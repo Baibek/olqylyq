@@ -521,7 +521,9 @@ details.more summary { color: var(--primary); }
 /* robot teacher */
 .bot { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); display: grid; gap: var(--s-3); padding: var(--s-3); background: linear-gradient(170deg, var(--primary-tint), var(--surface) 40%); border-color: color-mix(in srgb, var(--primary) 25%, var(--line)); box-shadow: var(--shadow-2); }
 @media (max-width: 960px) { .bot { position: static; } }
-.bot-head { display: flex; gap: var(--s-3); align-items: center; }
+.bot-head { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+.bot-acts { margin-left: auto; display: flex; gap: var(--s-2); }
+.bot-acts [hidden] { display: none; }
 .bot-head b { font-family: var(--f-display); font-size: var(--t-20); }
 .bot-state { font-size: var(--t-14); }
 .robot-box { width: 72px; height: 76px; flex: none; }
@@ -2080,7 +2082,9 @@ const CK = {
     pickVideo: 'Видео таңдау', pickVtt: 'Субтитр (.vtt)', play: 'Ойнату', pause: 'Пауза', speed: 'Жылдамдық', cc: 'Субтитр', voice: 'Дауыс',
     botName: 'Ұстаз-бот', botWatching: t => `Видеоны бірге көріп отырмын · ${t}`, botThinking: 'Ойланып жатырмын…', botTalking: 'Түсіндіріп жатырмын',
     hello: 'Сәлем! Мен Ұстаз-ботпын. Видеоны бірге көреміз. Түсініксіз жер болса, кез келген сәтте сұра: мен видеоның дәл сол жерін түсіндіремін.',
-    chips: ['Осы жерді түсіндір', 'Басқа мысал келтір', 'Неге солай болады?', 'Мені тексер'],
+    chips: ['Осы жерді түсіндір', 'Оңайырақ түсіндір', 'Басқа мысал келтір', 'Мені тексер'],
+    myGap: 'Менің олқылығымды түсіндір', helloGap: (x, g) => `Диагностика бойынша түбір олқылығың: «${x}» (${g}). Барлық тақырыпты қайталамаймыз, дәл осыдан бастаймыз. «Менің олқылығымды түсіндір» батырмасын бас немесе видеодан сұрақ қой.`,
+    stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.',
     ask: 'Сұрағыңды жаз…', send: 'Жіберу', at: 'сәт', off: 'Ұстаз-бот бет claude.ai ішінде ашылғанда жұмыс істейді.',
     err: { not_granted: 'AI-ға рұқсат берілмеді.', rate_limited: 'Сұрақ көп болды, сәлден кейін қайталаңыз.', other: 'Байланыс үзілді, қайта сұрап көр.' },
     readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
@@ -2091,7 +2095,9 @@ const CK = {
     pickVideo: 'Выбрать видео', pickVtt: 'Субтитры (.vtt)', play: 'Воспроизвести', pause: 'Пауза', speed: 'Скорость', cc: 'Субтитры', voice: 'Голос',
     botName: 'Ұстаз-бот', botWatching: t => `Смотрю видео вместе с тобой · ${t}`, botThinking: 'Думаю…', botTalking: 'Объясняю',
     hello: 'Привет! Я Ұстаз-бот. Смотрим видео вместе. Если что-то непонятно, спрашивай в любой момент: я объясню именно это место видео.',
-    chips: ['Объясни этот момент', 'Дай другой пример', 'Почему так?', 'Проверь меня'],
+    chips: ['Объясни этот момент', 'Объясни проще', 'Дай другой пример', 'Проверь меня'],
+    myGap: 'Объясни мой пробел', helloGap: (x, g) => `По диагностике твой корневой пробел: «${x}» (${g}). Не будем повторять всё подряд, начнём именно с него. Нажми «Объясни мой пробел» или задай вопрос по видео.`,
+    stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.',
     ask: 'Напиши вопрос…', send: 'Отправить', at: 'момент', off: 'Ұстаз-бот работает, когда страница открыта в claude.ai.',
     err: { not_granted: 'Доступ к AI не разрешён.', rate_limited: 'Слишком много вопросов, повтори чуть позже.', other: 'Связь прервалась, спроси ещё раз.' },
     readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
@@ -2172,7 +2178,7 @@ LESSONS.forEach(l => { l.dur = l.scenes.reduce((s, c) => s + c.d, 0); });
 const mmss = t => `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const ROBOT = `<svg class="robot" viewBox="0 0 80 84" aria-hidden="true"><line x1="40" y1="6" x2="40" y2="16" style="stroke:var(--line-strong)" stroke-width="3"/><circle class="rb-ant" cx="40" cy="6" r="5"/><rect x="4" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="69" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="10" y="16" width="60" height="46" rx="18" style="fill:var(--primary)"/><rect x="17" y="23" width="46" height="31" rx="11" style="fill:#0F2029"/><rect class="rb-eye" x="27" y="31" width="8" height="10" rx="4"/><rect class="rb-eye" x="45" y="31" width="8" height="10" rx="4"/><g class="rb-mouth"><rect x="32" y="46" width="4" height="3" rx="1.5"/><rect x="38" y="46" width="4" height="3" rx="1.5"/><rect x="44" y="46" width="4" height="3" rx="1.5"/></g><rect x="22" y="64" width="36" height="16" rx="8" style="fill:var(--primary-2)"/><circle cx="40" cy="72" r="3.5" style="fill:var(--gold)"/></svg>`;
 
-const CS = { lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], busy: false, ctl: null, lastScene: -1 };
+const CS = { lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], sug: [], busy: false, ctl: null, lastScene: -1 };
 let ttsP = null; const ttsGet = () => ttsP || (ttsP = (window.claude && window.claude.use) ? window.claude.use('tts').catch(() => null) : Promise.resolve(null));
 function curInfo() {
   if (CS.mode === 'video') {
@@ -2233,30 +2239,64 @@ async function frameBlob() {
   c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
   return new Promise(res => c.toBlob(b => res(b), 'image/jpeg', .85));
 }
+function botStudent() { // the diagnosed student the tutor is working with (null before any diagnostic)
+  const r = S.result; if (!r || !r.engine) return null;
+  const G = r.engine.G, res = r.engine.result();
+  return { G, res, grade: r.engine.grade, roots: res.roots.slice(0, 3) };
+}
+function splitSug(t) { // the reply may end with ">>> question | question | question": follow-up suggestions
+  const k = t.lastIndexOf('>>>'); if (k < 0) return { body: t, sug: [] };
+  return { body: t.slice(0, k).trim(), sug: t.slice(k + 3).split('|').map(x => x.replace(/[\n*«»"]/g, ' ').trim()).filter(x => x && x.length <= 60).slice(0, 3) };
+}
+function botChips() {
+  const X = CT(), st = botStudent(), box = document.querySelector('.chips-q'); if (!box) return;
+  const list = CS.sug.length ? CS.sug.concat(X.chips[3]) : (st && st.roots.length ? [X.myGap] : []).concat(X.chips);
+  box.innerHTML = list.map(c => `<button type="button" class="qchip">${esc(c)}</button>`).join('');
+}
+function botHello() {
+  const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
+  box.innerHTML = ''; bubble('bot', esc(X.hello));
+  if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade))));
+}
 async function askBot(q) {
   const sample = await samplePromise, X = CT();
   if (!sample || CS.busy || !q.trim()) return;
   setPlaying(false);
   const info = curInfo(); CS.busy = true; robotState('thinking'); $('#botState').textContent = X.botThinking;
+  const stopB = $('#botStop'); if (stopB) stopB.hidden = false;
   bubble('me', esc(q), info.t);
   const out = bubble('bot', `<span class="typing"><i></i><i></i><i></i></span>`);
-  const lk = lang === 'kk';
+  const lk = lang === 'kk', st = botStudent();
+  const diag = st && st.roots.length ? `Диагностика этого ученика (${st.grade > 9 ? '10–11' : st.grade} класс) по предмету «${sname(st.G)}»: всего тем с пробелами: ${st.res.gaps.length}. Корневые пробелы: ${st.roots.map(id => `«${nm(st.G, id)}» (${st.G.BY[id].grade} класс)`).join('; ')}. Цепочки последствий: ${st.roots.map(id => st.res.chain(id).map(c => nm(st.G, c)).join(' → ')).join(' || ')}.
+Главная цель: закрыть именно эти пробелы за короткое время, не повторяя то, что ученик уже знает. Если вопрос связан с этими темами или ученик просит объяснить свой пробел, начни с самого раннего корневого пробела, объясняй с основания и покажи, как он мешает в следующих темах.` : '';
   const ctx = `Ты — «Ұстаз-бот», добрый робот-учитель, который смотрит видеоурок вместе со школьником (12–17 лет) и объясняет понятно и интересно.
 Курс: «${X.courseName}». Урок: «${info.title}». Видео сейчас на моменте ${mmss(info.t)}${info.dur ? ' из ' + mmss(info.dur) : ''}.
 ${CS.mode === 'video' ? (info.text ? `Субтитр в этот момент: «${info.text}». Рядом звучит: «${info.prev}».` : 'Субтитров нет — смотри на кадр видео в этот момент (картинка приложена, если есть).') : `В этот момент в видео говорится: «${info.text}».${info.prev ? ` Перед этим: «${info.prev}».` : ''}${info.next ? ` Дальше будет: «${info.next}».` : ''}`}
 ${CS.mode === 'anim' ? 'План урока: ' + LESSONS[CS.lesson].scenes.map((s, k) => `${mmss(LESSONS[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))} ${tr(s.text).split('.')[0]}`).join(' | ') : ''}
-Правила ответа: отвечай именно про этот момент видео; 2–5 коротких предложений; один жизненный пример из Казахстана, если уместно; формулы обычным текстом (−3, x², √); если просят «проверь меня» — задай один короткий вопрос по этому моменту и не давай ответ сразу. Без markdown-заголовков. Язык ответа: ${lk ? 'казахский' : 'русский'}.`;
-  const turns = [{ role: 'user', content: ctx }, ...CS.chat.slice(-6), { role: 'user', content: `[${mmss(info.t)}] ${q}` }];
-  const opts = { cache: false, onText: ({ text }) => { robotState('talking'); $('#botState').textContent = X.botTalking; out.innerHTML = mdHTML(text); const b = $('#chatLog'); if (b) b.scrollTop = b.scrollHeight; } };
+${diag}
+Правила ответа:
+- если вопрос про видео, отвечай именно про этот момент; 2–5 коротких предложений; один жизненный пример из Казахстана, если уместно; формулы обычным текстом (−3, x², √);
+- учи, а не решай за ученика: после объяснения задай ОДИН короткий проверочный вопрос; ответ на него сразу не давай;
+- если ученик отвечает на твой проверочный вопрос: скажи, верно или нет и почему; при ошибке дай подсказку и попроси попробовать ещё раз, готовый ответ покажи только после второй ошибки; при верном ответе похвали одной фразой и дай шаг чуть сложнее;
+- если просят «проще» или ученик не понял: объясни по-другому, более простыми словами и на другом примере, не повторяй прежнее объяснение;
+- если просят «проверь меня»: задай один короткий вопрос и жди ответа;
+- не выдумывай факты; если не уверен, так и скажи.
+Без markdown-заголовков. Язык ответа: ${lk ? 'казахский' : 'русский'}.
+В самом конце ответа отдельной строкой напиши три коротких варианта следующей реплики ученика (до 5 слов каждый, от лица ученика, на языке ответа) в формате: >>> вариант 1 | вариант 2 | вариант 3`;
+  const turns = [{ role: 'user', content: ctx }, ...CS.chat.slice(-12), { role: 'user', content: `[${mmss(info.t)}] ${q}` }];
+  const opts = { cache: false, onText: ({ text }) => { robotState('talking'); $('#botState').textContent = X.botTalking; const body = splitSug(text).body; if (body) out.innerHTML = mdHTML(body); const b = $('#chatLog'); if (b) b.scrollTop = b.scrollHeight; } };
   const ctl = new AbortController(); CS.ctl = ctl; opts.signal = ctl.signal;
   try {
     if (CS.mode === 'video') { const lim = await sample.limits().catch(() => null); if (lim && lim.images) { const b = await frameBlob(); if (b) opts.images = [b]; } }
     const { text } = await sample(turns, opts);
-    CS.chat.push({ role: 'user', content: `[${mmss(info.t)}] ${q}` }, { role: 'assistant', content: text });
-    if (CS.aloud) ttsGet().then(t => t && t.speak(text.replace(/[*#]/g, '').slice(0, 1900)).catch(() => {}));
+    const ans = splitSug(text); out.innerHTML = mdHTML(ans.body || text);
+    CS.chat.push({ role: 'user', content: `[${mmss(info.t)}] ${q}` }, { role: 'assistant', content: ans.body || text });
+    CS.sug = ans.sug; botChips();
+    if (CS.aloud) ttsGet().then(t => t && t.speak((ans.body || text).replace(/[*#]/g, '').slice(0, 1900)).catch(() => {}));
   } catch (e) {
-    out.innerHTML = e && e.text && e.code !== 'refused' ? mdHTML(e.text) : `<span class="muted">${esc(X.err[e && e.code] || X.err.other)}</span>`;
-  } finally { CS.busy = false; CS.ctl = null; robotState('idle'); drawFrame(); }
+    const part = e && e.text && e.code !== 'refused' ? splitSug(e.text).body : '';
+    out.innerHTML = part ? mdHTML(part) : `<span class="muted">${esc(e && e.code === 'cancelled' ? X.stopped : (X.err[e && e.code] || X.err.other))}</span>`;
+  } finally { CS.busy = false; CS.ctl = null; robotState('idle'); const sb = $('#botStop'); if (sb) sb.hidden = true; drawFrame(); }
 }
 function renderCourse() {
   const X = CT(), sel = CS.mode === 'video' ? -1 : CS.lesson;
@@ -2287,15 +2327,16 @@ function renderCourse() {
       </section>
     </div>
     <aside class="bot card" aria-label="${X.botName}">
-      <div class="bot-head"><div class="robot-box" id="robotBox" data-state="idle">${ROBOT}</div><div><b>${X.botName}</b><div class="muted bot-state" id="botState" role="status"></div></div></div>
+      <div class="bot-head"><div class="robot-box" id="robotBox" data-state="idle">${ROBOT}</div><div><b>${X.botName}</b><div class="muted bot-state" id="botState" role="status"></div></div>
+        <div class="bot-acts"><button class="btn btn-ghost btn-sm" type="button" id="botStop" hidden>${X.stop}</button><button class="btn btn-ghost btn-sm" type="button" id="botNew">${X.newChat}</button></div></div>
       <div class="chat" id="chatLog" aria-live="polite"></div>
-      <div class="chips-q">${X.chips.map(c => `<button type="button" class="qchip">${c}</button>`).join('')}</div>
+      <div class="chips-q"></div>
       <form class="ask" id="askForm"><input class="input" id="askIn" autocomplete="off" placeholder="${esc(X.ask)}" aria-label="${esc(X.ask)}"><button class="btn btn-primary btn-sm" type="submit" aria-label="${X.send}">${ico('arrow')}</button></form>
       <label class="aloud" id="aloudRow" hidden><input type="checkbox" id="aloudIn" ${CS.aloud ? 'checked' : ''}> ${X.readAloud}</label>
     </aside>
   </div>`;
   // chat history
-  bubble('bot', esc(X.hello));
+  botHello(); botChips();
   CS.chat.forEach(m => { const el = bubble(m.role === 'user' ? 'me' : 'bot', m.role === 'user' ? esc(m.content.replace(/^\[\d\d:\d\d\] /, '')) : mdHTML(m.content), m.role === 'user' ? (() => { const mm = m.content.match(/^\[(\d\d):(\d\d)\]/); return mm ? +mm[1] * 60 + +mm[2] : undefined; })() : undefined); });
   $('#crsBack').addEventListener('click', () => { setPlaying(false); go('result'); });
   $('#playBtn').addEventListener('click', () => setPlaying(!CS.playing));
@@ -2306,7 +2347,9 @@ function renderCourse() {
   document.querySelectorAll('.chap').forEach(b => b.addEventListener('click', () => seekTo(LESSONS[CS.lesson].scenes.slice(0, +b.dataset.k).reduce((a, c) => a + c.d, 0) + 0.05)));
   document.querySelectorAll('.lsn-b').forEach(b => b.addEventListener('click', () => { setPlaying(false); if (b.dataset.k === 'own') { CS.mode = 'video'; } else { CS.mode = 'anim'; CS.lesson = +b.dataset.k; CS.t = 0; } CS.lastScene = -1; renderCourse(); const pl = document.querySelector('.player'); if (pl) pl.scrollIntoView({ block: 'start', behavior: MOTION ? 'smooth' : 'auto' }); }));
   $('#chatLog').addEventListener('click', e => { const b = e.target.closest('.tstamp'); if (b) seekTo(+b.dataset.t); });
-  document.querySelectorAll('.qchip').forEach(b => b.addEventListener('click', () => askBot(b.textContent)));
+  document.querySelector('.chips-q').addEventListener('click', e => { const b = e.target.closest('.qchip'); if (b && !b.disabled) askBot(b.textContent); });
+  $('#botStop').addEventListener('click', () => { if (CS.ctl) CS.ctl.abort(); });
+  $('#botNew').addEventListener('click', () => { if (CS.ctl) CS.ctl.abort(); CS.chat = []; CS.sug = []; botHello(); botChips(); });
   $('#askForm').addEventListener('submit', e => { e.preventDefault(); const v = $('#askIn').value; $('#askIn').value = ''; askBot(v); });
   $('#aloudIn').addEventListener('change', e => { CS.aloud = e.target.checked; });
   if (CS.mode === 'video') {
