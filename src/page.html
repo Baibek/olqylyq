@@ -524,6 +524,13 @@ details.more summary { color: var(--primary); }
 .bot-head { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
 .bot-acts { margin-left: auto; display: flex; gap: var(--s-2); }
 .bot-acts [hidden] { display: none; }
+.bot-modes { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--sunk); }
+.bot-modes button { flex: 1; min-height: 40px; padding: 0 8px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: var(--t-14); font-weight: 600; cursor: pointer; }
+.bot-modes button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+.bot-mem { font-size: var(--t-14); }
+.bot-mem summary { cursor: pointer; color: var(--muted); min-height: var(--tap); display: flex; align-items: center; }
+.bot-mem ul { margin: var(--s-2) 0; padding-left: 18px; display: grid; gap: 4px; }
+.bot-mem .btn { margin-top: var(--s-2); }
 .bot-head b { font-family: var(--f-display); font-size: var(--t-20); }
 .bot-state { font-size: var(--t-14); }
 .robot-box { width: 72px; height: 76px; flex: none; }
@@ -2085,6 +2092,8 @@ const CK = {
     chips: ['Осы жерді түсіндір', 'Оңайырақ түсіндір', 'Басқа мысал келтір', 'Мені тексер'],
     myGap: 'Менің олқылығымды түсіндір', helloGap: (x, g) => `Диагностика бойынша түбір олқылығың: «${x}» (${g}). Барлық тақырыпты қайталамаймыз, дәл осыдан бастаймыз. «Менің олқылығымды түсіндір» батырмасын бас немесе видеодан сұрақ қой.`,
     stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.',
+    modes: { chat: 'Сұрақ-жауап', guide: 'Қадамдап үйрен', quiz: 'Тест' }, modeLbl: 'Бот режимі', modeStart: { guide: 'Қадамдап үйретуді бастайық', quiz: 'Тест баста' },
+    memTitle: n => `Бот жады: ${n} жазба`, memHint: 'Бот өткен сабақтардан есте сақтағаны. Тек осы браузерде сақталады.', memEmpty: 'Әзірге бос.', memClear: 'Жадыны тазалау', memDiag: 'Соңғы диагностика',
     ask: 'Сұрағыңды жаз…', send: 'Жіберу', at: 'сәт', off: 'Ұстаз-бот бет claude.ai ішінде ашылғанда жұмыс істейді.',
     err: { not_granted: 'AI-ға рұқсат берілмеді.', rate_limited: 'Сұрақ көп болды, сәлден кейін қайталаңыз.', other: 'Байланыс үзілді, қайта сұрап көр.' },
     readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
@@ -2098,6 +2107,8 @@ const CK = {
     chips: ['Объясни этот момент', 'Объясни проще', 'Дай другой пример', 'Проверь меня'],
     myGap: 'Объясни мой пробел', helloGap: (x, g) => `По диагностике твой корневой пробел: «${x}» (${g}). Не будем повторять всё подряд, начнём именно с него. Нажми «Объясни мой пробел» или задай вопрос по видео.`,
     stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.',
+    modes: { chat: 'Вопрос-ответ', guide: 'По шагам', quiz: 'Тест' }, modeLbl: 'Режим бота', modeStart: { guide: 'Давай учиться по шагам', quiz: 'Начни тест' },
+    memTitle: n => `Память бота: записей ${n}`, memHint: 'Что бот запомнил с прошлых занятий. Хранится только в этом браузере.', memEmpty: 'Пока пусто.', memClear: 'Очистить память', memDiag: 'Последняя диагностика',
     ask: 'Напиши вопрос…', send: 'Отправить', at: 'момент', off: 'Ұстаз-бот работает, когда страница открыта в claude.ai.',
     err: { not_granted: 'Доступ к AI не разрешён.', rate_limited: 'Слишком много вопросов, повтори чуть позже.', other: 'Связь прервалась, спроси ещё раз.' },
     readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
@@ -2178,7 +2189,7 @@ LESSONS.forEach(l => { l.dur = l.scenes.reduce((s, c) => s + c.d, 0); });
 const mmss = t => `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const ROBOT = `<svg class="robot" viewBox="0 0 80 84" aria-hidden="true"><line x1="40" y1="6" x2="40" y2="16" style="stroke:var(--line-strong)" stroke-width="3"/><circle class="rb-ant" cx="40" cy="6" r="5"/><rect x="4" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="69" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="10" y="16" width="60" height="46" rx="18" style="fill:var(--primary)"/><rect x="17" y="23" width="46" height="31" rx="11" style="fill:#0F2029"/><rect class="rb-eye" x="27" y="31" width="8" height="10" rx="4"/><rect class="rb-eye" x="45" y="31" width="8" height="10" rx="4"/><g class="rb-mouth"><rect x="32" y="46" width="4" height="3" rx="1.5"/><rect x="38" y="46" width="4" height="3" rx="1.5"/><rect x="44" y="46" width="4" height="3" rx="1.5"/></g><rect x="22" y="64" width="36" height="16" rx="8" style="fill:var(--primary-2)"/><circle cx="40" cy="72" r="3.5" style="fill:var(--gold)"/></svg>`;
 
-const CS = { lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], sug: [], busy: false, ctl: null, lastScene: -1 };
+const CS = { lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], sug: [], botMode: 'chat', busy: false, ctl: null, lastScene: -1 };
 let ttsP = null; const ttsGet = () => ttsP || (ttsP = (window.claude && window.claude.use) ? window.claude.use('tts').catch(() => null) : Promise.resolve(null));
 function curInfo() {
   if (CS.mode === 'video') {
@@ -2242,20 +2253,37 @@ async function frameBlob() {
 function botStudent() { // the diagnosed student the tutor is working with (null before any diagnostic)
   const r = S.result; if (!r || !r.engine) return null;
   const G = r.engine.G, res = r.engine.result();
-  return { G, res, grade: r.engine.grade, roots: res.roots.slice(0, 3) };
+  return { G, res, grade: r.engine.grade, roots: res.roots.slice(0, 3), demo: !!r.demo };
 }
-function splitSug(t) { // the reply may end with ">>> question | question | question": follow-up suggestions
-  const k = t.lastIndexOf('>>>'); if (k < 0) return { body: t, sug: [] };
-  return { body: t.slice(0, k).trim(), sug: t.slice(k + 3).split('|').map(x => x.replace(/[\n*«»"]/g, ' ').trim()).filter(x => x && x.length <= 60).slice(0, 3) };
+function splitSug(t) { // reply tail: ">>> a | b | c" = follow-up suggestions, "@@@ note" = one line for the tutor's memory
+  const a = t.indexOf('>>>'), b = t.indexOf('@@@'), cut = Math.min(a < 0 ? Infinity : a, b < 0 ? Infinity : b);
+  if (cut === Infinity) return { body: t, sug: [], note: '' };
+  const line = (k, m) => (k < 0 ? '' : t.slice(k + 3).split(m)[0].split('\n')[0]);
+  const note = line(b, '>>>').replace(/[*«»"]/g, '').trim();
+  return { body: t.slice(0, cut).trim(), sug: line(a, '@@@').split('|').map(x => x.replace(/[*«»"]/g, ' ').trim()).filter(x => x && x.length <= 60).slice(0, 4), note: note.length > 3 && note.length <= 200 ? note : '' };
+}
+// tutor memory: short notes about what the learner struggled with, kept in this browser only
+const MEM_KEY = 'olqylyq.bot.mem';
+function memLoad() { try { const m = JSON.parse(localStorage.getItem(MEM_KEY) || 'null'); if (m && Array.isArray(m.notes)) return m; } catch (e) {} return { notes: [], diag: '' }; }
+function memSave(m) { try { localStorage.setItem(MEM_KEY, JSON.stringify(m)); } catch (e) {} }
+function memAdd(note) { if (!note) return; const m = memLoad(); if (m.notes.some(n => n.s === note)) return; m.notes.push({ d: new Date().toISOString().slice(0, 10), s: note }); m.notes = m.notes.slice(-12); memSave(m); botMemUI(); }
+function memDiag(st) { // remember the last diagnosis so the tutor still knows it after a reload
+  if (!st || st.demo || !st.roots.length) return; const m = memLoad(); // virtual demo students are not remembered
+  const d = `${sname(st.G)}: ${st.roots.map(id => `${nm(st.G, id)} (${st.G.BY[id].grade})`).join('; ')}`;
+  if (m.diag !== d) { m.diag = d; memSave(m); }
+}
+function botMemUI() {
+  const X = CT(), box = $('#botMem'); if (!box) return; const m = memLoad();
+  box.innerHTML = `<summary>${X.memTitle(m.notes.length)}</summary><p class="small">${X.memHint}</p>${m.diag ? `<p class="small"><b>${X.memDiag}:</b> ${esc(m.diag)}</p>` : ''}${m.notes.length ? `<ul>${m.notes.map(n => `<li><span class="muted num">${esc(n.d)}</span> ${esc(n.s)}</li>`).join('')}</ul>` : `<p class="small muted">${X.memEmpty}</p>`}${m.notes.length || m.diag ? `<button class="btn btn-ghost btn-sm" type="button" id="memClear">${X.memClear}</button>` : ''}`;
 }
 function botChips() {
   const X = CT(), st = botStudent(), box = document.querySelector('.chips-q'); if (!box) return;
-  const list = CS.sug.length ? CS.sug.concat(X.chips[3]) : (st && st.roots.length ? [X.myGap] : []).concat(X.chips);
+  const list = CS.sug.length ? (CS.botMode === 'quiz' ? CS.sug : CS.sug.slice(0, 3).concat(X.chips[3])) : (st && st.roots.length ? [X.myGap] : []).concat(X.chips);
   box.innerHTML = list.map(c => `<button type="button" class="qchip">${esc(c)}</button>`).join('');
 }
 function botHello() {
   const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
-  box.innerHTML = ''; bubble('bot', esc(X.hello));
+  box.innerHTML = ''; bubble('bot', esc(X.hello)); memDiag(st);
   if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade))));
 }
 async function askBot(q) {
@@ -2269,11 +2297,17 @@ async function askBot(q) {
   const lk = lang === 'kk', st = botStudent();
   const diag = st && st.roots.length ? `Диагностика этого ученика (${st.grade > 9 ? '10–11' : st.grade} класс) по предмету «${sname(st.G)}»: всего тем с пробелами: ${st.res.gaps.length}. Корневые пробелы: ${st.roots.map(id => `«${nm(st.G, id)}» (${st.G.BY[id].grade} класс)`).join('; ')}. Цепочки последствий: ${st.roots.map(id => st.res.chain(id).map(c => nm(st.G, c)).join(' → ')).join(' || ')}.
 Главная цель: закрыть именно эти пробелы за короткое время, не повторяя то, что ученик уже знает. Если вопрос связан с этими темами или ученик просит объяснить свой пробел, начни с самого раннего корневого пробела, объясняй с основания и покажи, как он мешает в следующих темах.` : '';
+  const mem = memLoad(), focus = st && st.roots.length ? `корневой пробел «${nm(st.G, st.roots[0])}»` : `тема урока «${info.title}»`;
+  const memTxt = (!diag && mem.diag ? `Последняя диагностика ученика (из памяти), корневые пробелы: ${mem.diag}. Главная цель: закрыть именно их, не повторяя то, что ученик уже знает.\n` : '') + (mem.notes.length ? `Твои заметки с прошлых занятий с этим учеником (учитывай их, не повторяй уже усвоенное, возвращайся к тому, что было трудно):\n${mem.notes.map(n => `- ${n.d}: ${n.s}`).join('\n')}` : '');
+  const modeTxt = CS.botMode === 'guide' ? `РЕЖИМ «ПО ШАГАМ»: проведи ученика через ${focus} маленькими шагами. В первом сообщении дай план из 3–5 шагов одной строкой и сразу начни шаг 1. Дальше один шаг за сообщение: начни с «Шаг N из M», короткое объяснение (2–3 предложения) и один вопрос. К следующему шагу переходи только после верного ответа. После последнего шага подведи итог в 2 предложениях.`
+    : CS.botMode === 'quiz' ? `РЕЖИМ «ТЕСТ»: проведи тест из 5 вопросов: ${focus}. Один вопрос за сообщение, начни с «Вопрос N из 5», четыре варианта ответа на отдельных строках: A) … B) … C) … D) …. Сложность повышай постепенно. Когда ученик ответил: одной-двумя фразами скажи, верно или нет и почему, затем сразу следующий вопрос. После 5-го вопроса подведи итог: сколько верно из 5 и что повторить. В этом режиме строка вариантов в конце всегда такая: >>> A | B | C | D (после итога — обычные три варианта).` : '';
   const ctx = `Ты — «Ұстаз-бот», добрый робот-учитель, который смотрит видеоурок вместе со школьником (12–17 лет) и объясняет понятно и интересно.
 Курс: «${X.courseName}». Урок: «${info.title}». Видео сейчас на моменте ${mmss(info.t)}${info.dur ? ' из ' + mmss(info.dur) : ''}.
 ${CS.mode === 'video' ? (info.text ? `Субтитр в этот момент: «${info.text}». Рядом звучит: «${info.prev}».` : 'Субтитров нет — смотри на кадр видео в этот момент (картинка приложена, если есть).') : `В этот момент в видео говорится: «${info.text}».${info.prev ? ` Перед этим: «${info.prev}».` : ''}${info.next ? ` Дальше будет: «${info.next}».` : ''}`}
 ${CS.mode === 'anim' ? 'План урока: ' + LESSONS[CS.lesson].scenes.map((s, k) => `${mmss(LESSONS[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))} ${tr(s.text).split('.')[0]}`).join(' | ') : ''}
 ${diag}
+${memTxt}
+${modeTxt}
 Правила ответа:
 - если вопрос про видео, отвечай именно про этот момент; 2–5 коротких предложений; один жизненный пример из Казахстана, если уместно; формулы обычным текстом (−3, x², √);
 - учи, а не решай за ученика: после объяснения задай ОДИН короткий проверочный вопрос; ответ на него сразу не давай;
@@ -2282,7 +2316,8 @@ ${diag}
 - если просят «проверь меня»: задай один короткий вопрос и жди ответа;
 - не выдумывай факты; если не уверен, так и скажи.
 Без markdown-заголовков. Язык ответа: ${lk ? 'казахский' : 'русский'}.
-В самом конце ответа отдельной строкой напиши три коротких варианта следующей реплики ученика (до 5 слов каждый, от лица ученика, на языке ответа) в формате: >>> вариант 1 | вариант 2 | вариант 3`;
+В самом конце ответа отдельной строкой напиши три коротких варианта следующей реплики ученика (до 5 слов каждый, от лица ученика, на языке ответа) в формате: >>> вариант 1 | вариант 2 | вариант 3
+После неё ещё одной отдельной строкой напиши заметку для своей памяти: что именно ученик в этом обмене не понял, в чём ошибся или что усвоил (до 15 слов, на языке ответа), в формате: @@@ заметка. Если ничего нового об ученике не выяснилось, напиши: @@@ -`;
   const turns = [{ role: 'user', content: ctx }, ...CS.chat.slice(-12), { role: 'user', content: `[${mmss(info.t)}] ${q}` }];
   const opts = { cache: false, onText: ({ text }) => { robotState('talking'); $('#botState').textContent = X.botTalking; const body = splitSug(text).body; if (body) out.innerHTML = mdHTML(body); const b = $('#chatLog'); if (b) b.scrollTop = b.scrollHeight; } };
   const ctl = new AbortController(); CS.ctl = ctl; opts.signal = ctl.signal;
@@ -2291,7 +2326,7 @@ ${diag}
     const { text } = await sample(turns, opts);
     const ans = splitSug(text); out.innerHTML = mdHTML(ans.body || text);
     CS.chat.push({ role: 'user', content: `[${mmss(info.t)}] ${q}` }, { role: 'assistant', content: ans.body || text });
-    CS.sug = ans.sug; botChips();
+    CS.sug = ans.sug; botChips(); memAdd(ans.note);
     if (CS.aloud) ttsGet().then(t => t && t.speak((ans.body || text).replace(/[*#]/g, '').slice(0, 1900)).catch(() => {}));
   } catch (e) {
     const part = e && e.text && e.code !== 'refused' ? splitSug(e.text).body : '';
@@ -2330,13 +2365,15 @@ function renderCourse() {
       <div class="bot-head"><div class="robot-box" id="robotBox" data-state="idle">${ROBOT}</div><div><b>${X.botName}</b><div class="muted bot-state" id="botState" role="status"></div></div>
         <div class="bot-acts"><button class="btn btn-ghost btn-sm" type="button" id="botStop" hidden>${X.stop}</button><button class="btn btn-ghost btn-sm" type="button" id="botNew">${X.newChat}</button></div></div>
       <div class="chat" id="chatLog" aria-live="polite"></div>
+      <div class="bot-modes" role="group" aria-label="${X.modeLbl}">${['chat', 'guide', 'quiz'].map(m => `<button type="button" data-mode="${m}" aria-pressed="${CS.botMode === m}">${X.modes[m]}</button>`).join('')}</div>
       <div class="chips-q"></div>
       <form class="ask" id="askForm"><input class="input" id="askIn" autocomplete="off" placeholder="${esc(X.ask)}" aria-label="${esc(X.ask)}"><button class="btn btn-primary btn-sm" type="submit" aria-label="${X.send}">${ico('arrow')}</button></form>
       <label class="aloud" id="aloudRow" hidden><input type="checkbox" id="aloudIn" ${CS.aloud ? 'checked' : ''}> ${X.readAloud}</label>
+      <details class="bot-mem" id="botMem"></details>
     </aside>
   </div>`;
   // chat history
-  botHello(); botChips();
+  botHello(); botChips(); botMemUI();
   CS.chat.forEach(m => { const el = bubble(m.role === 'user' ? 'me' : 'bot', m.role === 'user' ? esc(m.content.replace(/^\[\d\d:\d\d\] /, '')) : mdHTML(m.content), m.role === 'user' ? (() => { const mm = m.content.match(/^\[(\d\d):(\d\d)\]/); return mm ? +mm[1] * 60 + +mm[2] : undefined; })() : undefined); });
   $('#crsBack').addEventListener('click', () => { setPlaying(false); go('result'); });
   $('#playBtn').addEventListener('click', () => setPlaying(!CS.playing));
@@ -2350,6 +2387,13 @@ function renderCourse() {
   document.querySelector('.chips-q').addEventListener('click', e => { const b = e.target.closest('.qchip'); if (b && !b.disabled) askBot(b.textContent); });
   $('#botStop').addEventListener('click', () => { if (CS.ctl) CS.ctl.abort(); });
   $('#botNew').addEventListener('click', () => { if (CS.ctl) CS.ctl.abort(); CS.chat = []; CS.sug = []; botHello(); botChips(); });
+  document.querySelector('.bot-modes').addEventListener('click', e => {
+    const b = e.target.closest('[data-mode]'); if (!b || CS.busy || b.dataset.mode === CS.botMode) return;
+    CS.botMode = b.dataset.mode; CS.sug = []; botChips();
+    document.querySelectorAll('.bot-modes button').forEach(x => x.setAttribute('aria-pressed', x.dataset.mode === CS.botMode));
+    if (CS.botMode !== 'chat') askBot(X.modeStart[CS.botMode]);
+  });
+  $('#botMem').addEventListener('click', e => { if (e.target.closest('#memClear')) { try { localStorage.removeItem(MEM_KEY); } catch (err) {} botMemUI(); } });
   $('#askForm').addEventListener('submit', e => { e.preventDefault(); const v = $('#askIn').value; $('#askIn').value = ''; askBot(v); });
   $('#aloudIn').addEventListener('change', e => { CS.aloud = e.target.checked; });
   if (CS.mode === 'video') {
