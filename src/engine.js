@@ -1365,6 +1365,34 @@ const CORE = (() => {
     return e;
   }
 
-  return { SUBJ, Engine, rng, simulate, truthFromRoots, L, M };
+  // ---------- CEFR estimate (IELTS graph: grade 5..9 = A1..C1) ----------
+  const CEFR = { 4: ['A0', '<3'], 5: ['A1', '3'], 6: ['A2', '3.5–4'], 7: ['B1', '4.5–5.5'], 8: ['B2', '6–6.5'], 9: ['C1', '7–8'] };
+  function cefr(G, res) {
+    let lvl = 4;
+    for (const g of [5, 6, 7, 8, 9]) {
+      const ts = G.TOPICS.filter(t => t.grade === g);
+      if (!ts.length || ts.filter(t => res.st[t.id] === 'known').length / ts.length < 0.6) break;
+      lvl = g;
+    }
+    return { lvl, label: CEFR[lvl][0], band: CEFR[lvl][1] };
+  }
+  // ---------- groups of students by level: [{ key, n, names, topRoot }] ----------
+  function groupStudents(G, list) {
+    const eng = G.key === 'eng', order = eng ? ['A0', 'A1', 'A2', 'B1', 'B2', 'C1'] : ['low', 'mid', 'high'];
+    const keyOf = res => {
+      if (eng) return cefr(G, res).label;
+      const tot = res.known + res.gaps.length + res.unknown, m = tot ? res.known / tot : 0;
+      return m < 0.5 ? 'low' : m < 0.8 ? 'mid' : 'high';
+    };
+    const by = {};
+    list.forEach(({ name, res }) => { const k = keyOf(res); (by[k] = by[k] || []).push({ name, root: res.roots[0] || null }); });
+    return order.filter(k => by[k]).map(k => {
+      const cnt = new Map(); by[k].forEach(s => { if (s.root) cnt.set(s.root, (cnt.get(s.root) || 0) + 1); });
+      let topRoot = null, best = 0; cnt.forEach((v, id) => { if (v > best) { best = v; topRoot = id; } });
+      return { key: k, n: by[k].length, names: by[k].map(s => s.name), topRoot };
+    });
+  }
+
+  return { SUBJ, Engine, rng, simulate, truthFromRoots, cefr, groupStudents, L, M };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;

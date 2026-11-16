@@ -52,5 +52,21 @@ if (eng) {
   check(acc >= 0.85, `eng accuracy ${(100 * acc).toFixed(1)}% < 85%`);
 }
 
+// ---- CEFR estimate and grouping
+if (typeof CORE.cefr !== 'function' || typeof CORE.groupStudents !== 'function') bad.push('cefr / groupStudents are not exported');
+else {
+  const res = roots => CORE.simulate(eng, roots, 1).result();
+  const top = CORE.cefr(eng, res([]));
+  check(top.label === 'C1' && top.band === '7–8', `no gaps → ${JSON.stringify(top)}, expected C1 / 7–8`);
+  check(CORE.cefr(eng, res(['e1', 'e5'])).label === 'A0', `roots e1,e5 → ${CORE.cefr(eng, res(['e1', 'e5'])).label}, expected A0`);
+  check(CORE.cefr(eng, res(['e2'])).label === 'A1', `root e2 → ${CORE.cefr(eng, res(['e2'])).label}, expected A1`);
+  const math = CORE.SUBJ.math, mres = roots => CORE.simulate(math, roots, 1).result();
+  const g = CORE.groupStudents(math, [{ name: 'A', res: mres([]) }, { name: 'B', res: mres(['n1']) }, { name: 'C', res: mres(['n1']) }]);
+  check(JSON.stringify(g.map(x => x.key)) === '["low","high"]', `math groups ${JSON.stringify(g.map(x => x.key))}`);
+  check(g[0] && g[0].n === 2 && g[0].topRoot === 'n1' && g[0].names.join() === 'B,C', `low group ${JSON.stringify(g[0])}`);
+  const ge = CORE.groupStudents(eng, [{ name: 'X', res: res([]) }, { name: 'Y', res: res(['e2']) }]);
+  check(JSON.stringify(ge.map(x => x.key)) === '["A1","C1"]', `eng groups ${JSON.stringify(ge.map(x => x.key))}`);
+}
+
 console.log('problems:', bad.length ? bad : 'none');
 process.exit(bad.length ? 1 : 0);
