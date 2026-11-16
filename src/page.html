@@ -1660,13 +1660,14 @@ function renderHome() {
     ${meta.note ? `<p class="small" style="margin-top:4px">${esc(tr(meta.note))}</p>` : ''}
     <p class="small" style="margin-top:4px">${Lx.draft}</p>
   </section>`;
-  bindCellMap(G, res, $('#homeDetail'));
-  bindHow(G, res);
+  // the main buttons are wired first, so a failure in a decorative part below cannot leave them dead
+  $('#startForm').addEventListener('submit', e => { e.preventDefault(); startTest(false); });
+  $('#demoBtn').addEventListener('click', () => startTest(true));
+  try { bindCellMap(G, res, $('#homeDetail')); } catch (err) { console.error('cell map', err); }
+  try { bindHow(G, res); } catch (err) { console.error('how it works', err); }
   document.querySelectorAll('.subj').forEach(b => b.addEventListener('click', () => { setSubj(b.dataset.s); renderHeader(); renderHome(); enhanceMaps(); const nb = document.querySelector(`.subj[data-s="${b.dataset.s}"]`); if (nb) nb.focus({ preventScroll: true }); }));
   $('#nameIn').addEventListener('input', e => { S.name = e.target.value; const c = $('#coverName'); if (c) c.textContent = S.name; });
   document.querySelectorAll('.gradeseg button').forEach(b => b.addEventListener('click', () => { S.grade = +b.dataset.g; document.querySelectorAll('.gradeseg button').forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#startForm').addEventListener('submit', e => { e.preventDefault(); startTest(false); });
-  $('#demoBtn').addEventListener('click', () => startTest(true));
   $('#courseBtn').addEventListener('click', openCourse);
   $('#hcPy').addEventListener('click', openPython);
   const selT = document.querySelector('.subj[aria-pressed="true"]'); if (selT) { const row = selT.parentElement; if (row.scrollWidth > row.clientWidth) row.scrollLeft = selT.offsetLeft - row.offsetLeft - 16; }

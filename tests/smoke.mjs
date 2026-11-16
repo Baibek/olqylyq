@@ -91,6 +91,16 @@ await page.click('.subjseg button[data-s="math"]'); await page.waitForSelector('
 await page.click('tr.click'); await wait(500);
 { const t = await page.innerHTML('#v-result'); check(!t.includes('${'), 'math result contains raw template text: ' + (t.match(/.{0,20}\$\{.{0,30}/) || [''])[0]); }
 
+// 7. Demo button still works when a decorative part of the home page fails (older browsers)
+{
+  const c3 = await browser.newContext({ viewport: { width: 390, height: 800 } });
+  await c3.addInitScript(() => { window.IntersectionObserver = function () { throw new Error('unsupported'); }; });
+  const p3 = await c3.newPage(); await p3.goto(URL0); await p3.waitForTimeout(500);
+  await p3.click('#demoBtn'); await p3.waitForTimeout(600);
+  check(await p3.isVisible('#v-test'), 'demo button is dead when the "how it works" block fails');
+  await c3.close();
+}
+
 check(!errs.length, 'page errors: ' + errs.join(' | '));
 await browser.close();
 console.log('problems:', bad.length ? bad : 'none');
