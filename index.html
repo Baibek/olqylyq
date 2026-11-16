@@ -351,6 +351,7 @@ pre.code { margin: 0; font-family: var(--f-mono); font-size: var(--t-16); line-h
 /* result */
 .reshead { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); align-items: end; justify-content: space-between; }
 .reshead h1 { font-size: var(--t-32); }
+.field[hidden], .btn[hidden] { display: none; }
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); }
 .tiles.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); } .tiles.three { grid-template-columns: minmax(0, 1fr); } }
@@ -848,18 +849,21 @@ h1 { font-size: 44px; }
 }
 @keyframes viewin { from { opacity: .001; } }
 /* ===== subject themes: each subject gets its own ink and its own notebook cover ===== */
-:root { --c-math: #2340A8; --c-hist: #8A4513; --c-mlit: #0A6C74; --c-inf: #5531B8;
-  --cover: #2340A8; --cv-math: #2340A8; --cv-hist: #7A3D12; --cv-mlit: #0A5F67; --cv-inf: #4B2DA6; }
+:root { --c-eng: #B42A4F; --c-math: #2340A8; --c-hist: #8A4513; --c-mlit: #0A6C74; --c-inf: #5531B8;
+  --cover: #2340A8; --cv-eng: #A3264A; --cv-math: #2340A8; --cv-hist: #7A3D12; --cv-mlit: #0A5F67; --cv-inf: #4B2DA6; }
+:root[data-subj="eng"] { --primary: #B42A4F; --primary-2: #C93A60; --primary-tint: #FBE9EE; --accent: #B42A4F; --accent-tint: #FBE9EE; --cover: var(--cv-eng); }
 :root[data-subj="hist"] { --primary: #8A4513; --primary-2: #A1531B; --primary-tint: #F7ECE2; --accent: #8A4513; --accent-tint: #F7ECE2; --cover: var(--cv-hist); }
 :root[data-subj="mlit"] { --primary: #0A6C74; --primary-2: #0B7F88; --primary-tint: #E2F2F3; --accent: #0A6C74; --accent-tint: #E2F2F3; --cover: var(--cv-mlit); }
 :root[data-subj="inf"] { --primary: #5531B8; --primary-2: #6745CF; --primary-tint: #EEE9FB; --accent: #5531B8; --accent-tint: #EEE9FB; --cover: var(--cv-inf); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+  :root:not([data-theme="light"]) { --c-eng: #FF9DB5; --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-eng: #6A1D33; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+  :root[data-subj="eng"]:not([data-theme="light"]) { --primary: #FF9DB5; --primary-2: #FFB8C9; --primary-tint: #43242D; --accent: #FF9DB5; --accent-tint: #43242D; --on-primary: #3A0716; --cover: var(--cv-eng); }
   :root[data-subj="hist"]:not([data-theme="light"]) { --primary: #F0B27A; --primary-2: #F6C79D; --primary-tint: #3A2E22; --accent: #F0B27A; --accent-tint: #3A2E22; --on-primary: #2A1606; --cover: var(--cv-hist); }
   :root[data-subj="mlit"]:not([data-theme="light"]) { --primary: #73D3DB; --primary-2: #9BE2E8; --primary-tint: #1D3C3E; --accent: #73D3DB; --accent-tint: #1D3C3E; --on-primary: #032528; --cover: var(--cv-mlit); }
   :root[data-subj="inf"]:not([data-theme="light"]) { --primary: #C4B0FF; --primary-2: #D6C8FF; --primary-tint: #2E2D48; --accent: #C4B0FF; --accent-tint: #2E2D48; --on-primary: #1C0E45; --cover: var(--cv-inf); }
 }
-:root[data-theme="dark"] { --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+:root[data-theme="dark"] { --c-eng: #FF9DB5; --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-eng: #6A1D33; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+:root[data-theme="dark"][data-subj="eng"] { --primary: #FF9DB5; --primary-2: #FFB8C9; --primary-tint: #43242D; --on-primary: #3A0716; --cover: var(--cv-eng); }
 :root[data-theme="dark"][data-subj="hist"] { --primary: #F0B27A; --primary-2: #F6C79D; --primary-tint: #3A2E22; --on-primary: #2A1606; --cover: var(--cv-hist); }
 :root[data-theme="dark"][data-subj="mlit"] { --primary: #73D3DB; --primary-2: #9BE2E8; --primary-tint: #1D3C3E; --on-primary: #032528; --cover: var(--cv-mlit); }
 :root[data-theme="dark"][data-subj="inf"] { --primary: #C4B0FF; --primary-2: #D6C8FF; --primary-tint: #2E2D48; --on-primary: #1C0E45; --cover: var(--cv-inf); }
@@ -1925,6 +1929,346 @@ const CORE = (() => {
   ];
 
 
+  // ---------- IELTS (English): levels stored in `grade`: 5=A1, 6=A2, 7=B1, 8=B2, 9=C1 ----------
+  const E = {
+    fill: L('Бос орынды толтырыңыз', 'Заполните пропуск'),
+    choose: L('Дұрыс сөйлемді таңдаңыз', 'Выберите верное предложение'),
+    read: L('Мәтінді оқып, сұраққа жауап беріңіз', 'Прочитайте текст и ответьте на вопрос'),
+    tfng: L('Тұжырым мәтінге сәйкес пе: True, False әлде Not Given?', 'Соответствует ли утверждение тексту: True, False или Not Given?'),
+    mean: L('Мағынасы ең жақын нұсқаны таңдаңыз', 'Выберите ближайший по смыслу вариант'),
+    link: L('Сөйлемдерді ең жақсы байланыстыратын сөзді таңдаңыз', 'Выберите слово, которое лучше всего связывает предложения'),
+    form: L('Сөздің дұрыс формасын таңдаңыз', 'Выберите правильную форму слова'),
+    head: L('Абзацқа ең сәйкес тақырыпты таңдаңыз', 'Выберите заголовок, который лучше всего подходит абзацу'),
+    acad: L('Академиялық жазуға ең сәйкес нұсқаны таңдаңыз', 'Выберите вариант, наиболее подходящий для академического письма'),
+  };
+  // item = [expr, correct, distractor, distractor, distractor]
+  const eq = (stem, pool) => r => { const [expr, c, ...d] = pick(r, pool); return mc(r, stem, expr, c, d); };
+  const TF = ['True', 'False', 'Not Given', 'Partly true'];
+  const tf = (passage, claim, ans) => [[passage, 'Statement: ' + claim], ans, ...TF.filter(x => x !== ans)];
+
+  const RAW_ENG = [
+    // ===== A1 =====
+    ['e1', 5, 'gram', 'to be етістігі', 'Глагол to be', [], 0, eq(E.fill, [
+      ['My sister ___ a doctor.', 'is', 'are', 'am', 'be'],
+      ['We ___ from Almaty.', 'are', 'is', 'am', 'be'],
+      ['I ___ 15 years old.', 'am', 'is', 'are', 'have'],
+      ['___ your parents at home now?', 'Are', 'Is', 'Am', 'Do'],
+      ['The books ___ on the table.', 'are', 'is', 'am', 'be'],
+    ])],
+    ['e2', 5, 'gram', 'Present Simple', 'Present Simple', ['e1'], 0, eq(E.fill, [
+      ['She ___ to school by bus every day.', 'goes', 'go', 'is go', 'going'],
+      ['My father ___ coffee in the morning.', "doesn't drink", "don't drink", "isn't drink", 'not drinks'],
+      ['___ you speak English?', 'Do', 'Does', 'Are', 'Is'],
+      ['Water ___ at 100 degrees.', 'boils', 'boil', 'is boil', 'boiling'],
+      ['They ___ football on Sundays.', 'play', 'plays', 'are play', 'playing'],
+    ])],
+    ['e3', 5, 'gram', 'Артикльдер a/an/the', 'Артикли a/an/the', [], 0, eq(E.fill, [
+      ['I saw ___ elephant at the zoo.', 'an', 'a', 'the', '—'],
+      ['___ sun is very hot today.', 'The', 'A', 'An', '—'],
+      ['She is ___ university student.', 'a', 'an', 'the', '—'],
+      ['I usually have ___ breakfast at 7.', '—', 'a', 'an', 'the'],
+      ['Can you close ___ door, please?', 'the', 'a', 'an', '—'],
+    ])],
+    ['e4', 5, 'gram', 'Көпше түр, саналатын және саналмайтын', 'Множественное число, исчисляемые и неисчисляемые', ['e3'], 0, eq(E.fill, [
+      ['There are three ___ in the room.', 'children', 'childs', 'child', 'childrens'],
+      ['How ___ water do you drink a day?', 'much', 'many', 'a lot', 'few'],
+      ['I need some ___ about the course.', 'information', 'informations', 'an information', 'information s'],
+      ['There aren\'t ___ apples left.', 'any', 'some', 'much', 'a'],
+      ['He bought two ___ of bread.', 'loaves', 'loafs', 'loaf', 'breads'],
+    ])],
+    ['e5', 5, 'vocab', 'Күнделікті сөздер', 'Повседневная лексика', [], 0, eq(E.mean, [
+      ['My mother\'s brother is my ___.', 'uncle', 'cousin', 'nephew', 'grandfather'],
+      ['A person who works in a hospital and helps doctors is a ___.', 'nurse', 'pilot', 'waiter', 'farmer'],
+      ['You buy medicine at a ___.', 'pharmacy', 'library', 'bakery', 'stadium'],
+      ['The opposite of "cheap" is ___.', 'expensive', 'cold', 'empty', 'early'],
+      ['We eat lunch in the school ___.', 'canteen', 'garage', 'bedroom', 'office'],
+    ])],
+    ['e6', 5, 'gram', 'Уақыт пен орын предлогтары', 'Предлоги времени и места', ['e5'], 0, eq(E.fill, [
+      ['The lesson starts ___ 9 o\'clock.', 'at', 'in', 'on', 'by'],
+      ['My birthday is ___ May.', 'in', 'at', 'on', 'to'],
+      ['We have a test ___ Monday.', 'on', 'in', 'at', 'for'],
+      ['The keys are ___ the table.', 'on', 'at', 'in', 'to'],
+      ['She lives ___ Astana.', 'in', 'at', 'on', 'to'],
+    ])],
+    ['e7', 5, 'read', 'Қысқа хабарландыру', 'Короткие объявления', ['e1', 'e5'], 0, eq(E.read, [
+      [['LIBRARY: Open Monday–Friday 9:00–18:00. Closed on weekends.', 'When can you visit the library?'], 'On Wednesday at 10:00', 'On Saturday at 10:00', 'On Sunday at 12:00', 'On Friday at 19:00'],
+      [['Swimming pool: children under 12 must come with an adult.', 'Who can swim alone?'], 'A 14-year-old', 'A 10-year-old', 'An 8-year-old', 'A 5-year-old'],
+      [['Café: Buy two coffees, get one free!', 'How many coffees do you pay for if you get three?'], 'Two', 'Three', 'One', 'None'],
+      [['Bus 32 does not stop at Central Park today because of road works.', 'What is true today?'], 'Bus 32 will not stop at Central Park', 'Bus 32 is not working at all', 'Central Park is closed', 'The road works are finished'],
+    ])],
+    // ===== A2 =====
+    ['e8', 6, 'gram', 'Present Continuous', 'Present Continuous', ['e2'], 0, eq(E.fill, [
+      ['Be quiet! The baby ___.', 'is sleeping', 'sleeps', 'sleep', 'sleeping'],
+      ['Look! It ___ outside.', 'is raining', 'rains', 'rain', 'raining'],
+      ['What ___ you ___ now?', 'are / doing', 'do / do', 'are / do', 'do / doing'],
+      ['I ___ for my exam this week.', 'am studying', 'study', 'studies', 'studying'],
+      ['They ___ TV at the moment.', "aren't watching", "don't watch", "isn't watching", 'not watch'],
+    ])],
+    ['e9', 6, 'gram', 'Past Simple', 'Past Simple', ['e2'], 0, eq(E.fill, [
+      ['Yesterday I ___ to the cinema.', 'went', 'go', 'goed', 'have gone'],
+      ['She ___ the email last night.', "didn't send", "didn't sent", "doesn't send", 'not sent'],
+      ['When ___ you arrive?', 'did', 'do', 'were', 'have'],
+      ['We ___ a great time in Turkey last summer.', 'had', 'have', 'haved', 'has'],
+      ['He ___ his leg two years ago.', 'broke', 'breaked', 'broken', 'breaks'],
+    ])],
+    ['e10', 6, 'gram', 'Салыстырмалы шырай', 'Степени сравнения', ['e4'], 0, eq(E.fill, [
+      ['Almaty is ___ than Taraz.', 'bigger', 'more big', 'biggest', 'big'],
+      ['This is the ___ film I have ever seen.', 'worst', 'baddest', 'worse', 'most bad'],
+      ['English is ___ than Chinese for me.', 'easier', 'more easy', 'easiest', 'more easier'],
+      ['She is the ___ student in our class.', 'most intelligent', 'intelligentest', 'more intelligent', 'most intelligentest'],
+      ['My brother is not as tall ___ me.', 'as', 'than', 'that', 'like'],
+    ])],
+    ['e11', 6, 'gram', 'Модальдар can/must/should', 'Модальные глаголы can/must/should', ['e2'], 0, eq(E.fill, [
+      ['You look tired. You ___ go to bed early.', 'should', 'must to', 'can to', 'should to'],
+      ['Students ___ use phones during the exam. It is forbidden.', "mustn't", "don't have to", 'should', 'can'],
+      ['___ you help me with this bag?', 'Could', 'Must', 'Should', 'Have'],
+      ['You ___ bring food — lunch is included.', "don't have to", "mustn't", "can't", 'must'],
+      ['My grandmother ___ speak three languages.', 'can', 'cans', 'can to', 'is can'],
+    ])],
+    ['e12', 6, 'gram', 'Future: will / going to', 'Future: will / going to', ['e2'], 0, eq(E.fill, [
+      ['Look at those clouds! It ___ rain.', 'is going to', 'will to', 'goes to', 'is will'],
+      ['The phone is ringing. I ___ answer it.', "'ll", 'am going to', 'going to', 'will to'],
+      ['We have bought tickets. We ___ visit London in June.', 'are going to', 'will to', 'go to', 'are will'],
+      ['I think robots ___ do most jobs in the future.', 'will', 'are going', 'going to', 'will to'],
+      ['___ you come to my party tomorrow?', 'Will', 'Are', 'Do', 'Going'],
+    ])],
+    ['e13', 6, 'vocab', 'Негізгі тіркестер make/do/have/take', 'Базовые коллокации make/do/have/take', ['e5'], 0, eq(E.fill, [
+      ['Please don\'t ___ a noise in the library.', 'make', 'do', 'take', 'have'],
+      ['I need to ___ my homework tonight.', 'do', 'make', 'take', 'have'],
+      ['Let\'s ___ a break for ten minutes.', 'take', 'make', 'do', 'go'],
+      ['Did you ___ a good time at the party?', 'have', 'make', 'do', 'take'],
+      ['He ___ a mistake in the first question.', 'made', 'did', 'took', 'had'],
+    ])],
+    ['e14', 6, 'read', 'Мәтіннің негізгі ойы', 'Главная мысль текста', ['e7'], 0, eq(E.read, [
+      [['Many teenagers sleep less than eight hours a night. Doctors say this affects their memory, mood and marks at school.', 'What is the main idea?'], 'Lack of sleep harms teenagers', 'Teenagers like going to school', 'Doctors sleep eight hours', 'Marks are not important'],
+      [['Cycling to work is becoming popular in big cities. It is cheap, healthy and does not pollute the air.', 'What is the text mainly about?'], 'The benefits of cycling to work', 'How to repair a bicycle', 'Pollution in small villages', 'The price of cars'],
+      [['Our town has opened a new park. It has a lake, a playground and free Wi-Fi, and it is open until midnight.', 'What is the purpose of the text?'], 'To describe a new park', 'To complain about a lake', 'To sell Wi-Fi', 'To close a playground'],
+      [['Learning a language is easier when you use it every day: watch films, read news and talk to people.', 'What does the writer suggest?'], 'Use the language daily', 'Study grammar only', 'Avoid watching films', 'Learn many languages at once'],
+    ])],
+    ['e15', 6, 'write', 'and / but / because / so', 'and / but / because / so', ['e7'], 0, eq(E.link, [
+      ['I wanted to buy the jacket, ___ it was too expensive.', 'but', 'so', 'because', 'and'],
+      ['It was raining, ___ we stayed at home.', 'so', 'because', 'but', 'or'],
+      ['She was late ___ she missed the bus.', 'because', 'so', 'but', 'and'],
+      ['He plays the piano ___ the guitar.', 'and', 'but', 'so', 'because'],
+      ['The test was difficult, ___ most students passed.', 'but', 'so', 'because', 'and'],
+    ])],
+    // ===== B1 =====
+    ['e16', 7, 'gram', 'Present Perfect', 'Present Perfect', ['e9'], 0, eq(E.fill, [
+      ['I ___ never ___ to Japan.', 'have / been', 'have / went', 'did / go', 'was / been'],
+      ['She ___ here since 2019.', 'has lived', 'lives', 'lived', 'is living'],
+      ['___ you ever ___ sushi?', 'Have / eaten', 'Did / eaten', 'Have / ate', 'Do / eat'],
+      ['We ___ our project yet.', "haven't finished", "didn't finish yet", "don't finish", "hasn't finished"],
+      ['He ___ his keys, so he can\'t open the door.', 'has lost', 'lost', 'loses', 'is losing'],
+    ])],
+    ['e17', 7, 'gram', 'Past Continuous және Past Simple', 'Past Continuous и Past Simple', ['e9', 'e8'], 0, eq(E.fill, [
+      ['I ___ dinner when the phone rang.', 'was cooking', 'cooked', 'am cooking', 'have cooked'],
+      ['While we were walking, it ___ to rain.', 'started', 'was starting', 'starts', 'has started'],
+      ['What ___ you doing at 8 pm yesterday?', 'were', 'did', 'was', 'are'],
+      ['She ___ her leg while she was skiing.', 'broke', 'was breaking', 'breaks', 'has broken'],
+      ['They ___ TV when the lights went out.', 'were watching', 'watched', 'are watching', 'have watched'],
+    ])],
+    ['e18', 7, 'gram', '1 және 2 шартты сөйлем', 'Условные предложения 1 и 2 типа', ['e12', 'e9'], 0, eq(E.fill, [
+      ['If it rains tomorrow, we ___ at home.', 'will stay', 'would stay', 'stayed', 'stay will'],
+      ['If I ___ rich, I would travel the world.', 'were', 'am', 'will be', 'would be'],
+      ['If you heat ice, it ___.', 'melts', 'would melt', 'melted', 'will melted'],
+      ['What would you do if you ___ the lottery?', 'won', 'win', 'will win', 'would win'],
+      ['If she studies hard, she ___ the exam.', 'will pass', 'would pass', 'passed', 'passes will'],
+    ])],
+    ['e19', 7, 'gram', 'Ырықсыз етіс', 'Пассивный залог', ['e9', 'e2'], 0, eq(E.fill, [
+      ['English ___ in many countries.', 'is spoken', 'speaks', 'is speaking', 'spoken'],
+      ['This bridge ___ in 1990.', 'was built', 'built', 'is built', 'has build'],
+      ['The letters ___ every morning.', 'are delivered', 'deliver', 'are delivering', 'delivered'],
+      ['The results ___ next week.', 'will be announced', 'will announce', 'are announce', 'announced'],
+      ['Paper ___ from wood.', 'is made', 'makes', 'is making', 'made is'],
+    ])],
+    ['e20', 7, 'gram', 'who/which/that сөйлемдері', 'Придаточные who/which/that', ['e3', 'e2'], 0, eq(E.fill, [
+      ['The woman ___ lives next door is a teacher.', 'who', 'which', 'what', 'whose'],
+      ['This is the phone ___ I bought yesterday.', 'that', 'who', 'what', 'whom'],
+      ['The man ___ car was stolen called the police.', 'whose', 'who', 'which', 'that'],
+      ['I like books ___ have happy endings.', 'which', 'who', 'what', 'whose'],
+      ['That\'s the place ___ we first met.', 'where', 'which', 'who', 'what'],
+    ])],
+    ['e21', 7, 'gram', 'Gerund және infinitive', 'Gerund и infinitive', ['e11'], 0, eq(E.fill, [
+      ['I enjoy ___ to music.', 'listening', 'to listen', 'listen', 'listened'],
+      ['She decided ___ medicine.', 'to study', 'studying', 'study', 'studied'],
+      ['He avoided ___ the question.', 'answering', 'to answer', 'answer', 'answered'],
+      ['We hope ___ you soon.', 'to see', 'seeing', 'see', 'seen'],
+      ['Would you mind ___ the window?', 'opening', 'to open', 'open', 'opened'],
+    ])],
+    ['e22', 7, 'vocab', 'Сөзжасам', 'Словообразование', ['e13'], 0, eq(E.form, [
+      ['The ___ of the new road took two years. (CONSTRUCT)', 'construction', 'constructive', 'constructor', 'constructed'],
+      ['Air pollution is a serious ___ problem. (ENVIRONMENT)', 'environmental', 'environment', 'environmentally', 'environmentalist'],
+      ['It is ___ to drive without a licence. (LEGAL)', 'illegal', 'unlegal', 'dislegal', 'inlegal'],
+      ['She answered the question ___. (CORRECT)', 'correctly', 'correct', 'correction', 'correctness'],
+      ['There has been a big ___ in prices. (INCREASE)', 'increase', 'increasing', 'increased', 'increasingly'],
+    ])],
+    ['e23', 7, 'vocab', 'Фразалық етістіктер', 'Фразовые глаголы', ['e13'], 0, eq(E.mean, [
+      ['Please ___ the form and give it back. (complete)', 'fill in', 'fill up', 'take in', 'give in'],
+      ['I need to ___ this word in a dictionary. (find)', 'look up', 'look after', 'look for', 'look out'],
+      ['The meeting was ___ until Friday. (postponed)', 'put off', 'put on', 'put up', 'put out'],
+      ['He ___ smoking last year. (stopped)', 'gave up', 'gave in', 'gave out', 'gave away'],
+      ['Can you ___ my cat while I\'m away? (take care of)', 'look after', 'look up', 'look into', 'look down'],
+    ])],
+    ['e24', 7, 'read', 'Нақты ақпаратты табу', 'Поиск деталей', ['e14'], 0, eq(E.read, [
+      [['The museum was founded in 1856 by a group of local doctors. Today it has over 20,000 objects and receives about 300,000 visitors a year.', 'Who founded the museum?'], 'Local doctors', 'Local teachers', 'The government', '300,000 visitors'],
+      [['The course lasts twelve weeks. Classes take place on Tuesday and Thursday evenings, and the final exam is in week thirteen.', 'When is the final exam?'], 'In week thirteen', 'In week twelve', 'On Tuesday evening', 'After twenty weeks'],
+      [['Bamboo can grow up to 91 centimetres in a single day, which makes it one of the fastest-growing plants on Earth.', 'How fast can bamboo grow?'], 'Up to 91 cm per day', 'Up to 91 cm per year', '19 cm per day', '91 metres per day'],
+      [['The survey asked 1,200 students; 64% said they used social media for more than three hours a day.', 'How many students took part?'], '1,200', '64', '3', '768'],
+    ])],
+    ['e25', 7, 'read', 'True / False / Not Given', 'True / False / Not Given', ['e14'], 0, eq(E.tfng, [
+      tf('The library opened in 2010 and now lends more than 5,000 books every month.', 'The library opened in 2010.', 'True'),
+      tf('The library opened in 2010 and now lends more than 5,000 books every month.', 'The library has a café.', 'Not Given'),
+      tf('Most of the students who took part in the study were from rural areas.', 'The majority of participants lived in cities.', 'False'),
+      tf('The new drug reduced symptoms in 70% of patients, but it was expensive to produce.', 'The drug was cheap to make.', 'False'),
+      tf('The new drug reduced symptoms in 70% of patients, but it was expensive to produce.', 'The drug will be sold in Europe next year.', 'Not Given'),
+    ])],
+    ['e26', 7, 'write', 'however, moreover, therefore', 'however, moreover, therefore', ['e15'], 0, eq(E.link, [
+      ['Public transport is cheap. ___, it reduces traffic.', 'Moreover', 'However', 'Therefore', 'Otherwise'],
+      ['The plan was expensive. ___, the council approved it.', 'However', 'Moreover', 'Therefore', 'Similarly'],
+      ['The roads were icy. ___, many flights were cancelled.', 'As a result', 'However', 'In contrast', 'For example'],
+      ['Some people prefer cities. ___, others enjoy village life.', 'On the other hand', 'Therefore', 'Moreover', 'As a result'],
+      ['Exercise improves health. ___, it can reduce stress.', 'In addition', 'However', 'Nevertheless', 'In contrast'],
+    ])],
+    ['e27', 7, 'write', 'Өсу мен кемуді сипаттау', 'Описание трендов', ['e10', 'e13'], 0, eq(E.fill, [
+      ['Sales ___ sharply from 200 to 800 units.', 'rose', 'raised', 'grew up', 'risen'],
+      ['The number of visitors ___ steadily over the decade.', 'declined', 'reduced', 'fallen', 'decreased down'],
+      ['There was a ___ in unemployment in 2020.', 'dramatic increase', 'dramatically increase', 'dramatic increasing', 'drama increase'],
+      ['Prices remained ___ at about $5.', 'stable', 'stably', 'stability', 'stabilise'],
+      ['The figure ___ a peak of 90% in 2015.', 'reached', 'arrived', 'got to up', 'achieved at'],
+    ])],
+    // ===== B2 =====
+    ['e28', 8, 'gram', 'Present Perfect Continuous', 'Present Perfect Continuous', ['e16', 'e8'], 0, eq(E.fill, [
+      ['I ___ for you for two hours!', 'have been waiting', 'am waiting', 'waited', 'have waited since'],
+      ['She looks tired because she ___ all day.', 'has been working', 'works', 'worked', 'is worked'],
+      ['How long ___ you ___ English?', 'have / been learning', 'are / learning', 'did / learn', 'do / learn'],
+      ['It ___ since morning, so the streets are wet.', 'has been raining', 'rains', 'is raining', 'rained'],
+      ['They ___ this problem for years without success.', 'have been studying', 'study', 'are studying', 'studied since'],
+    ])],
+    ['e29', 8, 'gram', 'Past Perfect', 'Past Perfect', ['e16', 'e17'], 0, eq(E.fill, [
+      ['When we arrived, the film ___.', 'had already started', 'already started', 'has already started', 'was already start'],
+      ['She was nervous because she ___ by plane before.', 'had never travelled', 'never travelled', 'has never travelled', "didn't travelled"],
+      ['After he ___ his work, he went home.', 'had finished', 'has finished', 'finishes', 'was finish'],
+      ['I realised I ___ my passport at home.', 'had left', 'have left', 'leave', 'was leaving'],
+      ['By 2010, the company ___ 500 people.', 'had employed', 'has employed', 'employs', 'is employing'],
+    ])],
+    ['e30', 8, 'gram', '3 және аралас шартты сөйлем', 'Условные 3 типа и смешанные', ['e18', 'e29'], 0, eq(E.fill, [
+      ['If I had studied harder, I ___ the exam.', 'would have passed', 'would pass', 'will pass', 'passed'],
+      ['If she ___ the bus, she wouldn\'t have been late.', "hadn't missed", "didn't miss", "wouldn't miss", "hasn't missed"],
+      ['If I had taken the job, I ___ in London now.', 'would be living', 'would have lived', 'will live', 'lived'],
+      ['We ___ the match if our best player hadn\'t been injured.', 'might have won', 'might win', 'will win', 'won'],
+      ['If he were more careful, he ___ the accident yesterday.', "wouldn't have had", "wouldn't have", "won't have", "didn't have"],
+    ])],
+    ['e31', 8, 'gram', 'Модальмен ырықсыз етіс', 'Пассив с модальными и перфектом', ['e19', 'e11'], 0, eq(E.fill, [
+      ['The report must ___ by Friday.', 'be finished', 'finish', 'finished', 'be finishing'],
+      ['The road has ___ for repairs.', 'been closed', 'closed', 'be closed', 'being closed'],
+      ['This problem should have ___ earlier.', 'been solved', 'solved', 'be solved', 'solving'],
+      ['The new rules are ___ next month.', 'being introduced', 'introducing', 'introduce', 'been introduced'],
+      ['Mobile phones may not ___ in the exam room.', 'be used', 'use', 'used', 'being used'],
+    ])],
+    ['e32', 8, 'gram', 'Төлеу сөз (Reported speech)', 'Косвенная речь', ['e29', 'e12'], 0, eq(E.choose, [
+      ['"I am tired," she said.', 'She said that she was tired.', 'She said that she is tired yesterday.', 'She said me she was tired.', 'She told that she was tired.'],
+      ['"We will call you tomorrow," they said.', 'They said they would call me the next day.', 'They said they will call me tomorrow day.', 'They told they would call me.', 'They said they called me tomorrow.'],
+      ['"Where do you live?" he asked.', 'He asked where I lived.', 'He asked where did I live.', 'He asked where do I live.', 'He asked me where I live?'],
+      ['"I have finished the essay," Tom said.', 'Tom said he had finished the essay.', 'Tom said he has finish the essay.', 'Tom told he finished the essay.', 'Tom said me he had finished the essay.'],
+    ])],
+    ['e33', 8, 'gram', 'Қосымша анықтауыш сөйлем (non-defining)', 'Неопределительные придаточные', ['e20'], 0, eq(E.choose, [
+      ['Add extra information about my brother:', 'My brother, who lives in Paris, is a chef.', 'My brother who lives in Paris, is a chef.', 'My brother, that lives in Paris, is a chef.', 'My brother, who lives in Paris is a chef.'],
+      ['Add extra information about Astana:', 'Astana, which became the capital in 1997, has grown fast.', 'Astana, that became the capital in 1997, has grown fast.', 'Astana which became the capital in 1997, has grown fast.', 'Astana, what became the capital in 1997, has grown fast.'],
+      ['Add extra information about the project:', 'The project, which cost $2 million, was cancelled.', 'The project, that cost $2 million, was cancelled.', 'The project, who cost $2 million, was cancelled.', 'The project which, cost $2 million was cancelled.'],
+      ['Add extra information about Dr Lee:', 'Dr Lee, whose book I read, is speaking today.', 'Dr Lee, who book I read, is speaking today.', 'Dr Lee, that book I read, is speaking today.', 'Dr Lee whose book, I read is speaking today.'],
+    ])],
+    ['e34', 8, 'vocab', 'Академиялық сөздік', 'Академическая лексика', ['e22'], 0, eq(E.mean, [
+      ['The government plans to ___ new taxes. (bring in)', 'introduce', 'produce', 'reduce', 'induce'],
+      ['Scientists ___ the data carefully. (studied in detail)', 'analysed', 'ignored', 'invented', 'removed'],
+      ['There is a strong ___ between diet and health. (link)', 'correlation', 'collection', 'collision', 'conclusion'],
+      ['The results were not ___ with earlier studies. (in agreement)', 'consistent', 'constant', 'considerable', 'conscious'],
+      ['Many factors ___ to climate change. (help cause)', 'contribute', 'distribute', 'attribute', 'constitute'],
+    ])],
+    ['e35', 8, 'vocab', 'Перифраз және синонимдер', 'Перефраз и синонимы', ['e34'], 0, eq(E.mean, [
+      ['"The number of tourists went up a lot."', 'There was a significant rise in tourist numbers.', 'Tourists went up the mountain.', 'There were not many tourists.', 'Tourists were a lot of numbers.'],
+      ['"Young people use phones too much."', 'Excessive phone use is common among young people.', 'Young people do not have phones.', 'Phones are too expensive for young people.', 'Older people use phones more.'],
+      ['"Cars make the air dirty."', 'Vehicles contribute to air pollution.', 'Cars clean the air.', 'Air is used by cars.', 'Dirty cars need washing.'],
+      ['"Many people think that..."', 'It is widely believed that...', 'Nobody thinks that...', 'People think many that...', 'It is rarely believed that...'],
+    ])],
+    ['e36', 8, 'read', 'Matching headings', 'Matching headings', ['e25', 'e24'], 0, eq(E.head, [
+      [['Many cities now offer free buses at night. Officials say the aim is to reduce drink-driving and help shift workers get home safely.'], 'Reasons for free night transport', 'The history of buses', 'Problems with day trains', 'Why workers prefer cars'],
+      [['Although solar panels are cheaper than ever, many households still cannot afford the installation costs, and some roofs are unsuitable.'], 'Obstacles to using solar power at home', 'How solar panels are made', 'The falling price of electricity', 'Benefits of new roofs'],
+      [['Researchers followed 5,000 children for twenty years and found that those who read for pleasure had larger vocabularies as adults.'], 'Long-term effects of reading for pleasure', 'How to choose a children\'s book', 'Problems in modern schools', 'Why adults stop reading'],
+      [['Bees pollinate around a third of the crops we eat. Without them, the price of fruit and vegetables would rise dramatically.'], 'The economic importance of bees', 'How bees make honey', 'Types of fruit in supermarkets', 'Why bees sting'],
+    ])],
+    ['e37', 8, 'read', 'Автордың көзқарасы', 'Позиция автора', ['e25'], 0, eq(E.read, [
+      [['Supporters claim that homework improves discipline, yet there is surprisingly little evidence that it raises results in primary school.', 'What is the writer\'s view?'], 'Doubtful about the value of homework for young pupils', 'Strongly in favour of more homework', 'Neutral and has no opinion', 'Angry with primary teachers'],
+      [['It would be naive to think that a single policy could solve traffic congestion; a combination of measures is clearly needed.', 'What does the writer believe?'], 'Several measures are required', 'One policy will be enough', 'Traffic is not a problem', 'Policies are useless'],
+      [['The new museum is, admittedly, expensive to visit, but the quality of its exhibitions more than justifies the price.', 'What is the writer\'s attitude?'], 'Positive overall', 'Mainly negative', 'Uninterested', 'Confused'],
+      [['Critics dismiss online learning as a poor substitute for the classroom, but this view ignores the flexibility it offers working adults.', 'What does the writer suggest?'], 'Critics overlook an advantage of online learning', 'Online learning should be banned', 'Classrooms are always better', 'Working adults dislike flexibility'],
+    ])],
+    ['e38', 8, 'write', 'Деректерді салыстыру', 'Сравнение данных', ['e27', 'e10'], 0, eq(E.fill, [
+      ['Men spent 3 hours online, ___ women spent 5 hours.', 'whereas', 'despite', 'because of', 'in spite'],
+      ['The number of cars in 2020 was ___ that in 2000. (2 × more)', 'twice as high as', 'two times higher', 'double higher than', 'twice higher as'],
+      ['Germany produced ___ energy than France.', 'slightly more', 'slightly much', 'more slightly', 'a slightly'],
+      ['___ Japan, China saw a sharp rise.', 'Unlike', 'Like as', 'Different', 'Whereas'],
+      ['Spending on food was ___ to spending on transport, at about 20%.', 'similar', 'same', 'like', 'equally'],
+    ])],
+    ['e39', 8, 'write', 'Эссе құрылымы', 'Структура эссе', ['e26'], 0, eq(E.acad, [
+      [['Task: "Some people think university should be free. Discuss."', 'Which is the best thesis statement?'], 'This essay will argue that free university benefits society, although some costs should be shared.', 'University is a big building.', 'I want to talk about many things.', 'Free things are good and bad and also interesting.'],
+      [['Which sentence is the best topic sentence for a body paragraph?'], 'One major advantage of remote work is that it saves commuting time.', 'Also there are many other things too.', 'In conclusion, remote work is good.', 'My friend works from home.'],
+      [['What should a conclusion in IELTS Task 2 do?'], 'Summarise the main points and restate the opinion', 'Introduce a completely new argument', 'Give a personal story only', 'Repeat the question word for word'],
+      [['Which is the best way to start an introduction?'], 'Paraphrase the question and state your position', 'Copy the task exactly', 'Start with a joke', 'Write a list of examples'],
+    ])],
+    ['e40', 8, 'write', 'Сілтеме сөздер: this, which, the former', 'Связность: this, which, the former', ['e26', 'e33'], 0, eq(E.fill, [
+      ['Prices rose by 40%. ___ increase affected poor families most.', 'This', 'These', 'That is', 'It\'s'],
+      ['Cities and villages both have problems; ___ suffer from traffic, the latter from lack of jobs.', 'the former', 'the first one', 'formerly', 'the latter'],
+      ['Many students work part-time, ___ can affect their studies.', 'which', 'that', 'what', 'who'],
+      ['The government built new schools. ___ were opened in 2022.', 'These', 'This', 'Which', 'That'],
+      ['Some experts disagree with ___ view.', 'this', 'these', 'those', 'which'],
+    ])],
+    // ===== C1 =====
+    ['e41', 9, 'gram', 'Инверсия', 'Инверсия', ['e30'], 0, eq(E.fill, [
+      ['Not only ___ the exam, but she also got the highest score.', 'did she pass', 'she passed', 'she did pass', 'passed she'],
+      ['Rarely ___ such a beautiful sunset.', 'have I seen', 'I have seen', 'I saw', 'saw I'],
+      ['___ I known about the traffic, I would have left earlier.', 'Had', 'If', 'Have', 'Did'],
+      ['Under no circumstances ___ open this door.', 'should you', 'you should', 'you must', 'must not you'],
+      ['No sooner ___ home than it started to rain.', 'had we arrived', 'we had arrived', 'we arrived', 'did we arrived'],
+    ])],
+    ['e42', 9, 'gram', 'Екпін құрылымдары', 'Эмфатические конструкции', ['e33'], 0, eq(E.choose, [
+      ['Emphasise the cause: "Poor planning caused the delay."', 'It was poor planning that caused the delay.', 'It was the delay what caused poor planning.', 'What caused was poor planning the delay.', 'Poor planning it was caused the delay.'],
+      ['Emphasise what you need: "I need more time."', 'What I need is more time.', 'What I need it is more time.', 'That I need is more time.', 'It is need I more time.'],
+      ['Emphasise the person: "Maria found the answer."', 'It was Maria who found the answer.', 'It was Maria which found the answer.', 'Who found the answer it was Maria.', 'Maria was it who found.'],
+      ['Emphasise the action: "He forgot to save the file."', 'What he did was forget to save the file.', 'What he did was forgot saving the file.', 'He did what was forget the file.', 'It was forget that he did.'],
+    ])],
+    ['e43', 9, 'gram', 'Hedging: may, tends to, it is likely', 'Hedging: may, tends to, it is likely', ['e31', 'e11'], 0, eq(E.acad, [
+      ['Choose the most appropriately cautious claim.', 'Social media may contribute to anxiety among teenagers.', 'Social media always causes anxiety.', 'Social media is 100% the reason for anxiety.', 'Everyone knows social media destroys teenagers.'],
+      ['Choose the most academic hedge.', 'Older people tend to read more newspapers.', 'Old people read newspapers, period.', 'All old people love newspapers.', 'Old people read newspapers a lot, obviously.'],
+      ['Choose the best cautious conclusion.', 'It is likely that prices will continue to rise.', 'Prices will definitely rise forever.', 'Prices rise, end of story.', 'Nobody can say anything about prices.'],
+      ['Choose the most balanced statement.', 'This evidence suggests that the policy was partly effective.', 'This proves the policy is perfect.', 'The policy was totally useless.', 'Evidence shows everything about the policy.'],
+    ])],
+    ['e44', 9, 'vocab', 'Номинализация', 'Номинализация', ['e34', 'e22'], 0, eq(E.acad, [
+      ['"Prices increased quickly, and this worried people." → more academic:', 'The rapid increase in prices caused concern.', 'Prices quickly increased worried.', 'Increasing quick prices were worry.', 'People were worried because prices go up fast.'],
+      ['"Scientists discovered the virus, so they could develop a vaccine." → more academic:', 'The discovery of the virus enabled the development of a vaccine.', 'Scientists discover virus and vaccine developing.', 'Discovering scientists made vaccine.', 'The virus discovered scientists for a vaccine.'],
+      ['"If we reduce waste, the environment will improve." → more academic:', 'A reduction in waste would lead to environmental improvement.', 'Reduce waste environment improves.', 'Waste reducing will improving environment.', 'If waste is reduce, environment improve.'],
+      ['"People are using more energy." → more academic:', 'Energy consumption is increasing.', 'Energy is using more people.', 'People energy more use.', 'More energy people are using it.'],
+    ])],
+    ['e45', 9, 'vocab', 'Академиялық тіркестер', 'Академические коллокации', ['e34', 'e13'], 0, eq(E.fill, [
+      ['The study ___ light on the causes of the disease.', 'sheds', 'makes', 'gives', 'does'],
+      ['These findings ___ a significant role in policy-making.', 'play', 'make', 'do', 'have'],
+      ['The government must ___ measures to reduce crime.', 'take', 'make', 'do', 'put'],
+      ['The results ___ serious questions about safety.', 'raise', 'rise', 'arise', 'lift'],
+      ['This approach has ___ criticism from experts.', 'attracted', 'pulled', 'made', 'done'],
+    ])],
+    ['e46', 9, 'read', 'Күрделі аргумент', 'Сложная аргументация', ['e37', 'e36'], 0, eq(E.read, [
+      [['While it is tempting to attribute rising obesity solely to individual choice, such an explanation overlooks the role of food marketing, urban design and income inequality.', 'What is the writer\'s main argument?'], 'Obesity has several social causes, not only personal choice', 'Obesity is only caused by personal choice', 'Food marketing has no effect', 'Income has nothing to do with health'],
+      [['Far from being a waste of resources, space exploration has produced technologies — from water filters to medical imaging — that we now take for granted.', 'How does the writer view space exploration?'], 'As useful because of its practical benefits', 'As a waste of money', 'As dangerous for health', 'As too expensive to continue'],
+      [['The policy was hailed as a success, but its apparent effect may simply reflect a wider economic recovery that began a year earlier.', 'What is the writer questioning?'], 'Whether the policy really caused the improvement', 'Whether there was an economic recovery', 'Whether the policy existed', 'Whether success is important'],
+      [['Admittedly, standardised tests are efficient; nevertheless, they reward a narrow range of skills and may disadvantage creative students.', 'What is the writer\'s overall position?'], 'Critical of standardised tests despite one advantage', 'Fully supportive of standardised tests', 'Against all forms of testing', 'Not interested in testing'],
+    ])],
+    ['e47', 9, 'write', 'Task 2: дәлелді эссе', 'Task 2: аргументация', ['e39', 'e43', 'e40'], 0, eq(E.acad, [
+      [['Which body paragraph sentence is best developed for IELTS Task 2?'], 'For instance, Finland, which abolished most homework, still ranks among the top countries in PISA, suggesting that homework may not be essential.', 'Homework is bad. Very bad. Everyone hates it.', 'There are many reasons and also other reasons.', 'In my opinion I think that homework is a thing.'],
+      [['Which sentence best acknowledges and answers the opposing view?'], 'Although critics argue that taxes on sugar hurt the poor, the revenue could fund free healthy meals in schools.', 'Some people disagree but they are wrong.', 'Taxes are taxes and sugar is sugar.', 'There is no other opinion about this topic.'],
+      [['Which conclusion is most effective?'], 'In conclusion, while technology brings risks, its benefits for education clearly outweigh them if it is used responsibly.', 'In conclusion, I have written about technology.', 'Technology. Education. The end.', 'Finally, another new point is that robots are cool.'],
+      [['Which sentence uses cohesion most effectively?'], 'This trend, which has accelerated since 2010, has serious consequences for rural areas.', 'This is trend and it is fast and it is bad.', 'Which trend accelerated 2010 consequences.', 'The trend. It accelerated. Since 2010.'],
+    ])],
+  ];
+
   // ---------- graph builder (one per subject) ----------
   function makeGraph(key, raw, strands, depth) {
     const TOPICS = raw.map(([id, grade, strand, kk, ru, pre, unt, gen]) => ({ id, grade, strand, name: { kk, ru }, pre, unt: !!unt, gen }));
@@ -1945,6 +2289,7 @@ const CORE = (() => {
     hist: makeGraph('hist', RAW_HIST, ['skill', 'anc', 'med', 'cult', 'mong', 'khan', 'col', 'sov', 'ind'], 2),
     mlit: makeGraph('mlit', RAW_MLIT, ['arith', 'unit', 'frac', 'pct', 'ratio', 'motion', 'data', 'logic', 'geo', 'comb'], Infinity),
     inf: makeGraph('inf', RAW_INF, ['info', 'hw', 'file', 'data', 'num', 'logic', 'alg', 'py', 'sheet', 'db', 'net', 'sec'], Infinity),
+    eng: makeGraph('eng', RAW_ENG, ['gram', 'vocab', 'read', 'write'], Infinity),
   };
 
   // ---------- seeded RNG ----------
@@ -2038,7 +2383,35 @@ const CORE = (() => {
     return e;
   }
 
-  return { SUBJ, Engine, rng, simulate, truthFromRoots, L, M };
+  // ---------- CEFR estimate (IELTS graph: grade 5..9 = A1..C1) ----------
+  const CEFR = { 4: ['A0', '<3'], 5: ['A1', '3'], 6: ['A2', '3.5–4'], 7: ['B1', '4.5–5.5'], 8: ['B2', '6–6.5'], 9: ['C1', '7–8'] };
+  function cefr(G, res) {
+    let lvl = 4;
+    for (const g of [5, 6, 7, 8, 9]) {
+      const ts = G.TOPICS.filter(t => t.grade === g);
+      if (!ts.length || ts.filter(t => res.st[t.id] === 'known').length / ts.length < 0.6) break;
+      lvl = g;
+    }
+    return { lvl, label: CEFR[lvl][0], band: CEFR[lvl][1] };
+  }
+  // ---------- groups of students by level: [{ key, n, names, topRoot }] ----------
+  function groupStudents(G, list) {
+    const eng = G.key === 'eng', order = eng ? ['A0', 'A1', 'A2', 'B1', 'B2', 'C1'] : ['low', 'mid', 'high'];
+    const keyOf = res => {
+      if (eng) return cefr(G, res).label;
+      const tot = res.known + res.gaps.length + res.unknown, m = tot ? res.known / tot : 0;
+      return m < 0.5 ? 'low' : m < 0.8 ? 'mid' : 'high';
+    };
+    const by = {};
+    list.forEach(({ name, res }) => { const k = keyOf(res); (by[k] = by[k] || []).push({ name, root: res.roots[0] || null }); });
+    return order.filter(k => by[k]).map(k => {
+      const cnt = new Map(); by[k].forEach(s => { if (s.root) cnt.set(s.root, (cnt.get(s.root) || 0) + 1); });
+      let topRoot = null, best = 0; cnt.forEach((v, id) => { if (v > best) { best = v; topRoot = id; } });
+      return { key: k, n: by[k].length, names: by[k].map(s => s.name), topRoot };
+    });
+  }
+
+  return { SUBJ, Engine, rng, simulate, truthFromRoots, cefr, groupStudents, L, M };
 })();
 if (typeof module !== 'undefined') module.exports = CORE;
 
@@ -2047,10 +2420,15 @@ if (typeof module !== 'undefined') module.exports = CORE;
 (() => {
 const fc = document.getElementById('fontCss');
 if (fc) { const on = () => { fc.media = 'all'; }; if (fc.sheet) on(); else fc.addEventListener('load', on); }
-const { SUBJ, Engine, rng, truthFromRoots, simulate } = CORE;
+const { SUBJ, Engine, rng, truthFromRoots, simulate, cefr, groupStudents } = CORE;
 const NAMES = ['Әлихан Б.', 'Аружан С.', 'Нұрсұлтан К.', 'Айым Т.', 'Дияс М.', 'Томирис Ж.', 'Ерасыл А.', 'Мадина Е.', 'Бекзат Н.', 'Жансая О.', 'Арман Қ.', 'Әйгерім Р.', 'Санжар Д.', 'Дана Ш.', 'Ислам Ғ.', 'Камила Х.', 'Ернұр П.', 'Інжу Ә.', 'Данияр Ы.', 'Аяулым Ү.', 'Темірлан Ө.', 'Меруерт Л.', 'Алмас И.', 'Сабина Ұ.', 'Рахат В.', 'Асель Г.'];
 const L2 = (kk, ru) => ({ kk, ru });
 const SM = {
+  eng: { name: L2('IELTS (ағылшын тілі)', 'IELTS (английский язык)'), unt: L2('IELTS: Academic және General', 'IELTS: Academic и General'),
+    hook: L2('Writing-тегі B2 деңгейіндегі қате көбіне A2 грамматикасынан басталады.', 'Ошибка уровня B2 во Writing часто начинается с грамматики A2.'),
+    demo: ['e9', 'e22'], sim: 98,
+    note: L2('Деңгей Grammar, Vocabulary, Reading және Writing дағдылары бойынша бағаланады; Listening мен Speaking тексерілмейді.', 'Уровень оценивается по Grammar, Vocabulary, Reading и навыкам Writing; Listening и Speaking не проверяются.'),
+    weights: [['e9', .2], ['e16', .25], ['e18', .15], ['e22', .18], ['e25', .2], ['e26', .15], ['e13', .1], ['e29', .12], ['e33', .1], ['e35', .08]] },
   math: { name: L2('Математика (алгебра)', 'Математика (алгебра)'), unt: L2('ҰБТ: бейіндік пән', 'ЕНТ: профильный предмет'),
     hook: L2('9-сыныптағы алгебра қатесі көбіне 6-сыныптан басталады.', 'Ошибка по алгебре в 9 классе часто начинается в 6-м.'),
     demo: ['q2', 'k1'], sim: 96,
@@ -2069,7 +2447,7 @@ const SM = {
     demo: ['in8', 'in10'], sim: 94,
     weights: [['in8', .25], ['in7', .18], ['in10', .2], ['in5', .15], ['in12', .12], ['in11', .15], ['in25', .12], ['in18', .1], ['in6', .08]] },
 };
-const SUBJ_KEYS = ['math', 'hist', 'mlit', 'inf'];
+const SUBJ_KEYS = ['eng', 'math', 'hist', 'mlit', 'inf'];
 const ICONS = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>', play: '<path d="M7 5v14l11-7z"/>', pause: '<path d="M8 5v14M16 5v14"/>',
   skip: '<path d="M6 5l10 7-10 7zM18 5v14"/>', flag: '<path d="M5 21V4h11l-2 4 2 4H5"/>', help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>',
@@ -2079,6 +2457,7 @@ const ICONS = {
 Object.assign(ICONS, { users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.7.8 2.7 2.5 3 5.2"/>', code: '<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>' });
 const ico = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 const SUBJ_ICON = {
+  eng: '<path d="M4 6h9M8.5 4v2M6 6c0 4 3 7 6 8M11 6c-1 4-4 7-7 8"/><path d="M13 20l4-9 4 9M14.5 17h5"/>',
   math: '<path d="M4 4v16h16"/><path d="M7 15c2.5-7 5-7 7-3.5S18 14 20 7"/>',
   hist: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5V9M12 15v5.5M3.5 12H9M15 12h5.5M6 6l3.9 3.9M14.1 14.1L18 18M18 6l-3.9 3.9M9.9 14.1L6 18"/>',
   mlit: '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
@@ -2123,7 +2502,7 @@ const I = {
     rRecheck: '<b>Қайта тексеру.</b> Жауаптар бір-біріне қайшы, сондықтан бұл тақырып жаңа сұрақпен тексеріледі.',
     lOk: 'дұрыс', lBad: 'қате', lDk: 'білмеймін', lRoot: x => `Түбір табылды: ${x}`,
     virt: 'Виртуал оқушы', student: 'Оқушы', demoBadge: 'мысал', resTitle: n => `${n}: нәтиже`,
-    tKnown: 'Меңгерген тақырып', tGaps: 'Олқылығы бар тақырып', tRoots: 'Түбір олқылық', tReady: 'ҰБТ тақырыптарын меңгеру',
+    tKnown: 'Меңгерген тақырып', tGaps: 'Олқылығы бар тақырып', tRoots: 'Түбір олқылық', tReady: 'ҰБТ тақырыптарын меңгеру', tLevel: 'Шамамен деңгей (CEFR)',
     rootsTitle: 'Түбір олқылықтар', rootsLead: 'Олқылықтар осы тақырыптардан басталады. Соларды жапқанда, жоғарыдағы тақырыптар да жеңілдейді.',
     impact: n => `Осыған тәуелді ${n} тақырыпта олқылық бар`, probable: 'ықтимал түбір',
     noGaps: 'Тексерілген тақырыптарда олқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі есептер.',
@@ -2150,10 +2529,10 @@ const I = {
     courseTitle: 'Олқылық тақырыптары және курстар', courseLead: 'Олқылығы бар тақырыптар біздің курстар бойынша топталды: оқушыға дәл қай курс керек екені көрінеді.',
     example: 'мысал', lessons: n => `${n} сабақ`, yourGaps: n => `Оқушының осы курстағы олқылығы: ${n} тақырып`, courseIn: 'Курс', priceNote: 'Курстар мен бағалар мысал ретінде берілген, оларды өз курстарыңызға ауыстыруға болады.',
     parent: o => o.gaps === 0
-      ? `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\nОлқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі тапсырмалар.`
-      : `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\nМеңгерген: ${o.known} тақырып. Олқылық: ${o.gaps} тақырып.\nНегізгі себеп: ${o.rootGrade} сыныптағы «${o.root}» тақырыбы. Осыған байланысты тағы ${o.impact} тақырыпта қиындық бар${o.top ? `, соның ішінде «${o.top}»` : ''}.\nҰсыныс: алдымен «${o.root}» тақырыбын қайталау (1–2 сабақ), содан кейін жеке жоспар бойынша: ${o.path} тақырып, шамамен ${o.weeks} апта.`,
+      ? `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\nОлқылық табылмады. Келесі қадам: IELTS форматындағы сынақ тесттері.` : 'Олқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі тапсырмалар.'}`
+      : `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\n` : ''}Меңгерген: ${o.known} тақырып. Олқылық: ${o.gaps} тақырып.\nНегізгі себеп: ${o.rootGrade}${o.eng ? ' деңгейіндегі' : 'тағы'} «${o.root}» тақырыбы. Осыған байланысты тағы ${o.impact} тақырыпта қиындық бар${o.top ? `, соның ішінде «${o.top}»` : ''}.\nҰсыныс: алдымен «${o.root}» тақырыбын қайталау (1–2 сабақ), содан кейін жеке жоспар бойынша: ${o.path} тақырып, шамамен ${o.weeks} апта.`,
     clsTitle: '9 «Б» сыныбы', clsSub: n => `${n} оқушы · мысал деректер: әр оқушыға диагностика симуляцияланды`,
-    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cTop: 'Ең жиі түбір',
+    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cDeepEng: 'Түбірі A1–A2 деңгейінде', cTop: 'Ең жиі түбір',
     cRootsTitle: 'Сыныптағы түбір олқылықтар', cRootsLead: 'Пайыз: осы түбір олқылығы бар оқушылар үлесі.',
     recTitle: 'Мұғалімге ұсыныс', rec: (x, p, n) => `Сыныптың ${p}%-ының түбір олқылығы «${x}» тақырыбында. Келесі аптада осы тақырыпқа 1–2 қайталау сабағын берсеңіз, оған тікелей тәуелді ${n} тақырыптағы нәтиже де көтеріледі.`,
     rec2: (x, p) => `Екінші орында: «${x}» (${p}%). Бұл оқушыларды бөлек топқа бөліп, 15 минуттық тапсырма беруге болады.`,
@@ -2184,7 +2563,7 @@ const I = {
     rRecheck: '<b>Перепроверка.</b> Ответы противоречат друг другу, поэтому тема проверяется новым вопросом.',
     lOk: 'верно', lBad: 'ошибка', lDk: 'не знаю', lRoot: x => `Найден корень: ${x}`,
     virt: 'Виртуальный ученик', student: 'Ученик', demoBadge: 'пример', resTitle: n => `${n}: результат`,
-    tKnown: 'Освоено тем', tGaps: 'Тем с пробелами', tRoots: 'Корневые пробелы', tReady: 'Освоено тем ЕНТ',
+    tKnown: 'Освоено тем', tGaps: 'Тем с пробелами', tRoots: 'Корневые пробелы', tReady: 'Освоено тем ЕНТ', tLevel: 'Примерный уровень (CEFR)',
     rootsTitle: 'Корневые пробелы', rootsLead: 'С этих тем начинаются пробелы. Закрыв их, ученику станет легче и в темах выше.',
     impact: n => `Зависимых тем с пробелами: ${n}`, probable: 'вероятный корень',
     noGaps: 'В проверенных темах пробелов не найдено. Следующий шаг: задачи уровня ЕНТ.',
@@ -2211,10 +2590,10 @@ const I = {
     courseTitle: 'Темы с пробелами и курсы', courseLead: 'Темы с пробелами сгруппированы по нашим курсам: видно, какой курс нужен именно этому ученику.',
     example: 'пример', lessons: n => `Уроков: ${n}`, yourGaps: n => `Пробелов ученика в этом курсе: ${n}`, courseIn: 'Курс', priceNote: 'Курсы и цены даны для примера, их можно заменить на ваши.',
     parent: o => o.gaps === 0
-      ? `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\nПробелов не найдено. Следующий шаг: задания уровня ЕНТ.`
-      : `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\nОсвоено тем: ${o.known}. Тем с пробелами: ${o.gaps}.\nГлавная причина: тема «${o.root}» (${o.rootGrade} класс). Из-за неё есть трудности и в зависимых темах (${o.impact})${o.top ? `, в том числе «${o.top}»` : ''}.\nРекомендация: сначала повторить «${o.root}» (1–2 урока), затем идти по личному плану (тем: ${o.path}, примерно ${o.weeks} нед.).`,
+      ? `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\nПробелов не найдено. Следующий шаг: пробные тесты в формате IELTS.` : 'Пробелов не найдено. Следующий шаг: задания уровня ЕНТ.'}`
+      : `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\n` : ''}Освоено тем: ${o.known}. Тем с пробелами: ${o.gaps}.\nГлавная причина: тема «${o.root}» (${o.rootGrade}). Из-за неё есть трудности и в зависимых темах (${o.impact})${o.top ? `, в том числе «${o.top}»` : ''}.\nРекомендация: сначала повторить «${o.root}» (1–2 урока), затем идти по личному плану (тем: ${o.path}, примерно ${o.weeks} нед.).`,
     clsTitle: '9 «Б» класс', clsSub: n => `Учеников: ${n} · пример данных: диагностика смоделирована для каждого ученика`,
-    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cTop: 'Самый частый корень',
+    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cDeepEng: 'Корень на уровне A1–A2', cTop: 'Самый частый корень',
     cRootsTitle: 'Корневые пробелы класса', cRootsLead: 'Процент: доля учеников с этим корневым пробелом.',
     recTitle: 'Рекомендация учителю', rec: (x, p, n) => `У ${p}% класса корневой пробел в теме «${x}». Если на следующей неделе дать 1–2 урока повторения, вырастут результаты и в непосредственно зависимых темах (${n}).`,
     rec2: (x, p) => `На втором месте: «${x}» (${p}%). Этих учеников можно выделить в отдельную группу и дать 15-минутное задание.`,
@@ -2225,8 +2604,9 @@ const I = {
 };
 const T = () => I[lang];
 const tr = o => (o == null ? '' : typeof o === 'string' ? o : o[lang]);
-const gl = g => (g > 9 ? T().g1011 + (lang === 'kk' ? ' сынып' : ' класс') : lang === 'kk' ? `${g} сынып` : `${g} класс`);
-const gs = g => (lang === 'kk' ? `${g} сын.` : `${g} кл.`);
+const CEFR_L = { 4: 'A0', 5: 'A1', 6: 'A2', 7: 'B1', 8: 'B2', 9: 'C1' };
+const gl = (g, G) => (G && G.key === 'eng' ? CEFR_L[g] : g > 9 ? T().g1011 + (lang === 'kk' ? ' сынып' : ' класс') : lang === 'kk' ? `${g} сынып` : `${g} класс`);
+const gs = (g, G) => (G && G.key === 'eng' ? CEFR_L[g] : lang === 'kk' ? `${g} сын.` : `${g} кл.`);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = s => document.querySelector(s);
 const MON = { kk: ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'], ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'] };
@@ -2260,7 +2640,7 @@ function wrap(s, max) {
 function graphSVG(G, o = {}) {
   const { st, heat, cur, mini, roots } = o, { POS, EDGES, VW, VH } = layout(G);
   let s = `<svg viewBox="0 0 ${VW} ${VH}" ${mini ? 'aria-hidden="true"' : `role="group" aria-label="${esc(sname(G))}"`}>`, first = true;
-  G.grades.forEach((g, ci) => { s += `<text class="gh" x="${PX + ci * CP + 2}" y="28">${esc(gl(g))}</text>`; });
+  G.grades.forEach((g, ci) => { s += `<text class="gh" x="${PX + ci * CP + 2}" y="28">${esc(gl(g, G))}</text>`; });
   EDGES.forEach(([a, b]) => {
     const A = POS[a], B = POS[b]; let d;
     if (G.BY[a].grade === G.BY[b].grade) { const x = A.x + NW, y1 = A.y + NH / 2, y2 = B.y + NH / 2; d = `M${x} ${y1} C${x + 24} ${y1} ${x + 24} ${y2} ${x} ${y2}`; }
@@ -2275,7 +2655,7 @@ function graphSVG(G, o = {}) {
     const lines = heat ? [wrap(nm(G, t.id), 23)[0], sub] : wrap(nm(G, t.id), 23);
     const y0 = lines.length === 1 ? p.y + NH / 2 + 5 : p.y + 19;
     const k = st ? (st[t.id] === 'gap' && roots && roots.has(t.id) ? 'root' : st[t.id]) : null;
-    const label = nm(G, t.id) + ' · ' + gl(t.grade) + (k ? ' · ' + T().st[k] : heat ? ' · ' + sub : '');
+    const label = nm(G, t.id) + ' · ' + gl(t.grade, G) + (k ? ' · ' + T().st[k] : heat ? ' · ' + sub : '');
     s += `<g class="${cls}" data-id="${t.id}"${mini ? '' : ` role="button" aria-label="${esc(label)}" tabindex="${first ? 0 : -1}"`}><rect x="${p.x}" y="${p.y}" width="${NW}" height="${NH}" rx="8"${style}/>`;
     first = false;
     lines.forEach((ln, i) => { s += `<text x="${p.x + 10}" y="${y0 + i * 16}" aria-hidden="true">${esc(ln)}</text>`; });
@@ -2291,7 +2671,7 @@ function graphSVG(G, o = {}) {
 function legendHTML(G) {
   const Lg = T().lg, allUnt = G.TOPICS.every(x => x.unt);
   const gsv = d => `<svg viewBox="0 0 10 10" aria-hidden="true"><path d="${d}"/></svg>`;
-  return `<div class="legend"><span><i class="l-known">${gsv('M1 5l3 3 5-6')}</i>${Lg.known}</span><span><i class="l-gap">${gsv('M2 2l6 6M8 2l-6 6')}</i>${Lg.gap}</span><span><i class="l-root">${gsv('M5 1v5M5 8.5v.5')}</i>${Lg.root}</span><span><i class="l-unk"></i>${Lg.unknown}</span><span><i class="l-na"></i>${Lg.na}</span>${allUnt ? '' : `<span><i class="l-unt"></i>${Lg.unt}</span>`}</div>`;
+  return `<div class="legend"><span><i class="l-known">${gsv('M1 5l3 3 5-6')}</i>${Lg.known}</span><span><i class="l-gap">${gsv('M2 2l6 6M8 2l-6 6')}</i>${Lg.gap}</span><span><i class="l-root">${gsv('M5 1v5M5 8.5v.5')}</i>${Lg.root}</span><span><i class="l-unk"></i>${Lg.unknown}</span><span><i class="l-na"></i>${Lg.na}</span>${allUnt || !G.TOPICS.some(x => x.unt) ? '' : `<span><i class="l-unt"></i>${Lg.unt}</span>`}</div>`;
 }
 function bindMap(G, box, detailEl, getState) {
   const svg = box.querySelector('svg'); let selected = null;
@@ -2329,13 +2709,13 @@ function stKey(id, s) { if (!s) return null; let k = s.st[id]; if (k === 'gap' &
 const CHIP = { known: 'ok', gap: 'gap', root: 'root' };
 function detailHTML(G, id, s) {
   const t = G.BY[id], Lx = T(), k = stKey(id, s);
-  const pre = t.pre.length ? `<ul>${t.pre.map(p => `<li>${esc(gs(G.BY[p].grade))} · ${esc(nm(G, p))}${s ? ` <span class="chip ${CHIP[stKey(p, s)] || ''}">${esc(Lx.st[stKey(p, s)] || '')}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${Lx.none}</p>`;
-  return `<div class="row"><span class="chip">${esc(gl(t.grade))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}${k ? `<span class="chip ${CHIP[k] || ''}">${esc(Lx.st[k])}</span>` : ''}</div>
+  const pre = t.pre.length ? `<ul>${t.pre.map(p => `<li>${esc(gs(G.BY[p].grade, G))} · ${esc(nm(G, p))}${s ? ` <span class="chip ${CHIP[stKey(p, s)] || ''}">${esc(Lx.st[stKey(p, s)] || '')}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${Lx.none}</p>`;
+  return `<div class="row"><span class="chip">${esc(gl(t.grade, G))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}${k ? `<span class="chip ${CHIP[k] || ''}">${esc(Lx.st[k])}</span>` : ''}</div>
     <h3>${esc(nm(G, id))}</h3><div class="lbl">${Lx.pre}</div>${pre}<p class="muted">${Lx.deps(t.kids.length)}</p>`;
 }
 
 // ---------- state ----------
-const S = { view: 'home', subj: 'math', clsSubj: 'math', grade: 9, name: '', test: null, result: null, cls: {}, demo: {} };
+const S = { view: 'home', subj: 'eng', clsSubj: 'eng', grade: 9, name: '', test: null, result: null, cls: {}, demo: {} };
 try { const s = localStorage.getItem('olq-subj'); if (SM[s]) { S.subj = s; S.clsSubj = s; } } catch (e) {}
 function demoResult(key) {
   if (!S.demo[key]) { const G = SUBJ[key]; S.demo[key] = { engine: simulate(G, SM[key].demo, 3, 0, 9), nameKey: 'virt', demo: true, date: new Date() }; }
@@ -2440,18 +2820,18 @@ function cellMapHTML(G, res) {
   const GL = { known: '✓', gap: '×', root: '!', unknown: '', na: '' };
   let first = true;
   const cell = (s, g) => G.TOPICS.filter(t => t.strand === s && t.grade === g).sort((a, b) => G.RANK[a.id] - G.RANK[b.id]).map(t => {
-    const k = st(t.id), b = `<button type="button" class="cm-t k-${k}${t.unt && !allUnt ? ' unt' : ''}" data-id="${t.id}" tabindex="${first ? 0 : -1}" aria-label="${esc(nm(G, t.id) + ' · ' + gl(t.grade) + ' · ' + (Lx.st[k] || ''))}"><span aria-hidden="true">${GL[k] || ''}</span></button>`;
+    const k = st(t.id), b = `<button type="button" class="cm-t k-${k}${t.unt && !allUnt ? ' unt' : ''}" data-id="${t.id}" tabindex="${first ? 0 : -1}" aria-label="${esc(nm(G, t.id) + ' · ' + gl(t.grade, G) + ' · ' + (Lx.st[k] || ''))}"><span aria-hidden="true">${GL[k] || ''}</span></button>`;
     first = false; return b;
   }).join('');
   return `<div class="cm" id="cm"><div class="cm-grid" role="group" aria-label="${esc(X.mapTitle(sname(G)))}" style="--ng:${G.grades.length}">
-    <div class="cm-h cm-corner">${X.strand}</div>${G.grades.map(g => `<div class="cm-h">${esc(gl(g))}</div>`).join('')}
+    <div class="cm-h cm-corner">${X.strand}</div>${G.grades.map(g => `<div class="cm-h">${esc(gl(g, G))}</div>`).join('')}
     ${strands.map(s => `<div class="cm-s">${esc(strandName(G, s))}</div>${G.grades.map(g => `<div class="cm-cell">${cell(s, g)}</div>`).join('')}`).join('')}
   </div></div><p class="cm-line" id="cmLine">${X.mapHint}</p>`;
 }
 function bindCellMap(G, res, detailEl) {
   const grid = document.querySelector('#cm .cm-grid'), line = $('#cmLine'); if (!grid) return;
   const btns = [...grid.querySelectorAll('.cm-t')], Lx = T(), roots = new Set(res.roots); let sel = null;
-  const label = id => `${gs(G.BY[id].grade)} · ${nm(G, id)}`;
+  const label = id => `${gs(G.BY[id].grade, G)} · ${nm(G, id)}`;
   const show = id => { line.textContent = id ? label(id) : HVT().mapHint; line.classList.toggle('on', !!id); };
   const pick = id => {
     sel = sel === id ? null : id;
@@ -2510,7 +2890,7 @@ function howModel(G, res) {
 function howSVG(M) {
   const { G, P, E, W, H, NW2, NH2, root, vert, HD } = M;
   let s = `<svg class="how-svg${vert ? ' vert' : ''}" viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
-  HD.forEach(([x, y, g]) => { s += `<text class="hg" x="${x}" y="${y}">${esc(gl(g))}</text>`; });
+  HD.forEach(([x, y, g]) => { s += `<text class="hg" x="${x}" y="${y}">${esc(gl(g, G))}</text>`; });
   E.forEach(([a, b]) => {
     const A = P[a], B = P[b]; let d;
     if (vert) {
@@ -2605,12 +2985,14 @@ function notebookSheet(G, res) {
   const full = res.chain(root), ch = (full.length > 4 ? [full[0], ...full.slice(-3)] : full).slice().reverse();
   const top = G.BY[ch[0]].grade, rg = G.BY[root].grade;
   const gn = g => (g > 9 ? '10–11' : g);
-  const cap = lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gn(top)}-сыныпта көрінді, түбірі ${gn(rg)}-сыныпта жатыр.` : `Тетрадь демо-ученика: ошибка видна в ${gn(top)} классе, а корень — в ${gn(rg)}.`;
+  const cap = G.key === 'eng' ? (lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gs(top, G)} деңгейінде көрінді, түбірі ${gs(rg, G)} деңгейінде жатыр.` : `Тетрадь демо-ученика: ошибка видна на уровне ${gs(top, G)}, а корень — на уровне ${gs(rg, G)}.`)
+    : lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gn(top)}-сыныпта көрінді, түбірі ${gn(rg)}-сыныпта жатыр.` : `Тетрадь демо-ученика: ошибка видна в ${gn(top)} классе, а корень — в ${gn(rg)}.`;
   const X = '<svg class="sl-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  return `<figure class="sheet" aria-labelledby="sheetCap"><figcaption class="sheet-cap" id="sheetCap">${esc(cap)}</figcaption><ol class="sheet-lines">${ch.map(id => `<li${id === root ? ' class="is-root"' : ''}><span class="sl-g">${esc(gs(G.BY[id].grade))}</span><span class="sl-t">${esc(nm(G, id))}</span>${X}${id === root ? '<svg class="pen-circle" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M40 9 C110 2 250 3 289 20 C303 30 290 50 220 55 C150 60 40 58 14 46 C-4 36 8 16 52 8 C70 5 90 4 104 5"/></svg>' : ''}</li>`).join('')}</ol><span class="pen-note" aria-hidden="true">${lang === 'kk' ? 'түбірі осында' : 'корень здесь'}</span></figure>`;
+  return `<figure class="sheet" aria-labelledby="sheetCap"><figcaption class="sheet-cap" id="sheetCap">${esc(cap)}</figcaption><ol class="sheet-lines">${ch.map(id => `<li${id === root ? ' class="is-root"' : ''}><span class="sl-g">${esc(gs(G.BY[id].grade, G))}</span><span class="sl-t">${esc(nm(G, id))}</span>${X}${id === root ? '<svg class="pen-circle" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M40 9 C110 2 250 3 289 20 C303 30 290 50 220 55 C150 60 40 58 14 46 C-4 36 8 16 52 8 C70 5 90 4 104 5"/></svg>' : ''}</li>`).join('')}</ol><span class="pen-note" aria-hidden="true">${lang === 'kk' ? 'түбірі осында' : 'корень здесь'}</span></figure>`;
 }
 // the subject's notebook cover: its own colour and a line drawing from the subject's world
 const COVER_ART = {
+  eng: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a-soft" d="M0 172H360"/><rect x="40" y="40" width="130" height="90" rx="14"/><path d="M70 130l-10 26 34-26"/><path class="a-soft" d="M62 70h86M62 96h56"/><rect x="200" y="20" width="130" height="80" rx="14"/><path d="M300 100l10 24-32-24"/><path class="a-soft" d="M222 48h86M222 72h50"/></g>',
   math: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="a-soft" d="M40 160H360M70 186V14"/><path d="M95 30Q170 250 245 30"/><circle cx="133" cy="160" r="4" fill="currentColor"/><circle cx="207" cy="160" r="4" fill="currentColor"/><path class="a-soft" d="M268 120l60-80 22 80z"/></g><text x="190" y="190" font-size="17">x² − 4x + 3 = 0</text>',
   hist: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path class="a-soft" d="M0 172H360M20 172c30-14 60-14 90 0"/><circle class="a-soft" cx="326" cy="44" r="16"/><path d="M118 172V64h66v108"/><path d="M134 172v-46q17-34 34 0v46"/><path d="M118 64l-6-10h78l-6 10"/><path d="M184 112h104v60H184"/><path d="M196 112q0-58 46-58t46 58"/><path class="a-soft" d="M242 54v58M218 62q-10 22-10 50M266 62q10 22 10 50"/><path d="M242 54v-14M236 40h12"/><path d="M300 172v-34q12-22 24 0v34z"/><path class="a-soft" d="M40 150l8-14 6 6 8-16 8 24M44 150h24"/></g>',
   mlit: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a-soft" d="M140 172H350"/><rect x="160" y="128" width="26" height="44"/><rect x="204" y="98" width="26" height="74"/><rect x="248" y="112" width="26" height="60"/><rect x="292" y="58" width="26" height="114"/><path d="M173 112l44-34 44 16 44-56"/><circle cx="305" cy="38" r="4" fill="currentColor"/><path class="a-soft" d="M40 30h70v130l-10-7-10 7-10-7-10 7-10-7-10 7-10-7z"/><path class="a-soft" d="M52 52h46M52 72h32M52 92h40M52 120h46"/></g><text class="a-hand" x="56" y="150" font-size="24">−15%</text>',
@@ -2637,11 +3019,11 @@ function renderHome() {
     <form class="card startcard" id="startForm">
       <h2>${Lx.startTitle}: ${esc(sname(G))}</h2>
       <div class="field"><label for="nameIn">${Lx.nameL}</label><input class="input" id="nameIn" maxlength="40" autocomplete="off" placeholder="${esc(Lx.namePh)}" value="${esc(S.name)}"></div>
-      <div class="field"><span class="lbl" id="gradeLbl">${Lx.gradeL}</span>
+      <div class="field"${S.subj === 'eng' ? ' hidden' : ''}><span class="lbl" id="gradeLbl">${Lx.gradeL}</span>
         <div class="gradeseg" role="group" aria-labelledby="gradeLbl">${[7, 8, 9, 11].map(g => `<button type="button" data-g="${g}" aria-pressed="${S.grade === g}">${g > 9 ? Lx.g1011 : g}</button>`).join('')}</div></div>
       <button class="btn btn-primary" type="submit">${Lx.start}${ico('arrow')}</button>
       <button class="btn btn-ghost" type="button" id="demoBtn">${ico('play')}${Lx.demo}</button>
-      <button class="btn btn-ghost" type="button" id="courseBtn">${ROBOT_MINI}${CT().demoCourse}</button>
+      <button class="btn btn-ghost" type="button" id="courseBtn"${S.subj === 'eng' ? ' hidden' : ''}>${ROBOT_MINI}${CT().demoCourse}</button>
       <p class="note">${esc(Lx.demoNote(nm(G, meta.demo[0]), nm(G, meta.demo[1])))}</p>
     </form>
   </div>
@@ -2681,7 +3063,7 @@ function renderHome() {
 // ---------- test ----------
 function startTest(demo) {
   if (S.test) clearTimeout(S.test.timer);
-  const G = SUBJ[S.subj], grade = demo ? 9 : S.grade;
+  const G = SUBJ[S.subj], grade = demo || G.key === 'eng' ? 9 : S.grade;
   S.test = { G, engine: Engine({ graph: G, grade }), demo, auto: demo, paused: false, step: null, q: null, n: 0, log: [], seed: Math.floor(Math.random() * 1e6), truth: demo ? truthFromRoots(G, SM[G.key].demo) : null, name: demo ? null : S.name.trim(), logged: new Set(), busy: false, picked: null };
   S.view = 'test';
   nextQ(true);
@@ -2761,7 +3143,7 @@ function renderTest() {
   $('#v-test').innerHTML = `
   <div class="testgrid">
     <article class="card qcard" aria-live="polite">
-      <div class="qmeta"><span class="qn">${Lx.q} ${X.n}</span><span class="chip">${esc(sname(G))}</span><span class="chip">${esc(gl(t.grade))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="muted" >${esc(nm(G, t.id))}</span>${X.demo ? `<span class="badge-demo">${esc(Lx.virt)}</span>` : ''}</div>
+      <div class="qmeta"><span class="qn">${Lx.q} ${X.n}</span><span class="chip">${esc(sname(G))}</span><span class="chip">${esc(gl(t.grade, G))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="muted" >${esc(nm(G, t.id))}</span>${X.demo ? `<span class="badge-demo">${esc(Lx.virt)}</span>` : ''}</div>
       <h1 class="stem">${esc(tr(q.stem))}</h1>
       ${exprHTML(q)}
       <div class="opts${wide ? ' wide' : ''}">${q.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}" ${X.demo ? 'tabindex="-1"' : ''}><span class="k">${'ABCD'[i]}</span><span class="v ${kind}">${esc(tr(o))}</span><span class="mark">${ico(i === q.a ? 'check' : 'x')}</span></button>`).join('')}</div>
@@ -2810,8 +3192,8 @@ function updateEngine() {
   const st = {}; G.TOPICS.forEach(t => { const s0 = X.engine.status(t.id); st[t.id] = s0 === 'conflict' ? 'unknown' : s0; });
   $('#miniMap').innerHTML = graphSVG(G, { st, roots: new Set([...res.certainRoots].filter(r => X.logged.has(r))), cur: X.busy ? null : X.step.id, mini: true });
   $('#log').innerHTML = X.log.slice(0, 12).map(l => {
-    if (l.kind === 'root') return `<li class="root">${esc(Lx.lRoot(gs(G.BY[l.id].grade) + ' · ' + nm(G, l.id)))}</li>`;
-    return `<li class="${l.kind}"><span class="g">${esc(gs(G.BY[l.id].grade))}</span><span>${esc(nm(G, l.id))}: ${{ ok: Lx.lOk, bad: Lx.lBad, dk: Lx.lDk }[l.kind]}</span></li>`;
+    if (l.kind === 'root') return `<li class="root">${esc(Lx.lRoot(gs(G.BY[l.id].grade, G) + ' · ' + nm(G, l.id)))}</li>`;
+    return `<li class="${l.kind}"><span class="g">${esc(gs(G.BY[l.id].grade, G))}</span><span>${esc(nm(G, l.id))}: ${{ ok: Lx.lOk, bad: Lx.lBad, dk: Lx.lDk }[l.kind]}</span></li>`;
   }).join('');
 }
 document.addEventListener('keydown', e => {
@@ -2825,25 +3207,25 @@ document.addEventListener('keydown', e => {
 function renderResult() {
   const Lx = T();
   const r = S.result || demoResult(S.subj);
-  const e = r.engine, G = e.G, res = e.result(), name = resName(r);
+  const e = r.engine, G = e.G, res = e.result(), name = resName(r), lv = G.key === 'eng' ? cefr(G, res) : null;
   const scope = e.scope.size, roots = res.roots.slice(0, 4), allUnt = G.TOPICS.every(x => x.unt);
   const rootsHTML = roots.length ? roots.map(id => {
     const full = res.chain(id), ch = full.length > 5 ? [full[0], full[1], null, full[full.length - 2], full[full.length - 1]] : full;
-    return `<div class="rootc"><div class="hd"><span class="chip root">${esc(gl(G.BY[id].grade))}</span><h3>${esc(nm(G, id))}</h3>${res.certainRoots.has(id) ? '' : `<span class="chip">${Lx.probable}</span>`}</div>
+    return `<div class="rootc"><div class="hd"><span class="chip root">${esc(gl(G.BY[id].grade, G))}</span><h3>${esc(nm(G, id))}</h3>${res.certainRoots.has(id) ? '' : `<span class="chip">${Lx.probable}</span>`}</div>
       <p class="muted" >${Lx.impact(res.impact(id))}</p>
-      <div class="chain">${ch.map((c, i) => `${i ? '<span class="ar">→</span>' : ''}${c ? `<span class="lk"><span class="g">${esc(gs(G.BY[c].grade))}</span>${esc(nm(G, c))}</span>` : `<span class="muted">+${full.length - 4}</span>`}`).join('')}</div></div>`;
+      <div class="chain">${ch.map((c, i) => `${i ? '<span class="ar">→</span>' : ''}${c ? `<span class="lk"><span class="g">${esc(gs(G.BY[c].grade, G))}</span>${esc(nm(G, c))}</span>` : `<span class="muted">+${full.length - 4}</span>`}`).join('')}</div></div>`;
   }).join('') : `<p>${Lx.noGaps}</p>`;
   const weeks = Math.max(1, Math.ceil(res.path.length / 3));
-  const pathItem = (id, i) => `${i % 3 === 0 ? `<li class="wk">${Lx.week(i / 3 + 1)}</li>` : ''}<li class="it${res.roots.includes(id) ? ' isroot' : ''}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${esc(nm(G, id))}</span><span class="row" style="gap:6px">${G.BY[id].unt && !allUnt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="chip">${esc(gs(G.BY[id].grade))}</span></span></li>`;
+  const pathItem = (id, i) => `${i % 3 === 0 ? `<li class="wk">${Lx.week(i / 3 + 1)}</li>` : ''}<li class="it${res.roots.includes(id) ? ' isroot' : ''}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${esc(nm(G, id))}</span><span class="row" style="gap:6px">${G.BY[id].unt && !allUnt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="chip">${esc(gs(G.BY[id].grade, G))}</span></span></li>`;
   const FIRST = 9;
   let pathHTML = `<ul class="path">${res.path.slice(0, FIRST).map(pathItem).join('')}</ul>`;
   if (res.path.length > FIRST) pathHTML += `<details class="more"><summary>${Lx.more(res.path.length - FIRST)}</summary><ul class="path">${res.path.slice(FIRST).map((id, j) => pathItem(id, j + FIRST)).join('')}</ul></details>`;
   const ch0 = roots.length ? res.chain(roots[0]) : [], top = ch0.length > 1 ? ch0[ch0.length - 1] : null;
   const msg = Lx.parent({ name, subj: sname(G), date: fmtDate(r.date), scope, q: e.asked.length, known: res.known, gaps: res.gaps.length,
-    root: roots.length ? nm(G, roots[0]) : '', rootGrade: roots.length ? G.BY[roots[0]].grade : '', impact: roots.length ? res.impact(roots[0]) : 0, top: top ? nm(G, top) : '', path: res.path.length, weeks });
+    root: roots.length ? nm(G, roots[0]) : '', rootGrade: roots.length ? gl(G.BY[roots[0]].grade, G) : '', eng: !!lv, lvl: lv ? `${lv.label} (IELTS ≈ ${lv.band})` : '', impact: roots.length ? res.impact(roots[0]) : 0, top: top ? nm(G, top) : '', path: res.path.length, weeks });
   const qlog = e.asked.map((a, i) => {
     const q = a.q, ex = q ? (Array.isArray(q.expr) ? (q.code ? '' : q.expr.map(tr).join('; ')) : tr(q.expr || '')) : '';
-    return `<div class="r"><span class="mono muted">${i + 1}</span><span class="mono muted">${esc(gs(G.BY[a.id].grade))}</span><span>${esc(nm(G, a.id))}${ex ? ` <span class="muted">${esc(ex)}</span>` : ''}</span><span class="chip ${a.correct ? 'ok' : 'gap'}">${a.correct ? Lx.lOk : (a.choice === -1 ? Lx.lDk : Lx.lBad)}${q && !a.correct ? ` · ${esc(Lx.right)}: ${esc(tr(q.opts[q.a]))}` : ''}</span></div>`;
+    return `<div class="r"><span class="mono muted">${i + 1}</span><span class="mono muted">${esc(gs(G.BY[a.id].grade, G))}</span><span>${esc(nm(G, a.id))}${ex ? ` <span class="muted">${esc(ex)}</span>` : ''}</span><span class="chip ${a.correct ? 'ok' : 'gap'}">${a.correct ? Lx.lOk : (a.choice === -1 ? Lx.lDk : Lx.lBad)}${q && !a.correct ? ` · ${esc(Lx.right)}: ${esc(tr(q.opts[q.a]))}` : ''}</span></div>`;
   }).join('');
   $('#v-result').innerHTML = `
   <div class="reshead">
@@ -2854,8 +3236,9 @@ function renderResult() {
     <div class="tile t-ok" style="--i:0"><span class="v"><span data-count="${res.known}">${res.known}</span><small> / ${scope}</small></span><span class="k">${Lx.tKnown}</span></div>
     <div class="tile t-gap" style="--i:1"><span class="v" data-count="${res.gaps.length}">${res.gaps.length}</span><span class="k">${Lx.tGaps}</span></div>
     <div class="tile t-gap" style="--i:2"><span class="v" data-count="${res.roots.length}">${res.roots.length}</span><span class="k">${Lx.tRoots}</span></div>
-    <div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="${res.ready}">${res.ready}</span><small>%</small></span><span class="k">${Lx.tReady}</span></div>
+    ${G.key === 'eng' ? `<div class="tile t-ok" style="--i:3"><span class="v">${lv.label}<small> · IELTS ≈ ${lv.band}</small></span><span class="k">${Lx.tLevel}</span></div>` : `<div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="\${res.ready}">\${res.ready}</span><small>%</small></span><span class="k">\${Lx.tReady}</span></div>`}
   </div>
+  ${lv ? `<p class="small" style="margin-top:calc(-1 * var(--s-2))">${esc(tr(SM.eng.note))}</p>` : ''}
   <div class="two">
     <section class="card"><div class="sec-head"><h2>${Lx.rootsTitle}</h2></div><p class="muted" style="margin-bottom:14px">${Lx.rootsLead}</p><div class="roots">${rootsHTML}</div></section>
     <section class="card"><div class="sec-head"><h2>${Lx.parentTitle}</h2></div><p class="muted" style="margin-bottom:12px">${Lx.parentLead}</p><div class="msg" id="msg">${esc(msg)}</div><div class="row" style="margin-top:12px"><button class="btn btn-ghost btn-sm" type="button" id="copyBtn">${ico('copy')}${Lx.copy}</button><span class="muted" id="copyNote" ></span></div></section>
@@ -2912,6 +3295,7 @@ function mdHTML(t) {
   return out.join('');
 }
 const COURSE_MAP = {
+  eng: [[['gram'], 'Grammar: A1–C1', 'Grammar: A1–C1'], [['vocab'], 'Vocabulary', 'Vocabulary'], [['read'], 'Reading Academic', 'Reading Academic'], [['write'], 'Writing Task 1 және 2', 'Writing Task 1 и 2']],
   math: [[['num'], 'Сандар, дәреже және түбір', 'Числа, степени и корни'], [['frac'], 'Бөлшек, пайыз, пропорция', 'Дроби, проценты, пропорции'], [['expr'], 'Алгебралық өрнектер', 'Алгебраические выражения'], [['eq'], 'Теңдеулер мен теңсіздіктер', 'Уравнения и неравенства'], [['func'], 'Функциялар мен тригонометрия', 'Функции и тригонометрия'], [['stat', 'seq'], 'Прогрессия, статистика, ықтималдық', 'Прогрессии, статистика, вероятность']],
   hist: [[['skill', 'anc'], 'Ежелгі Қазақстан', 'Древний Казахстан'], [['med', 'cult', 'mong'], 'Түркі дәуірі және Алтын Орда', 'Тюркская эпоха и Золотая Орда'], [['khan'], 'Қазақ хандығы', 'Казахское ханство'], [['col'], 'Отаршылдық және ұлт-азаттық күрес', 'Колониализм и освободительная борьба'], [['sov', 'ind'], 'XX ғасыр және Тәуелсіздік', 'XX век и Независимость']],
   mlit: [[['arith', 'unit', 'frac'], 'Есептеу негіздері', 'Основы вычислений'], [['pct', 'ratio'], 'Пайыз және пропорция', 'Проценты и пропорции'], [['motion', 'geo'], 'Қозғалыс және геометрия', 'Движение и геометрия'], [['data', 'logic', 'comb'], 'Деректер, логика, ықтималдық', 'Данные, логика, вероятность']],
@@ -2957,7 +3341,7 @@ function coursesHTML(G, res) {
   <div class="courses">${list.map((c, i) => `<article class="course" id="course-${c.id}" style="--i:${i}">
     <div class="row" style="justify-content:space-between"><h3>${esc(tr(c.name))}</h3><span class="badge-demo">${Lx.example}</span></div>
     <p class="muted">${Lx.yourGaps(c.mine.length)}</p>
-    <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade))} · ${esc(nm(G, id))}</span>`).join('')}</div>
+    <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span>`).join('')}</div>
     <div class="course-foot"><span>${Lx.lessons(c.lessons)}</span><b class="num">${big(c.price)} ₸</b></div>
     <button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>
   </article>`).join('')}</div><p class="small" style="margin-top:var(--s-3)">${Lx.priceNote}</p>`;
@@ -2999,7 +3383,7 @@ function aiCardsHTML(G, data) {
   const cards = list.slice(0, 3).map(c => {
     const id = G.BY[c.id] ? c.id : null, src = svgSrc(c.svg), course = id && courseOf(G, id);
     return `<article class="aicard">
-      <div class="aihead"><h3>${esc(id ? nm(G, id) : String(c.id || ''))}</h3>${id ? `<span class="chip root">${esc(gl(G.BY[id].grade))}</span>` : ''}</div>
+      <div class="aihead"><h3>${esc(id ? nm(G, id) : String(c.id || ''))}</h3>${id ? `<span class="chip root">${esc(gl(G.BY[id].grade, G))}</span>` : ''}</div>
       ${c.hook ? `<p class="hook">${esc(c.hook)}</p>` : ''}
       <div class="aibody">
         ${src ? `<figure class="aifig"><img src="${src}" alt="${esc(Lx.aiFigAlt(id ? nm(G, id) : ''))}" loading="lazy" width="320" height="200"></figure>` : ''}
@@ -3074,12 +3458,12 @@ function renderClass() {
   <div class="subjseg" role="group" aria-label="${esc(Lx.pickSubj)}">${SUBJ_KEYS.map(k => `<button type="button" data-s="${k}" aria-pressed="${S.clsSubj === k}">${esc(tr(SM[k].name))}</button>`).join('')}</div>
   <div class="tiles three">
     <div class="tile t-ok" style="--i:0"><span class="v"><span data-count="${C.avg}">${C.avg}</span><small>%</small></span><span class="k">${Lx.cAvg}</span></div>
-    <div class="tile t-gap" style="--i:1"><span class="v"><span data-count="${C.deep}">${C.deep}</span><small>%</small></span><span class="k">${Lx.cDeep}</span></div>
+    <div class="tile t-gap" style="--i:1"><span class="v"><span data-count="${C.deep}">${C.deep}</span><small>%</small></span><span class="k">${G.key === 'eng' ? Lx.cDeepEng : Lx.cDeep}</span></div>
     <div class="tile" style="--i:2"><span class="v txt">${r1 ? esc(nm(G, r1[0])) : '—'}</span><span class="k">${Lx.cTop}${r1 ? ` · ${pct(r1[1])}% ${Lx.pctStud}` : ''}</span></div>
   </div>
   <div class="two">
     <section class="card"><div class="sec-head"><h2>${Lx.cRootsTitle}</h2></div><p class="muted" style="margin-bottom:14px">${Lx.cRootsLead}</p>
-      <div class="bars">${C.topRoots.slice(0, 7).map(([id, c]) => `<div class="b"><div class="t"><span>${esc(gs(G.BY[id].grade))} · ${esc(nm(G, id))}</span><span>${pct(c)}%</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></div>`).join('')}</div></section>
+      <div class="bars">${C.topRoots.slice(0, 7).map(([id, c]) => `<div class="b"><div class="t"><span>${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span><span>${pct(c)}%</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></div>`).join('')}</div></section>
     <section class="card"><div class="sec-head"><h2>${Lx.recTitle}</h2></div>
       ${r1 ? `<p>${esc(Lx.rec(nm(G, r1[0]), pct(r1[1]), G.BY[r1[0]].kids.length))}</p>` : ''}
       ${r2 ? `<p class="muted" style="margin-top:10px">${esc(Lx.rec2(nm(G, r2[0]), pct(r2[1])))}</p>` : ''}</section>
@@ -3092,7 +3476,7 @@ function renderClass() {
   <section class="card">
     <div class="sec-head"><h2>${Lx.stTitle}</h2><span class="muted" >${Lx.rowHint}</span></div>
     <div class="tbl"><table><thead><tr><th>${Lx.colName}</th><th>${Lx.colRoots}</th><th>${Lx.colMastery}</th><th>${Lx.colQ}</th></tr></thead><tbody>
-    ${C.students.map((s, i) => { const m = Math.round(100 * s.res.known / G.TOPICS.length); return `<tr class="click" data-i="${i}" tabindex="0"><td>${esc(s.name)}</td><td><div class="row" style="gap:4px">${s.res.roots.length ? s.res.roots.slice(0, 3).map(r => `<span class="chip gap">${esc(gs(G.BY[r].grade))} · ${esc(nm(G, r))}</span>`).join('') : '<span class="chip ok">—</span>'}</div></td><td class="num"><span class="mbar"><i style="width:${m}%"></i></span>${m}%</td><td class="num mono">${s.engine.asked.length}</td></tr>`; }).join('')}
+    ${C.students.map((s, i) => { const m = Math.round(100 * s.res.known / G.TOPICS.length); return `<tr class="click" data-i="${i}" tabindex="0"><td>${esc(s.name)}</td><td><div class="row" style="gap:4px">${s.res.roots.length ? s.res.roots.slice(0, 3).map(r => `<span class="chip gap">${esc(gs(G.BY[r].grade, G))} · ${esc(nm(G, r))}</span>`).join('') : '<span class="chip ok">—</span>'}</div></td><td class="num"><span class="mbar"><i style="width:${m}%"></i></span>${m}%</td><td class="num mono">${s.engine.asked.length}</td></tr>`; }).join('')}
     </tbody></table></div>
   </section>`;
   bindMap(G, $('#clsMap'), $('#clsDetail'), null);
@@ -3319,7 +3703,7 @@ function botChips() {
 function botHello() {
   const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
   box.innerHTML = ''; bubble('bot', esc(X.hello)); memDiag(st);
-  if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade))));
+  if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade, st.G))));
 }
 async function askBot(q) {
   const sample = await samplePromise, X = CT();

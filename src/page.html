@@ -345,6 +345,7 @@ pre.code { margin: 0; font-family: var(--f-mono); font-size: var(--t-16); line-h
 /* result */
 .reshead { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); align-items: end; justify-content: space-between; }
 .reshead h1 { font-size: var(--t-32); }
+.field[hidden], .btn[hidden] { display: none; }
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); }
 .tiles.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); } .tiles.three { grid-template-columns: minmax(0, 1fr); } }
@@ -842,18 +843,21 @@ h1 { font-size: 44px; }
 }
 @keyframes viewin { from { opacity: .001; } }
 /* ===== subject themes: each subject gets its own ink and its own notebook cover ===== */
-:root { --c-math: #2340A8; --c-hist: #8A4513; --c-mlit: #0A6C74; --c-inf: #5531B8;
-  --cover: #2340A8; --cv-math: #2340A8; --cv-hist: #7A3D12; --cv-mlit: #0A5F67; --cv-inf: #4B2DA6; }
+:root { --c-eng: #B42A4F; --c-math: #2340A8; --c-hist: #8A4513; --c-mlit: #0A6C74; --c-inf: #5531B8;
+  --cover: #2340A8; --cv-eng: #A3264A; --cv-math: #2340A8; --cv-hist: #7A3D12; --cv-mlit: #0A5F67; --cv-inf: #4B2DA6; }
+:root[data-subj="eng"] { --primary: #B42A4F; --primary-2: #C93A60; --primary-tint: #FBE9EE; --accent: #B42A4F; --accent-tint: #FBE9EE; --cover: var(--cv-eng); }
 :root[data-subj="hist"] { --primary: #8A4513; --primary-2: #A1531B; --primary-tint: #F7ECE2; --accent: #8A4513; --accent-tint: #F7ECE2; --cover: var(--cv-hist); }
 :root[data-subj="mlit"] { --primary: #0A6C74; --primary-2: #0B7F88; --primary-tint: #E2F2F3; --accent: #0A6C74; --accent-tint: #E2F2F3; --cover: var(--cv-mlit); }
 :root[data-subj="inf"] { --primary: #5531B8; --primary-2: #6745CF; --primary-tint: #EEE9FB; --accent: #5531B8; --accent-tint: #EEE9FB; --cover: var(--cv-inf); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+  :root:not([data-theme="light"]) { --c-eng: #FF9DB5; --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-eng: #6A1D33; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+  :root[data-subj="eng"]:not([data-theme="light"]) { --primary: #FF9DB5; --primary-2: #FFB8C9; --primary-tint: #43242D; --accent: #FF9DB5; --accent-tint: #43242D; --on-primary: #3A0716; --cover: var(--cv-eng); }
   :root[data-subj="hist"]:not([data-theme="light"]) { --primary: #F0B27A; --primary-2: #F6C79D; --primary-tint: #3A2E22; --accent: #F0B27A; --accent-tint: #3A2E22; --on-primary: #2A1606; --cover: var(--cv-hist); }
   :root[data-subj="mlit"]:not([data-theme="light"]) { --primary: #73D3DB; --primary-2: #9BE2E8; --primary-tint: #1D3C3E; --accent: #73D3DB; --accent-tint: #1D3C3E; --on-primary: #032528; --cover: var(--cv-mlit); }
   :root[data-subj="inf"]:not([data-theme="light"]) { --primary: #C4B0FF; --primary-2: #D6C8FF; --primary-tint: #2E2D48; --accent: #C4B0FF; --accent-tint: #2E2D48; --on-primary: #1C0E45; --cover: var(--cv-inf); }
 }
-:root[data-theme="dark"] { --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+:root[data-theme="dark"] { --c-eng: #FF9DB5; --c-math: #A5BDFF; --c-hist: #F0B27A; --c-mlit: #73D3DB; --c-inf: #C4B0FF; --cover: #22346F; --cv-eng: #6A1D33; --cv-math: #22346F; --cv-hist: #5B3517; --cv-mlit: #10484E; --cv-inf: #3A2C78; }
+:root[data-theme="dark"][data-subj="eng"] { --primary: #FF9DB5; --primary-2: #FFB8C9; --primary-tint: #43242D; --on-primary: #3A0716; --cover: var(--cv-eng); }
 :root[data-theme="dark"][data-subj="hist"] { --primary: #F0B27A; --primary-2: #F6C79D; --primary-tint: #3A2E22; --on-primary: #2A1606; --cover: var(--cv-hist); }
 :root[data-theme="dark"][data-subj="mlit"] { --primary: #73D3DB; --primary-2: #9BE2E8; --primary-tint: #1D3C3E; --on-primary: #032528; --cover: var(--cv-mlit); }
 :root[data-theme="dark"][data-subj="inf"] { --primary: #C4B0FF; --primary-2: #D6C8FF; --primary-tint: #2E2D48; --on-primary: #1C0E45; --cover: var(--cv-inf); }
@@ -1012,10 +1016,15 @@ h1 { font-size: 44px; }
 (() => {
 const fc = document.getElementById('fontCss');
 if (fc) { const on = () => { fc.media = 'all'; }; if (fc.sheet) on(); else fc.addEventListener('load', on); }
-const { SUBJ, Engine, rng, truthFromRoots, simulate } = CORE;
+const { SUBJ, Engine, rng, truthFromRoots, simulate, cefr, groupStudents } = CORE;
 const NAMES = ['Әлихан Б.', 'Аружан С.', 'Нұрсұлтан К.', 'Айым Т.', 'Дияс М.', 'Томирис Ж.', 'Ерасыл А.', 'Мадина Е.', 'Бекзат Н.', 'Жансая О.', 'Арман Қ.', 'Әйгерім Р.', 'Санжар Д.', 'Дана Ш.', 'Ислам Ғ.', 'Камила Х.', 'Ернұр П.', 'Інжу Ә.', 'Данияр Ы.', 'Аяулым Ү.', 'Темірлан Ө.', 'Меруерт Л.', 'Алмас И.', 'Сабина Ұ.', 'Рахат В.', 'Асель Г.'];
 const L2 = (kk, ru) => ({ kk, ru });
 const SM = {
+  eng: { name: L2('IELTS (ағылшын тілі)', 'IELTS (английский язык)'), unt: L2('IELTS: Academic және General', 'IELTS: Academic и General'),
+    hook: L2('Writing-тегі B2 деңгейіндегі қате көбіне A2 грамматикасынан басталады.', 'Ошибка уровня B2 во Writing часто начинается с грамматики A2.'),
+    demo: ['e9', 'e22'], sim: 98,
+    note: L2('Деңгей Grammar, Vocabulary, Reading және Writing дағдылары бойынша бағаланады; Listening мен Speaking тексерілмейді.', 'Уровень оценивается по Grammar, Vocabulary, Reading и навыкам Writing; Listening и Speaking не проверяются.'),
+    weights: [['e9', .2], ['e16', .25], ['e18', .15], ['e22', .18], ['e25', .2], ['e26', .15], ['e13', .1], ['e29', .12], ['e33', .1], ['e35', .08]] },
   math: { name: L2('Математика (алгебра)', 'Математика (алгебра)'), unt: L2('ҰБТ: бейіндік пән', 'ЕНТ: профильный предмет'),
     hook: L2('9-сыныптағы алгебра қатесі көбіне 6-сыныптан басталады.', 'Ошибка по алгебре в 9 классе часто начинается в 6-м.'),
     demo: ['q2', 'k1'], sim: 96,
@@ -1034,7 +1043,7 @@ const SM = {
     demo: ['in8', 'in10'], sim: 94,
     weights: [['in8', .25], ['in7', .18], ['in10', .2], ['in5', .15], ['in12', .12], ['in11', .15], ['in25', .12], ['in18', .1], ['in6', .08]] },
 };
-const SUBJ_KEYS = ['math', 'hist', 'mlit', 'inf'];
+const SUBJ_KEYS = ['eng', 'math', 'hist', 'mlit', 'inf'];
 const ICONS = {
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>', play: '<path d="M7 5v14l11-7z"/>', pause: '<path d="M8 5v14M16 5v14"/>',
   skip: '<path d="M6 5l10 7-10 7zM18 5v14"/>', flag: '<path d="M5 21V4h11l-2 4 2 4H5"/>', help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/>',
@@ -1044,6 +1053,7 @@ const ICONS = {
 Object.assign(ICONS, { users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5M16 4.8a3.5 3.5 0 0 1 0 6.4M18.5 14.8c1.7.8 2.7 2.5 3 5.2"/>', code: '<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>' });
 const ico = n => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
 const SUBJ_ICON = {
+  eng: '<path d="M4 6h9M8.5 4v2M6 6c0 4 3 7 6 8M11 6c-1 4-4 7-7 8"/><path d="M13 20l4-9 4 9M14.5 17h5"/>',
   math: '<path d="M4 4v16h16"/><path d="M7 15c2.5-7 5-7 7-3.5S18 14 20 7"/>',
   hist: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 3.5V9M12 15v5.5M3.5 12H9M15 12h5.5M6 6l3.9 3.9M14.1 14.1L18 18M18 6l-3.9 3.9M9.9 14.1L6 18"/>',
   mlit: '<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>',
@@ -1088,7 +1098,7 @@ const I = {
     rRecheck: '<b>Қайта тексеру.</b> Жауаптар бір-біріне қайшы, сондықтан бұл тақырып жаңа сұрақпен тексеріледі.',
     lOk: 'дұрыс', lBad: 'қате', lDk: 'білмеймін', lRoot: x => `Түбір табылды: ${x}`,
     virt: 'Виртуал оқушы', student: 'Оқушы', demoBadge: 'мысал', resTitle: n => `${n}: нәтиже`,
-    tKnown: 'Меңгерген тақырып', tGaps: 'Олқылығы бар тақырып', tRoots: 'Түбір олқылық', tReady: 'ҰБТ тақырыптарын меңгеру',
+    tKnown: 'Меңгерген тақырып', tGaps: 'Олқылығы бар тақырып', tRoots: 'Түбір олқылық', tReady: 'ҰБТ тақырыптарын меңгеру', tLevel: 'Шамамен деңгей (CEFR)',
     rootsTitle: 'Түбір олқылықтар', rootsLead: 'Олқылықтар осы тақырыптардан басталады. Соларды жапқанда, жоғарыдағы тақырыптар да жеңілдейді.',
     impact: n => `Осыған тәуелді ${n} тақырыпта олқылық бар`, probable: 'ықтимал түбір',
     noGaps: 'Тексерілген тақырыптарда олқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі есептер.',
@@ -1115,10 +1125,10 @@ const I = {
     courseTitle: 'Олқылық тақырыптары және курстар', courseLead: 'Олқылығы бар тақырыптар біздің курстар бойынша топталды: оқушыға дәл қай курс керек екені көрінеді.',
     example: 'мысал', lessons: n => `${n} сабақ`, yourGaps: n => `Оқушының осы курстағы олқылығы: ${n} тақырып`, courseIn: 'Курс', priceNote: 'Курстар мен бағалар мысал ретінде берілген, оларды өз курстарыңызға ауыстыруға болады.',
     parent: o => o.gaps === 0
-      ? `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\nОлқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі тапсырмалар.`
-      : `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\nМеңгерген: ${o.known} тақырып. Олқылық: ${o.gaps} тақырып.\nНегізгі себеп: ${o.rootGrade} сыныптағы «${o.root}» тақырыбы. Осыған байланысты тағы ${o.impact} тақырыпта қиындық бар${o.top ? `, соның ішінде «${o.top}»` : ''}.\nҰсыныс: алдымен «${o.root}» тақырыбын қайталау (1–2 сабақ), содан кейін жеке жоспар бойынша: ${o.path} тақырып, шамамен ${o.weeks} апта.`,
+      ? `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\nОлқылық табылмады. Келесі қадам: IELTS форматындағы сынақ тесттері.` : 'Олқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі тапсырмалар.'}`
+      : `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\n` : ''}Меңгерген: ${o.known} тақырып. Олқылық: ${o.gaps} тақырып.\nНегізгі себеп: ${o.rootGrade}${o.eng ? ' деңгейіндегі' : 'тағы'} «${o.root}» тақырыбы. Осыған байланысты тағы ${o.impact} тақырыпта қиындық бар${o.top ? `, соның ішінде «${o.top}»` : ''}.\nҰсыныс: алдымен «${o.root}» тақырыбын қайталау (1–2 сабақ), содан кейін жеке жоспар бойынша: ${o.path} тақырып, шамамен ${o.weeks} апта.`,
     clsTitle: '9 «Б» сыныбы', clsSub: n => `${n} оқушы · мысал деректер: әр оқушыға диагностика симуляцияланды`,
-    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cTop: 'Ең жиі түбір',
+    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cDeepEng: 'Түбірі A1–A2 деңгейінде', cTop: 'Ең жиі түбір',
     cRootsTitle: 'Сыныптағы түбір олқылықтар', cRootsLead: 'Пайыз: осы түбір олқылығы бар оқушылар үлесі.',
     recTitle: 'Мұғалімге ұсыныс', rec: (x, p, n) => `Сыныптың ${p}%-ының түбір олқылығы «${x}» тақырыбында. Келесі аптада осы тақырыпқа 1–2 қайталау сабағын берсеңіз, оған тікелей тәуелді ${n} тақырыптағы нәтиже де көтеріледі.`,
     rec2: (x, p) => `Екінші орында: «${x}» (${p}%). Бұл оқушыларды бөлек топқа бөліп, 15 минуттық тапсырма беруге болады.`,
@@ -1149,7 +1159,7 @@ const I = {
     rRecheck: '<b>Перепроверка.</b> Ответы противоречат друг другу, поэтому тема проверяется новым вопросом.',
     lOk: 'верно', lBad: 'ошибка', lDk: 'не знаю', lRoot: x => `Найден корень: ${x}`,
     virt: 'Виртуальный ученик', student: 'Ученик', demoBadge: 'пример', resTitle: n => `${n}: результат`,
-    tKnown: 'Освоено тем', tGaps: 'Тем с пробелами', tRoots: 'Корневые пробелы', tReady: 'Освоено тем ЕНТ',
+    tKnown: 'Освоено тем', tGaps: 'Тем с пробелами', tRoots: 'Корневые пробелы', tReady: 'Освоено тем ЕНТ', tLevel: 'Примерный уровень (CEFR)',
     rootsTitle: 'Корневые пробелы', rootsLead: 'С этих тем начинаются пробелы. Закрыв их, ученику станет легче и в темах выше.',
     impact: n => `Зависимых тем с пробелами: ${n}`, probable: 'вероятный корень',
     noGaps: 'В проверенных темах пробелов не найдено. Следующий шаг: задачи уровня ЕНТ.',
@@ -1176,10 +1186,10 @@ const I = {
     courseTitle: 'Темы с пробелами и курсы', courseLead: 'Темы с пробелами сгруппированы по нашим курсам: видно, какой курс нужен именно этому ученику.',
     example: 'пример', lessons: n => `Уроков: ${n}`, yourGaps: n => `Пробелов ученика в этом курсе: ${n}`, courseIn: 'Курс', priceNote: 'Курсы и цены даны для примера, их можно заменить на ваши.',
     parent: o => o.gaps === 0
-      ? `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\nПробелов не найдено. Следующий шаг: задания уровня ЕНТ.`
-      : `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\nОсвоено тем: ${o.known}. Тем с пробелами: ${o.gaps}.\nГлавная причина: тема «${o.root}» (${o.rootGrade} класс). Из-за неё есть трудности и в зависимых темах (${o.impact})${o.top ? `, в том числе «${o.top}»` : ''}.\nРекомендация: сначала повторить «${o.root}» (1–2 урока), затем идти по личному плану (тем: ${o.path}, примерно ${o.weeks} нед.).`,
+      ? `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\nПробелов не найдено. Следующий шаг: пробные тесты в формате IELTS.` : 'Пробелов не найдено. Следующий шаг: задания уровня ЕНТ.'}`
+      : `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\n` : ''}Освоено тем: ${o.known}. Тем с пробелами: ${o.gaps}.\nГлавная причина: тема «${o.root}» (${o.rootGrade}). Из-за неё есть трудности и в зависимых темах (${o.impact})${o.top ? `, в том числе «${o.top}»` : ''}.\nРекомендация: сначала повторить «${o.root}» (1–2 урока), затем идти по личному плану (тем: ${o.path}, примерно ${o.weeks} нед.).`,
     clsTitle: '9 «Б» класс', clsSub: n => `Учеников: ${n} · пример данных: диагностика смоделирована для каждого ученика`,
-    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cTop: 'Самый частый корень',
+    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cDeepEng: 'Корень на уровне A1–A2', cTop: 'Самый частый корень',
     cRootsTitle: 'Корневые пробелы класса', cRootsLead: 'Процент: доля учеников с этим корневым пробелом.',
     recTitle: 'Рекомендация учителю', rec: (x, p, n) => `У ${p}% класса корневой пробел в теме «${x}». Если на следующей неделе дать 1–2 урока повторения, вырастут результаты и в непосредственно зависимых темах (${n}).`,
     rec2: (x, p) => `На втором месте: «${x}» (${p}%). Этих учеников можно выделить в отдельную группу и дать 15-минутное задание.`,
@@ -1190,8 +1200,9 @@ const I = {
 };
 const T = () => I[lang];
 const tr = o => (o == null ? '' : typeof o === 'string' ? o : o[lang]);
-const gl = g => (g > 9 ? T().g1011 + (lang === 'kk' ? ' сынып' : ' класс') : lang === 'kk' ? `${g} сынып` : `${g} класс`);
-const gs = g => (lang === 'kk' ? `${g} сын.` : `${g} кл.`);
+const CEFR_L = { 4: 'A0', 5: 'A1', 6: 'A2', 7: 'B1', 8: 'B2', 9: 'C1' };
+const gl = (g, G) => (G && G.key === 'eng' ? CEFR_L[g] : g > 9 ? T().g1011 + (lang === 'kk' ? ' сынып' : ' класс') : lang === 'kk' ? `${g} сынып` : `${g} класс`);
+const gs = (g, G) => (G && G.key === 'eng' ? CEFR_L[g] : lang === 'kk' ? `${g} сын.` : `${g} кл.`);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const $ = s => document.querySelector(s);
 const MON = { kk: ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'], ru: ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'] };
@@ -1225,7 +1236,7 @@ function wrap(s, max) {
 function graphSVG(G, o = {}) {
   const { st, heat, cur, mini, roots } = o, { POS, EDGES, VW, VH } = layout(G);
   let s = `<svg viewBox="0 0 ${VW} ${VH}" ${mini ? 'aria-hidden="true"' : `role="group" aria-label="${esc(sname(G))}"`}>`, first = true;
-  G.grades.forEach((g, ci) => { s += `<text class="gh" x="${PX + ci * CP + 2}" y="28">${esc(gl(g))}</text>`; });
+  G.grades.forEach((g, ci) => { s += `<text class="gh" x="${PX + ci * CP + 2}" y="28">${esc(gl(g, G))}</text>`; });
   EDGES.forEach(([a, b]) => {
     const A = POS[a], B = POS[b]; let d;
     if (G.BY[a].grade === G.BY[b].grade) { const x = A.x + NW, y1 = A.y + NH / 2, y2 = B.y + NH / 2; d = `M${x} ${y1} C${x + 24} ${y1} ${x + 24} ${y2} ${x} ${y2}`; }
@@ -1240,7 +1251,7 @@ function graphSVG(G, o = {}) {
     const lines = heat ? [wrap(nm(G, t.id), 23)[0], sub] : wrap(nm(G, t.id), 23);
     const y0 = lines.length === 1 ? p.y + NH / 2 + 5 : p.y + 19;
     const k = st ? (st[t.id] === 'gap' && roots && roots.has(t.id) ? 'root' : st[t.id]) : null;
-    const label = nm(G, t.id) + ' · ' + gl(t.grade) + (k ? ' · ' + T().st[k] : heat ? ' · ' + sub : '');
+    const label = nm(G, t.id) + ' · ' + gl(t.grade, G) + (k ? ' · ' + T().st[k] : heat ? ' · ' + sub : '');
     s += `<g class="${cls}" data-id="${t.id}"${mini ? '' : ` role="button" aria-label="${esc(label)}" tabindex="${first ? 0 : -1}"`}><rect x="${p.x}" y="${p.y}" width="${NW}" height="${NH}" rx="8"${style}/>`;
     first = false;
     lines.forEach((ln, i) => { s += `<text x="${p.x + 10}" y="${y0 + i * 16}" aria-hidden="true">${esc(ln)}</text>`; });
@@ -1256,7 +1267,7 @@ function graphSVG(G, o = {}) {
 function legendHTML(G) {
   const Lg = T().lg, allUnt = G.TOPICS.every(x => x.unt);
   const gsv = d => `<svg viewBox="0 0 10 10" aria-hidden="true"><path d="${d}"/></svg>`;
-  return `<div class="legend"><span><i class="l-known">${gsv('M1 5l3 3 5-6')}</i>${Lg.known}</span><span><i class="l-gap">${gsv('M2 2l6 6M8 2l-6 6')}</i>${Lg.gap}</span><span><i class="l-root">${gsv('M5 1v5M5 8.5v.5')}</i>${Lg.root}</span><span><i class="l-unk"></i>${Lg.unknown}</span><span><i class="l-na"></i>${Lg.na}</span>${allUnt ? '' : `<span><i class="l-unt"></i>${Lg.unt}</span>`}</div>`;
+  return `<div class="legend"><span><i class="l-known">${gsv('M1 5l3 3 5-6')}</i>${Lg.known}</span><span><i class="l-gap">${gsv('M2 2l6 6M8 2l-6 6')}</i>${Lg.gap}</span><span><i class="l-root">${gsv('M5 1v5M5 8.5v.5')}</i>${Lg.root}</span><span><i class="l-unk"></i>${Lg.unknown}</span><span><i class="l-na"></i>${Lg.na}</span>${allUnt || !G.TOPICS.some(x => x.unt) ? '' : `<span><i class="l-unt"></i>${Lg.unt}</span>`}</div>`;
 }
 function bindMap(G, box, detailEl, getState) {
   const svg = box.querySelector('svg'); let selected = null;
@@ -1294,13 +1305,13 @@ function stKey(id, s) { if (!s) return null; let k = s.st[id]; if (k === 'gap' &
 const CHIP = { known: 'ok', gap: 'gap', root: 'root' };
 function detailHTML(G, id, s) {
   const t = G.BY[id], Lx = T(), k = stKey(id, s);
-  const pre = t.pre.length ? `<ul>${t.pre.map(p => `<li>${esc(gs(G.BY[p].grade))} · ${esc(nm(G, p))}${s ? ` <span class="chip ${CHIP[stKey(p, s)] || ''}">${esc(Lx.st[stKey(p, s)] || '')}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${Lx.none}</p>`;
-  return `<div class="row"><span class="chip">${esc(gl(t.grade))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}${k ? `<span class="chip ${CHIP[k] || ''}">${esc(Lx.st[k])}</span>` : ''}</div>
+  const pre = t.pre.length ? `<ul>${t.pre.map(p => `<li>${esc(gs(G.BY[p].grade, G))} · ${esc(nm(G, p))}${s ? ` <span class="chip ${CHIP[stKey(p, s)] || ''}">${esc(Lx.st[stKey(p, s)] || '')}</span>` : ''}</li>`).join('')}</ul>` : `<p class="muted">${Lx.none}</p>`;
+  return `<div class="row"><span class="chip">${esc(gl(t.grade, G))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}${k ? `<span class="chip ${CHIP[k] || ''}">${esc(Lx.st[k])}</span>` : ''}</div>
     <h3>${esc(nm(G, id))}</h3><div class="lbl">${Lx.pre}</div>${pre}<p class="muted">${Lx.deps(t.kids.length)}</p>`;
 }
 
 // ---------- state ----------
-const S = { view: 'home', subj: 'math', clsSubj: 'math', grade: 9, name: '', test: null, result: null, cls: {}, demo: {} };
+const S = { view: 'home', subj: 'eng', clsSubj: 'eng', grade: 9, name: '', test: null, result: null, cls: {}, demo: {} };
 try { const s = localStorage.getItem('olq-subj'); if (SM[s]) { S.subj = s; S.clsSubj = s; } } catch (e) {}
 function demoResult(key) {
   if (!S.demo[key]) { const G = SUBJ[key]; S.demo[key] = { engine: simulate(G, SM[key].demo, 3, 0, 9), nameKey: 'virt', demo: true, date: new Date() }; }
@@ -1405,18 +1416,18 @@ function cellMapHTML(G, res) {
   const GL = { known: '✓', gap: '×', root: '!', unknown: '', na: '' };
   let first = true;
   const cell = (s, g) => G.TOPICS.filter(t => t.strand === s && t.grade === g).sort((a, b) => G.RANK[a.id] - G.RANK[b.id]).map(t => {
-    const k = st(t.id), b = `<button type="button" class="cm-t k-${k}${t.unt && !allUnt ? ' unt' : ''}" data-id="${t.id}" tabindex="${first ? 0 : -1}" aria-label="${esc(nm(G, t.id) + ' · ' + gl(t.grade) + ' · ' + (Lx.st[k] || ''))}"><span aria-hidden="true">${GL[k] || ''}</span></button>`;
+    const k = st(t.id), b = `<button type="button" class="cm-t k-${k}${t.unt && !allUnt ? ' unt' : ''}" data-id="${t.id}" tabindex="${first ? 0 : -1}" aria-label="${esc(nm(G, t.id) + ' · ' + gl(t.grade, G) + ' · ' + (Lx.st[k] || ''))}"><span aria-hidden="true">${GL[k] || ''}</span></button>`;
     first = false; return b;
   }).join('');
   return `<div class="cm" id="cm"><div class="cm-grid" role="group" aria-label="${esc(X.mapTitle(sname(G)))}" style="--ng:${G.grades.length}">
-    <div class="cm-h cm-corner">${X.strand}</div>${G.grades.map(g => `<div class="cm-h">${esc(gl(g))}</div>`).join('')}
+    <div class="cm-h cm-corner">${X.strand}</div>${G.grades.map(g => `<div class="cm-h">${esc(gl(g, G))}</div>`).join('')}
     ${strands.map(s => `<div class="cm-s">${esc(strandName(G, s))}</div>${G.grades.map(g => `<div class="cm-cell">${cell(s, g)}</div>`).join('')}`).join('')}
   </div></div><p class="cm-line" id="cmLine">${X.mapHint}</p>`;
 }
 function bindCellMap(G, res, detailEl) {
   const grid = document.querySelector('#cm .cm-grid'), line = $('#cmLine'); if (!grid) return;
   const btns = [...grid.querySelectorAll('.cm-t')], Lx = T(), roots = new Set(res.roots); let sel = null;
-  const label = id => `${gs(G.BY[id].grade)} · ${nm(G, id)}`;
+  const label = id => `${gs(G.BY[id].grade, G)} · ${nm(G, id)}`;
   const show = id => { line.textContent = id ? label(id) : HVT().mapHint; line.classList.toggle('on', !!id); };
   const pick = id => {
     sel = sel === id ? null : id;
@@ -1475,7 +1486,7 @@ function howModel(G, res) {
 function howSVG(M) {
   const { G, P, E, W, H, NW2, NH2, root, vert, HD } = M;
   let s = `<svg class="how-svg${vert ? ' vert' : ''}" viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
-  HD.forEach(([x, y, g]) => { s += `<text class="hg" x="${x}" y="${y}">${esc(gl(g))}</text>`; });
+  HD.forEach(([x, y, g]) => { s += `<text class="hg" x="${x}" y="${y}">${esc(gl(g, G))}</text>`; });
   E.forEach(([a, b]) => {
     const A = P[a], B = P[b]; let d;
     if (vert) {
@@ -1570,12 +1581,14 @@ function notebookSheet(G, res) {
   const full = res.chain(root), ch = (full.length > 4 ? [full[0], ...full.slice(-3)] : full).slice().reverse();
   const top = G.BY[ch[0]].grade, rg = G.BY[root].grade;
   const gn = g => (g > 9 ? '10–11' : g);
-  const cap = lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gn(top)}-сыныпта көрінді, түбірі ${gn(rg)}-сыныпта жатыр.` : `Тетрадь демо-ученика: ошибка видна в ${gn(top)} классе, а корень — в ${gn(rg)}.`;
+  const cap = G.key === 'eng' ? (lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gs(top, G)} деңгейінде көрінді, түбірі ${gs(rg, G)} деңгейінде жатыр.` : `Тетрадь демо-ученика: ошибка видна на уровне ${gs(top, G)}, а корень — на уровне ${gs(rg, G)}.`)
+    : lang === 'kk' ? `Демо оқушының дәптері: қатесі ${gn(top)}-сыныпта көрінді, түбірі ${gn(rg)}-сыныпта жатыр.` : `Тетрадь демо-ученика: ошибка видна в ${gn(top)} классе, а корень — в ${gn(rg)}.`;
   const X = '<svg class="sl-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  return `<figure class="sheet" aria-labelledby="sheetCap"><figcaption class="sheet-cap" id="sheetCap">${esc(cap)}</figcaption><ol class="sheet-lines">${ch.map(id => `<li${id === root ? ' class="is-root"' : ''}><span class="sl-g">${esc(gs(G.BY[id].grade))}</span><span class="sl-t">${esc(nm(G, id))}</span>${X}${id === root ? '<svg class="pen-circle" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M40 9 C110 2 250 3 289 20 C303 30 290 50 220 55 C150 60 40 58 14 46 C-4 36 8 16 52 8 C70 5 90 4 104 5"/></svg>' : ''}</li>`).join('')}</ol><span class="pen-note" aria-hidden="true">${lang === 'kk' ? 'түбірі осында' : 'корень здесь'}</span></figure>`;
+  return `<figure class="sheet" aria-labelledby="sheetCap"><figcaption class="sheet-cap" id="sheetCap">${esc(cap)}</figcaption><ol class="sheet-lines">${ch.map(id => `<li${id === root ? ' class="is-root"' : ''}><span class="sl-g">${esc(gs(G.BY[id].grade, G))}</span><span class="sl-t">${esc(nm(G, id))}</span>${X}${id === root ? '<svg class="pen-circle" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M40 9 C110 2 250 3 289 20 C303 30 290 50 220 55 C150 60 40 58 14 46 C-4 36 8 16 52 8 C70 5 90 4 104 5"/></svg>' : ''}</li>`).join('')}</ol><span class="pen-note" aria-hidden="true">${lang === 'kk' ? 'түбірі осында' : 'корень здесь'}</span></figure>`;
 }
 // the subject's notebook cover: its own colour and a line drawing from the subject's world
 const COVER_ART = {
+  eng: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a-soft" d="M0 172H360"/><rect x="40" y="40" width="130" height="90" rx="14"/><path d="M70 130l-10 26 34-26"/><path class="a-soft" d="M62 70h86M62 96h56"/><rect x="200" y="20" width="130" height="80" rx="14"/><path d="M300 100l10 24-32-24"/><path class="a-soft" d="M222 48h86M222 72h50"/></g>',
   math: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="a-soft" d="M40 160H360M70 186V14"/><path d="M95 30Q170 250 245 30"/><circle cx="133" cy="160" r="4" fill="currentColor"/><circle cx="207" cy="160" r="4" fill="currentColor"/><path class="a-soft" d="M268 120l60-80 22 80z"/></g><text x="190" y="190" font-size="17">x² − 4x + 3 = 0</text>',
   hist: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path class="a-soft" d="M0 172H360M20 172c30-14 60-14 90 0"/><circle class="a-soft" cx="326" cy="44" r="16"/><path d="M118 172V64h66v108"/><path d="M134 172v-46q17-34 34 0v46"/><path d="M118 64l-6-10h78l-6 10"/><path d="M184 112h104v60H184"/><path d="M196 112q0-58 46-58t46 58"/><path class="a-soft" d="M242 54v58M218 62q-10 22-10 50M266 62q10 22 10 50"/><path d="M242 54v-14M236 40h12"/><path d="M300 172v-34q12-22 24 0v34z"/><path class="a-soft" d="M40 150l8-14 6 6 8-16 8 24M44 150h24"/></g>',
   mlit: '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="a-soft" d="M140 172H350"/><rect x="160" y="128" width="26" height="44"/><rect x="204" y="98" width="26" height="74"/><rect x="248" y="112" width="26" height="60"/><rect x="292" y="58" width="26" height="114"/><path d="M173 112l44-34 44 16 44-56"/><circle cx="305" cy="38" r="4" fill="currentColor"/><path class="a-soft" d="M40 30h70v130l-10-7-10 7-10-7-10 7-10-7-10 7-10-7z"/><path class="a-soft" d="M52 52h46M52 72h32M52 92h40M52 120h46"/></g><text class="a-hand" x="56" y="150" font-size="24">−15%</text>',
@@ -1602,11 +1615,11 @@ function renderHome() {
     <form class="card startcard" id="startForm">
       <h2>${Lx.startTitle}: ${esc(sname(G))}</h2>
       <div class="field"><label for="nameIn">${Lx.nameL}</label><input class="input" id="nameIn" maxlength="40" autocomplete="off" placeholder="${esc(Lx.namePh)}" value="${esc(S.name)}"></div>
-      <div class="field"><span class="lbl" id="gradeLbl">${Lx.gradeL}</span>
+      <div class="field"${S.subj === 'eng' ? ' hidden' : ''}><span class="lbl" id="gradeLbl">${Lx.gradeL}</span>
         <div class="gradeseg" role="group" aria-labelledby="gradeLbl">${[7, 8, 9, 11].map(g => `<button type="button" data-g="${g}" aria-pressed="${S.grade === g}">${g > 9 ? Lx.g1011 : g}</button>`).join('')}</div></div>
       <button class="btn btn-primary" type="submit">${Lx.start}${ico('arrow')}</button>
       <button class="btn btn-ghost" type="button" id="demoBtn">${ico('play')}${Lx.demo}</button>
-      <button class="btn btn-ghost" type="button" id="courseBtn">${ROBOT_MINI}${CT().demoCourse}</button>
+      <button class="btn btn-ghost" type="button" id="courseBtn"${S.subj === 'eng' ? ' hidden' : ''}>${ROBOT_MINI}${CT().demoCourse}</button>
       <p class="note">${esc(Lx.demoNote(nm(G, meta.demo[0]), nm(G, meta.demo[1])))}</p>
     </form>
   </div>
@@ -1646,7 +1659,7 @@ function renderHome() {
 // ---------- test ----------
 function startTest(demo) {
   if (S.test) clearTimeout(S.test.timer);
-  const G = SUBJ[S.subj], grade = demo ? 9 : S.grade;
+  const G = SUBJ[S.subj], grade = demo || G.key === 'eng' ? 9 : S.grade;
   S.test = { G, engine: Engine({ graph: G, grade }), demo, auto: demo, paused: false, step: null, q: null, n: 0, log: [], seed: Math.floor(Math.random() * 1e6), truth: demo ? truthFromRoots(G, SM[G.key].demo) : null, name: demo ? null : S.name.trim(), logged: new Set(), busy: false, picked: null };
   S.view = 'test';
   nextQ(true);
@@ -1726,7 +1739,7 @@ function renderTest() {
   $('#v-test').innerHTML = `
   <div class="testgrid">
     <article class="card qcard" aria-live="polite">
-      <div class="qmeta"><span class="qn">${Lx.q} ${X.n}</span><span class="chip">${esc(sname(G))}</span><span class="chip">${esc(gl(t.grade))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="muted" >${esc(nm(G, t.id))}</span>${X.demo ? `<span class="badge-demo">${esc(Lx.virt)}</span>` : ''}</div>
+      <div class="qmeta"><span class="qn">${Lx.q} ${X.n}</span><span class="chip">${esc(sname(G))}</span><span class="chip">${esc(gl(t.grade, G))}</span>${t.unt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="muted" >${esc(nm(G, t.id))}</span>${X.demo ? `<span class="badge-demo">${esc(Lx.virt)}</span>` : ''}</div>
       <h1 class="stem">${esc(tr(q.stem))}</h1>
       ${exprHTML(q)}
       <div class="opts${wide ? ' wide' : ''}">${q.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}" ${X.demo ? 'tabindex="-1"' : ''}><span class="k">${'ABCD'[i]}</span><span class="v ${kind}">${esc(tr(o))}</span><span class="mark">${ico(i === q.a ? 'check' : 'x')}</span></button>`).join('')}</div>
@@ -1775,8 +1788,8 @@ function updateEngine() {
   const st = {}; G.TOPICS.forEach(t => { const s0 = X.engine.status(t.id); st[t.id] = s0 === 'conflict' ? 'unknown' : s0; });
   $('#miniMap').innerHTML = graphSVG(G, { st, roots: new Set([...res.certainRoots].filter(r => X.logged.has(r))), cur: X.busy ? null : X.step.id, mini: true });
   $('#log').innerHTML = X.log.slice(0, 12).map(l => {
-    if (l.kind === 'root') return `<li class="root">${esc(Lx.lRoot(gs(G.BY[l.id].grade) + ' · ' + nm(G, l.id)))}</li>`;
-    return `<li class="${l.kind}"><span class="g">${esc(gs(G.BY[l.id].grade))}</span><span>${esc(nm(G, l.id))}: ${{ ok: Lx.lOk, bad: Lx.lBad, dk: Lx.lDk }[l.kind]}</span></li>`;
+    if (l.kind === 'root') return `<li class="root">${esc(Lx.lRoot(gs(G.BY[l.id].grade, G) + ' · ' + nm(G, l.id)))}</li>`;
+    return `<li class="${l.kind}"><span class="g">${esc(gs(G.BY[l.id].grade, G))}</span><span>${esc(nm(G, l.id))}: ${{ ok: Lx.lOk, bad: Lx.lBad, dk: Lx.lDk }[l.kind]}</span></li>`;
   }).join('');
 }
 document.addEventListener('keydown', e => {
@@ -1790,25 +1803,25 @@ document.addEventListener('keydown', e => {
 function renderResult() {
   const Lx = T();
   const r = S.result || demoResult(S.subj);
-  const e = r.engine, G = e.G, res = e.result(), name = resName(r);
+  const e = r.engine, G = e.G, res = e.result(), name = resName(r), lv = G.key === 'eng' ? cefr(G, res) : null;
   const scope = e.scope.size, roots = res.roots.slice(0, 4), allUnt = G.TOPICS.every(x => x.unt);
   const rootsHTML = roots.length ? roots.map(id => {
     const full = res.chain(id), ch = full.length > 5 ? [full[0], full[1], null, full[full.length - 2], full[full.length - 1]] : full;
-    return `<div class="rootc"><div class="hd"><span class="chip root">${esc(gl(G.BY[id].grade))}</span><h3>${esc(nm(G, id))}</h3>${res.certainRoots.has(id) ? '' : `<span class="chip">${Lx.probable}</span>`}</div>
+    return `<div class="rootc"><div class="hd"><span class="chip root">${esc(gl(G.BY[id].grade, G))}</span><h3>${esc(nm(G, id))}</h3>${res.certainRoots.has(id) ? '' : `<span class="chip">${Lx.probable}</span>`}</div>
       <p class="muted" >${Lx.impact(res.impact(id))}</p>
-      <div class="chain">${ch.map((c, i) => `${i ? '<span class="ar">→</span>' : ''}${c ? `<span class="lk"><span class="g">${esc(gs(G.BY[c].grade))}</span>${esc(nm(G, c))}</span>` : `<span class="muted">+${full.length - 4}</span>`}`).join('')}</div></div>`;
+      <div class="chain">${ch.map((c, i) => `${i ? '<span class="ar">→</span>' : ''}${c ? `<span class="lk"><span class="g">${esc(gs(G.BY[c].grade, G))}</span>${esc(nm(G, c))}</span>` : `<span class="muted">+${full.length - 4}</span>`}`).join('')}</div></div>`;
   }).join('') : `<p>${Lx.noGaps}</p>`;
   const weeks = Math.max(1, Math.ceil(res.path.length / 3));
-  const pathItem = (id, i) => `${i % 3 === 0 ? `<li class="wk">${Lx.week(i / 3 + 1)}</li>` : ''}<li class="it${res.roots.includes(id) ? ' isroot' : ''}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${esc(nm(G, id))}</span><span class="row" style="gap:6px">${G.BY[id].unt && !allUnt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="chip">${esc(gs(G.BY[id].grade))}</span></span></li>`;
+  const pathItem = (id, i) => `${i % 3 === 0 ? `<li class="wk">${Lx.week(i / 3 + 1)}</li>` : ''}<li class="it${res.roots.includes(id) ? ' isroot' : ''}"><span class="n">${String(i + 1).padStart(2, '0')}</span><span>${esc(nm(G, id))}</span><span class="row" style="gap:6px">${G.BY[id].unt && !allUnt ? `<span class="chip unt">${Lx.untShort}</span>` : ''}<span class="chip">${esc(gs(G.BY[id].grade, G))}</span></span></li>`;
   const FIRST = 9;
   let pathHTML = `<ul class="path">${res.path.slice(0, FIRST).map(pathItem).join('')}</ul>`;
   if (res.path.length > FIRST) pathHTML += `<details class="more"><summary>${Lx.more(res.path.length - FIRST)}</summary><ul class="path">${res.path.slice(FIRST).map((id, j) => pathItem(id, j + FIRST)).join('')}</ul></details>`;
   const ch0 = roots.length ? res.chain(roots[0]) : [], top = ch0.length > 1 ? ch0[ch0.length - 1] : null;
   const msg = Lx.parent({ name, subj: sname(G), date: fmtDate(r.date), scope, q: e.asked.length, known: res.known, gaps: res.gaps.length,
-    root: roots.length ? nm(G, roots[0]) : '', rootGrade: roots.length ? G.BY[roots[0]].grade : '', impact: roots.length ? res.impact(roots[0]) : 0, top: top ? nm(G, top) : '', path: res.path.length, weeks });
+    root: roots.length ? nm(G, roots[0]) : '', rootGrade: roots.length ? gl(G.BY[roots[0]].grade, G) : '', eng: !!lv, lvl: lv ? `${lv.label} (IELTS ≈ ${lv.band})` : '', impact: roots.length ? res.impact(roots[0]) : 0, top: top ? nm(G, top) : '', path: res.path.length, weeks });
   const qlog = e.asked.map((a, i) => {
     const q = a.q, ex = q ? (Array.isArray(q.expr) ? (q.code ? '' : q.expr.map(tr).join('; ')) : tr(q.expr || '')) : '';
-    return `<div class="r"><span class="mono muted">${i + 1}</span><span class="mono muted">${esc(gs(G.BY[a.id].grade))}</span><span>${esc(nm(G, a.id))}${ex ? ` <span class="muted">${esc(ex)}</span>` : ''}</span><span class="chip ${a.correct ? 'ok' : 'gap'}">${a.correct ? Lx.lOk : (a.choice === -1 ? Lx.lDk : Lx.lBad)}${q && !a.correct ? ` · ${esc(Lx.right)}: ${esc(tr(q.opts[q.a]))}` : ''}</span></div>`;
+    return `<div class="r"><span class="mono muted">${i + 1}</span><span class="mono muted">${esc(gs(G.BY[a.id].grade, G))}</span><span>${esc(nm(G, a.id))}${ex ? ` <span class="muted">${esc(ex)}</span>` : ''}</span><span class="chip ${a.correct ? 'ok' : 'gap'}">${a.correct ? Lx.lOk : (a.choice === -1 ? Lx.lDk : Lx.lBad)}${q && !a.correct ? ` · ${esc(Lx.right)}: ${esc(tr(q.opts[q.a]))}` : ''}</span></div>`;
   }).join('');
   $('#v-result').innerHTML = `
   <div class="reshead">
@@ -1819,8 +1832,9 @@ function renderResult() {
     <div class="tile t-ok" style="--i:0"><span class="v"><span data-count="${res.known}">${res.known}</span><small> / ${scope}</small></span><span class="k">${Lx.tKnown}</span></div>
     <div class="tile t-gap" style="--i:1"><span class="v" data-count="${res.gaps.length}">${res.gaps.length}</span><span class="k">${Lx.tGaps}</span></div>
     <div class="tile t-gap" style="--i:2"><span class="v" data-count="${res.roots.length}">${res.roots.length}</span><span class="k">${Lx.tRoots}</span></div>
-    <div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="${res.ready}">${res.ready}</span><small>%</small></span><span class="k">${Lx.tReady}</span></div>
+    ${G.key === 'eng' ? `<div class="tile t-ok" style="--i:3"><span class="v">${lv.label}<small> · IELTS ≈ ${lv.band}</small></span><span class="k">${Lx.tLevel}</span></div>` : `<div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="\${res.ready}">\${res.ready}</span><small>%</small></span><span class="k">\${Lx.tReady}</span></div>`}
   </div>
+  ${lv ? `<p class="small" style="margin-top:calc(-1 * var(--s-2))">${esc(tr(SM.eng.note))}</p>` : ''}
   <div class="two">
     <section class="card"><div class="sec-head"><h2>${Lx.rootsTitle}</h2></div><p class="muted" style="margin-bottom:14px">${Lx.rootsLead}</p><div class="roots">${rootsHTML}</div></section>
     <section class="card"><div class="sec-head"><h2>${Lx.parentTitle}</h2></div><p class="muted" style="margin-bottom:12px">${Lx.parentLead}</p><div class="msg" id="msg">${esc(msg)}</div><div class="row" style="margin-top:12px"><button class="btn btn-ghost btn-sm" type="button" id="copyBtn">${ico('copy')}${Lx.copy}</button><span class="muted" id="copyNote" ></span></div></section>
@@ -1877,6 +1891,7 @@ function mdHTML(t) {
   return out.join('');
 }
 const COURSE_MAP = {
+  eng: [[['gram'], 'Grammar: A1–C1', 'Grammar: A1–C1'], [['vocab'], 'Vocabulary', 'Vocabulary'], [['read'], 'Reading Academic', 'Reading Academic'], [['write'], 'Writing Task 1 және 2', 'Writing Task 1 и 2']],
   math: [[['num'], 'Сандар, дәреже және түбір', 'Числа, степени и корни'], [['frac'], 'Бөлшек, пайыз, пропорция', 'Дроби, проценты, пропорции'], [['expr'], 'Алгебралық өрнектер', 'Алгебраические выражения'], [['eq'], 'Теңдеулер мен теңсіздіктер', 'Уравнения и неравенства'], [['func'], 'Функциялар мен тригонометрия', 'Функции и тригонометрия'], [['stat', 'seq'], 'Прогрессия, статистика, ықтималдық', 'Прогрессии, статистика, вероятность']],
   hist: [[['skill', 'anc'], 'Ежелгі Қазақстан', 'Древний Казахстан'], [['med', 'cult', 'mong'], 'Түркі дәуірі және Алтын Орда', 'Тюркская эпоха и Золотая Орда'], [['khan'], 'Қазақ хандығы', 'Казахское ханство'], [['col'], 'Отаршылдық және ұлт-азаттық күрес', 'Колониализм и освободительная борьба'], [['sov', 'ind'], 'XX ғасыр және Тәуелсіздік', 'XX век и Независимость']],
   mlit: [[['arith', 'unit', 'frac'], 'Есептеу негіздері', 'Основы вычислений'], [['pct', 'ratio'], 'Пайыз және пропорция', 'Проценты и пропорции'], [['motion', 'geo'], 'Қозғалыс және геометрия', 'Движение и геометрия'], [['data', 'logic', 'comb'], 'Деректер, логика, ықтималдық', 'Данные, логика, вероятность']],
@@ -1922,7 +1937,7 @@ function coursesHTML(G, res) {
   <div class="courses">${list.map((c, i) => `<article class="course" id="course-${c.id}" style="--i:${i}">
     <div class="row" style="justify-content:space-between"><h3>${esc(tr(c.name))}</h3><span class="badge-demo">${Lx.example}</span></div>
     <p class="muted">${Lx.yourGaps(c.mine.length)}</p>
-    <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade))} · ${esc(nm(G, id))}</span>`).join('')}</div>
+    <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span>`).join('')}</div>
     <div class="course-foot"><span>${Lx.lessons(c.lessons)}</span><b class="num">${big(c.price)} ₸</b></div>
     <button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>
   </article>`).join('')}</div><p class="small" style="margin-top:var(--s-3)">${Lx.priceNote}</p>`;
@@ -1964,7 +1979,7 @@ function aiCardsHTML(G, data) {
   const cards = list.slice(0, 3).map(c => {
     const id = G.BY[c.id] ? c.id : null, src = svgSrc(c.svg), course = id && courseOf(G, id);
     return `<article class="aicard">
-      <div class="aihead"><h3>${esc(id ? nm(G, id) : String(c.id || ''))}</h3>${id ? `<span class="chip root">${esc(gl(G.BY[id].grade))}</span>` : ''}</div>
+      <div class="aihead"><h3>${esc(id ? nm(G, id) : String(c.id || ''))}</h3>${id ? `<span class="chip root">${esc(gl(G.BY[id].grade, G))}</span>` : ''}</div>
       ${c.hook ? `<p class="hook">${esc(c.hook)}</p>` : ''}
       <div class="aibody">
         ${src ? `<figure class="aifig"><img src="${src}" alt="${esc(Lx.aiFigAlt(id ? nm(G, id) : ''))}" loading="lazy" width="320" height="200"></figure>` : ''}
@@ -2039,12 +2054,12 @@ function renderClass() {
   <div class="subjseg" role="group" aria-label="${esc(Lx.pickSubj)}">${SUBJ_KEYS.map(k => `<button type="button" data-s="${k}" aria-pressed="${S.clsSubj === k}">${esc(tr(SM[k].name))}</button>`).join('')}</div>
   <div class="tiles three">
     <div class="tile t-ok" style="--i:0"><span class="v"><span data-count="${C.avg}">${C.avg}</span><small>%</small></span><span class="k">${Lx.cAvg}</span></div>
-    <div class="tile t-gap" style="--i:1"><span class="v"><span data-count="${C.deep}">${C.deep}</span><small>%</small></span><span class="k">${Lx.cDeep}</span></div>
+    <div class="tile t-gap" style="--i:1"><span class="v"><span data-count="${C.deep}">${C.deep}</span><small>%</small></span><span class="k">${G.key === 'eng' ? Lx.cDeepEng : Lx.cDeep}</span></div>
     <div class="tile" style="--i:2"><span class="v txt">${r1 ? esc(nm(G, r1[0])) : '—'}</span><span class="k">${Lx.cTop}${r1 ? ` · ${pct(r1[1])}% ${Lx.pctStud}` : ''}</span></div>
   </div>
   <div class="two">
     <section class="card"><div class="sec-head"><h2>${Lx.cRootsTitle}</h2></div><p class="muted" style="margin-bottom:14px">${Lx.cRootsLead}</p>
-      <div class="bars">${C.topRoots.slice(0, 7).map(([id, c]) => `<div class="b"><div class="t"><span>${esc(gs(G.BY[id].grade))} · ${esc(nm(G, id))}</span><span>${pct(c)}%</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></div>`).join('')}</div></section>
+      <div class="bars">${C.topRoots.slice(0, 7).map(([id, c]) => `<div class="b"><div class="t"><span>${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span><span>${pct(c)}%</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></div>`).join('')}</div></section>
     <section class="card"><div class="sec-head"><h2>${Lx.recTitle}</h2></div>
       ${r1 ? `<p>${esc(Lx.rec(nm(G, r1[0]), pct(r1[1]), G.BY[r1[0]].kids.length))}</p>` : ''}
       ${r2 ? `<p class="muted" style="margin-top:10px">${esc(Lx.rec2(nm(G, r2[0]), pct(r2[1])))}</p>` : ''}</section>
@@ -2057,7 +2072,7 @@ function renderClass() {
   <section class="card">
     <div class="sec-head"><h2>${Lx.stTitle}</h2><span class="muted" >${Lx.rowHint}</span></div>
     <div class="tbl"><table><thead><tr><th>${Lx.colName}</th><th>${Lx.colRoots}</th><th>${Lx.colMastery}</th><th>${Lx.colQ}</th></tr></thead><tbody>
-    ${C.students.map((s, i) => { const m = Math.round(100 * s.res.known / G.TOPICS.length); return `<tr class="click" data-i="${i}" tabindex="0"><td>${esc(s.name)}</td><td><div class="row" style="gap:4px">${s.res.roots.length ? s.res.roots.slice(0, 3).map(r => `<span class="chip gap">${esc(gs(G.BY[r].grade))} · ${esc(nm(G, r))}</span>`).join('') : '<span class="chip ok">—</span>'}</div></td><td class="num"><span class="mbar"><i style="width:${m}%"></i></span>${m}%</td><td class="num mono">${s.engine.asked.length}</td></tr>`; }).join('')}
+    ${C.students.map((s, i) => { const m = Math.round(100 * s.res.known / G.TOPICS.length); return `<tr class="click" data-i="${i}" tabindex="0"><td>${esc(s.name)}</td><td><div class="row" style="gap:4px">${s.res.roots.length ? s.res.roots.slice(0, 3).map(r => `<span class="chip gap">${esc(gs(G.BY[r].grade, G))} · ${esc(nm(G, r))}</span>`).join('') : '<span class="chip ok">—</span>'}</div></td><td class="num"><span class="mbar"><i style="width:${m}%"></i></span>${m}%</td><td class="num mono">${s.engine.asked.length}</td></tr>`; }).join('')}
     </tbody></table></div>
   </section>`;
   bindMap(G, $('#clsMap'), $('#clsDetail'), null);
@@ -2284,7 +2299,7 @@ function botChips() {
 function botHello() {
   const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
   box.innerHTML = ''; bubble('bot', esc(X.hello)); memDiag(st);
-  if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade))));
+  if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade, st.G))));
 }
 async function askBot(q) {
   const sample = await samplePromise, X = CT();
