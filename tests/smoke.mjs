@@ -59,6 +59,28 @@ for (const lang of ['ru', 'kk']) {
   check(!/undefined/.test(all), `[${lang}] class view contains "undefined"`);
 }
 
+// 5. Tutor bot knows the IELTS level (AI mocked)
+{
+  const c2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await c2.addInitScript(() => {
+    window.__prompts = [];
+    const sample = async (turns, opts) => { window.__prompts.push(turns); const t = 'OK.\n>>> a | b | c\n@@@ -'; opts.onText && opts.onText({ text: t }); return { text: t }; };
+    sample.json = async () => ({ cards: [] }); sample.limits = async () => ({ images: 0 });
+    window.claude = { use: async k => (k === 'sample' ? sample : null) };
+  });
+  const p2 = await c2.newPage(); p2.on('pageerror', e => errs.push('bot: ' + e));
+  await p2.goto(URL0 + '#class'); await p2.waitForTimeout(300);
+  await p2.click('.subjseg button[data-s="eng"]'); await p2.waitForSelector('tr.click', { timeout: 30000 });
+  await p2.click('tr.click'); await p2.waitForTimeout(400);
+  await p2.evaluate(() => { location.hash = '#course'; }); await p2.waitForTimeout(600);
+  const hello = await p2.innerText('#chatLog');
+  check(LEVEL.test(hello) && /IELTS/.test(hello), 'bot greeting does not name the IELTS level');
+  await p2.click('.qchip'); await p2.waitForTimeout(600);
+  const sys = await p2.evaluate(() => (window.__prompts[0] || [{}])[0].content || '');
+  check(/IELTS/.test(sys) && LEVEL.test(sys), 'bot system context lacks IELTS role or level');
+  await c2.close();
+}
+
 check(!errs.length, 'page errors: ' + errs.join(' | '));
 await browser.close();
 console.log('problems:', bad.length ? bad : 'none');
