@@ -39,6 +39,8 @@ for (const lang of ['kk', 'ru']) {
   check(LEVEL.test(txt) && /IELTS/.test(txt), `[${lang}] result has no CEFR level or IELTS`);
   check(!/сынып|класс/.test(txt), `[${lang}] result mentions a school grade: ${(txt.match(/.{0,30}(сынып|класс).{0,10}/) || [''])[0]}`);
   check(!/undefined/.test(txt), `[${lang}] result contains "undefined"`);
+  check(!/ҰБТ|ЕНТ/.test(txt), `[${lang}] IELTS result mentions ҰБТ/ЕНТ: ${(txt.match(/.{0,30}(ҰБТ|ЕНТ).{0,20}/) || [''])[0]}`);
+  check(!(await page.$$eval('[data-open-course]', xs => xs.filter(x => x.offsetParent).length)), `[${lang}] IELTS result shows demo video-course buttons`);
 }
 
 // 4. Class view: level groups (IELTS, then math), kk and ru
@@ -51,7 +53,6 @@ for (const lang of ['ru', 'kk']) {
   check(eg.length >= 2, `[${lang}] IELTS groups: ${eg.length}`);
   check(eg.every(t => LEVEL.test(t) && /\d/.test(t)), `[${lang}] IELTS group card lacks level or count`);
   await page.click('.subjseg button[data-s="math"]'); await page.waitForSelector('#grpBtn', { timeout: 30000 }); await wait(200);
-  if (!(await page.$('.grp'))) { await page.click('#grpBtn'); await wait(300); }
   const mg = await page.$$eval('.grp', xs => xs.map(x => x.innerText));
   const names = lang === 'kk' ? /Бастапқы|Орта|Жоғары/ : /Начальный|Средний|Высокий/;
   check(mg.length >= 1 && mg.every(t => names.test(t) && !LEVEL.test(t)), `[${lang}] math groups not recomputed: ${JSON.stringify(mg.map(t => t.slice(0, 40)))}`);
@@ -65,13 +66,16 @@ for (const lang of ['ru', 'kk']) {
   await c2.addInitScript(() => {
     window.__prompts = [];
     const sample = async (turns, opts) => { window.__prompts.push(turns); const t = 'OK.\n>>> a | b | c\n@@@ -'; opts.onText && opts.onText({ text: t }); return { text: t }; };
-    sample.json = async () => ({ cards: [] }); sample.limits = async () => ({ images: 0 });
+    sample.json = async (prompt) => { window.__aiPrompt = prompt; return { cards: [] }; }; sample.limits = async () => ({ images: 0 });
     window.claude = { use: async k => (k === 'sample' ? sample : null) };
   });
   const p2 = await c2.newPage(); p2.on('pageerror', e => errs.push('bot: ' + e));
   await p2.goto(URL0 + '#class'); await p2.waitForTimeout(300);
   await p2.click('.subjseg button[data-s="eng"]'); await p2.waitForSelector('tr.click', { timeout: 30000 });
   await p2.click('tr.click'); await p2.waitForTimeout(400);
+  await p2.click('#aiBtn'); await p2.waitForTimeout(400);
+  const ai = await p2.evaluate(() => window.__aiPrompt || '');
+  check(/IELTS/.test(ai) && !/\d\s*(класс|сынып)/.test(ai), 'AI analysis prompt for IELTS uses school grades or lacks IELTS: ' + (ai.match(/.{0,30}\d\s*(класс|сынып).{0,10}/) || [''])[0]);
   await p2.evaluate(() => { location.hash = '#course'; }); await p2.waitForTimeout(600);
   const hello = await p2.innerText('#chatLog');
   check(LEVEL.test(hello) && /IELTS/.test(hello), 'bot greeting does not name the IELTS level');
@@ -80,6 +84,12 @@ for (const lang of ['ru', 'kk']) {
   check(/IELTS/.test(sys) && LEVEL.test(sys), 'bot system context lacks IELTS role or level');
   await c2.close();
 }
+
+// 6. A school-subject result renders (no raw template text)
+await page.goto(URL0 + '#class'); await wait(300);
+await page.click('.subjseg button[data-s="math"]'); await page.waitForSelector('tr.click', { timeout: 30000 });
+await page.click('tr.click'); await wait(500);
+{ const t = await page.innerHTML('#v-result'); check(!t.includes('${'), 'math result contains raw template text: ' + (t.match(/.{0,20}\$\{.{0,30}/) || [''])[0]); }
 
 check(!errs.length, 'page errors: ' + errs.join(' | '));
 await browser.close();

@@ -1210,6 +1210,11 @@ const I = {
     pctStud: 'учеников',
   },
 };
+const ENG_OV = {
+  kk: { noGaps: 'Тексерілген тақырыптарда олқылық табылмады. Келесі қадам: IELTS форматындағы сынақ тесттері.', pkgName: { start: 'Түбір', best: 'Оптимал', full: 'IELTS-ке толық' }, pkgFeatLast: 'IELTS форматындағы сынақ тесттері', pkgSubFull: 'Барлық курс + IELTS сынақтары' },
+  ru: { noGaps: 'В проверенных темах пробелов не найдено. Следующий шаг: пробные тесты в формате IELTS.', pkgName: { start: 'Корень', best: 'Оптимальный', full: 'Полный к IELTS' }, pkgFeatLast: 'Пробные тесты в формате IELTS', pkgSubFull: 'Все курсы + пробные IELTS' },
+};
+const TG = G => { const Lx = T(); if (!G || G.key !== 'eng') return Lx; const o = ENG_OV[lang]; return { ...Lx, noGaps: o.noGaps, pkgName: o.pkgName, pkgSub: { ...Lx.pkgSub, full: o.pkgSubFull }, pkgFeat: [...Lx.pkgFeat.slice(0, -1), o.pkgFeatLast] }; };
 const T = () => I[lang];
 const tr = o => (o == null ? '' : typeof o === 'string' ? o : o[lang]);
 const CEFR_L = { 4: 'A0', 5: 'A1', 6: 'A2', 7: 'B1', 8: 'B2', 9: 'C1' };
@@ -1813,9 +1818,8 @@ document.addEventListener('keydown', e => {
 
 // ---------- result ----------
 function renderResult() {
-  const Lx = T();
   const r = S.result || demoResult(S.subj);
-  const e = r.engine, G = e.G, res = e.result(), name = resName(r), lv = G.key === 'eng' ? cefr(G, res) : null;
+  const e = r.engine, G = e.G, Lx = TG(G), res = e.result(), name = resName(r), lv = G.key === 'eng' ? cefr(G, res) : null;
   const scope = e.scope.size, roots = res.roots.slice(0, 4), allUnt = G.TOPICS.every(x => x.unt);
   const rootsHTML = roots.length ? roots.map(id => {
     const full = res.chain(id), ch = full.length > 5 ? [full[0], full[1], null, full[full.length - 2], full[full.length - 1]] : full;
@@ -1844,7 +1848,7 @@ function renderResult() {
     <div class="tile t-ok" style="--i:0"><span class="v"><span data-count="${res.known}">${res.known}</span><small> / ${scope}</small></span><span class="k">${Lx.tKnown}</span></div>
     <div class="tile t-gap" style="--i:1"><span class="v" data-count="${res.gaps.length}">${res.gaps.length}</span><span class="k">${Lx.tGaps}</span></div>
     <div class="tile t-gap" style="--i:2"><span class="v" data-count="${res.roots.length}">${res.roots.length}</span><span class="k">${Lx.tRoots}</span></div>
-    ${G.key === 'eng' ? `<div class="tile t-ok" style="--i:3"><span class="v">${lv.label}<small> · IELTS ≈ ${lv.band}</small></span><span class="k">${Lx.tLevel}</span></div>` : `<div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="\${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="\${res.ready}">\${res.ready}</span><small>%</small></span><span class="k">\${Lx.tReady}</span></div>`}
+    ${G.key === 'eng' ? `<div class="tile t-ok" style="--i:3"><span class="v">${lv.label}<small> · IELTS ≈ ${lv.band}</small></span><span class="k">${Lx.tLevel}</span></div>` : `<div class="tile t-ring" style="--i:3"><svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle class="rbg" cx="32" cy="32" r="26"/><circle class="rfg" cx="32" cy="32" r="26" stroke-dasharray="163.4" stroke-dashoffset="${(163.4 * (1 - res.ready / 100)).toFixed(1)}" data-off="${(163.4 * (1 - res.ready / 100)).toFixed(1)}"/></svg><span class="v"><span data-count="${res.ready}">${res.ready}</span><small>%</small></span><span class="k">${Lx.tReady}</span></div>`}
   </div>
   ${lv ? `<p class="small" style="margin-top:calc(-1 * var(--s-2))">${esc(tr(SM.eng.note))}</p>` : ''}
   <div class="two">
@@ -1930,7 +1934,7 @@ function packages(G, res) {
   return P;
 }
 function coursesHTML(G, res) {
-  const Lx = T(), gap = new Set(res.gaps);
+  const Lx = TG(G), gap = new Set(res.gaps);
   const list = courses(G).map(c => ({ ...c, mine: c.topics.filter(id => gap.has(id)) })).filter(c => c.mine.length).sort((a, b) => b.mine.length - a.mine.length);
   if (!list.length) return `<p>${Lx.noGaps}</p>`;
   const P = packages(G, res), F = Lx.pkgFeat;
@@ -1951,18 +1955,18 @@ function coursesHTML(G, res) {
     <p class="muted">${Lx.yourGaps(c.mine.length)}</p>
     <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span>`).join('')}</div>
     <div class="course-foot"><span>${Lx.lessons(c.lessons)}</span><b class="num">${big(c.price)} ₸</b></div>
-    <button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>
+    ${G.key === 'eng' ? '' : `<button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>`}
   </article>`).join('')}</div><p class="small" style="margin-top:var(--s-3)">${Lx.priceNote}</p>`;
 }
 const big = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 function aiPrompt(e, G, res) {
-  const lk = lang === 'kk', g = id => `[${id}] «${G.BY[id].name[lang]}» (${G.BY[id].grade} ${lk ? 'сынып' : 'класс'})`;
+  const lk = lang === 'kk', g = id => `[${id}] «${G.BY[id].name[lang]}» (${G.key === 'eng' ? gl(G.BY[id].grade, G) : `${G.BY[id].grade} ${lk ? 'сынып' : 'класс'}`})`;
   const roots = res.roots.slice(0, 3);
   const wrong = e.asked.filter(a => !a.correct && a.q).slice(0, 10).map(a => {
     const q = a.q, ex = Array.isArray(q.expr) ? q.expr.map(tr).join(' | ') : tr(q.expr || '');
     return `- ${g(a.id)}: ${tr(q.stem)} ${ex} → ${a.choice >= 0 ? (lk ? 'оқушы жауабы: ' : 'ответ ученика: ') + tr(q.opts[a.choice]) : (lk ? '«білмеймін»' : '«не знаю»')}; ${lk ? 'дұрысы' : 'верно'}: ${tr(q.opts[q.a])}`;
   }).join('\n');
-  return `Ты лучший учитель по предмету «${sname(G)}» в Казахстане: объясняешь интересно, с жизненными примерами, и рисуешь понятные схемы. Ученик ${e.grade > 9 ? '10–11' : e.grade} класса прошёл диагностику.
+  return `Ты лучший учитель по предмету «${sname(G)}» в Казахстане: объясняешь интересно, с жизненными примерами, и рисуешь понятные схемы. ${G.key === 'eng' ? `Ученик готовится к IELTS; уровень по диагностике: ${cefr(G, res).label} (IELTS ≈ ${cefr(G, res).band}). Объясняй правила на языке ответа, а примеры и упражнения давай на английском. Ученик прошёл диагност` : `Ученик ${e.grade > 9 ? '10–11' : e.grade} класса прошёл диагност`}ику.
 Корневые пробелы (объясни каждый): ${roots.map(g).join('; ')}
 Цепочки последствий: ${roots.map(id => res.chain(id).map(c => G.BY[c].name[lang]).join(' → ')).join(' || ')}
 Ошибки ученика:

@@ -44,11 +44,11 @@ if (eng) {
     const r = CORE.rng(1000 + i), roots = [];
     const k = 1 + Math.floor(r() * 2);
     while (roots.length < k) { const id = ids[Math.floor(r() * ids.length)]; if (!roots.includes(id)) roots.push(id); }
-    const e = CORE.simulate(eng, roots, i, 0, 9), st = e.result().st, truth = CORE.truthFromRoots(eng, roots);
+    const e = CORE.simulate(eng, roots, i, 0.25, 9), st = e.result().st, truth = CORE.truthFromRoots(eng, roots);
     sum += ids.filter(id => (st[id] === 'gap') === truth.has(id)).length / ids.length;
   }
   const acc = sum / N;
-  console.log('eng simulated accuracy:', (100 * acc).toFixed(1) + '%');
+  console.log('eng simulated accuracy (25% guessing):', (100 * acc).toFixed(1) + '%');
   check(acc >= 0.85, `eng accuracy ${(100 * acc).toFixed(1)}% < 85%`);
 }
 
@@ -60,6 +60,7 @@ else {
   check(top.label === 'C1' && top.band === '7–8', `no gaps → ${JSON.stringify(top)}, expected C1 / 7–8`);
   check(CORE.cefr(eng, res(['e1', 'e5'])).label === 'A0', `roots e1,e5 → ${CORE.cefr(eng, res(['e1', 'e5'])).label}, expected A0`);
   check(CORE.cefr(eng, res(['e2'])).label === 'A1', `root e2 → ${CORE.cefr(eng, res(['e2'])).label}, expected A1`);
+  check(CORE.cefr(eng, res(['e26'])).band === '4–5', `B1 band ${CORE.cefr(eng, res(['e26'])).band}, expected 4–5 (common CEFR→IELTS mapping)`);
   check(CORE.cefr(eng, res(['e26'])).label === 'B1', `root e26 (B1) → ${CORE.cefr(eng, res(['e26'])).label}, expected B1: a level cannot sit above the student's root gap`);
   const math = CORE.SUBJ.math, mres = roots => CORE.simulate(math, roots, 1).result();
   const g = CORE.groupStudents(math, [{ name: 'A', res: mres([]) }, { name: 'B', res: mres(['n1']) }, { name: 'C', res: mres(['n1']) }]);
@@ -67,6 +68,13 @@ else {
   check(g[0] && g[0].n === 2 && g[0].topRoot === 'n1' && g[0].names.join() === 'B,C', `low group ${JSON.stringify(g[0])}`);
   const ge = CORE.groupStudents(eng, [{ name: 'X', res: res([]) }, { name: 'Y', res: res(['e2']) }]);
   check(JSON.stringify(ge.map(x => x.key)) === '["A1","C1"]', `eng groups ${JSON.stringify(ge.map(x => x.key))}`);
+}
+
+// ---- items flagged as ambiguous must stay fixed
+{
+  const txt = src;
+  for (const bad0 of ["['She was late ___ she missed the bus.'", "['When ___ you arrive?'", "'play', 'make', 'do', 'have']", "['I saw ___ elephant at the zoo.', 'an', 'a', 'the'", "'look up', 'look after', 'look for'"])
+    check(!txt.includes(bad0), 'ambiguous item still present: ' + bad0);
 }
 
 console.log('problems:', bad.length ? bad : 'none');

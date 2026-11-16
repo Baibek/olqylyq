@@ -945,7 +945,7 @@ const CORE = (() => {
       ['They ___ football on Sundays.', 'play', 'plays', 'are play', 'playing'],
     ])],
     ['e3', 5, 'gram', 'Артикльдер a/an/the', 'Артикли a/an/the', [], 0, eq(E.fill, [
-      ['I saw ___ elephant at the zoo.', 'an', 'a', 'the', '—'],
+      ['There is ___ elephant in this photo.', 'an', 'a', 'any', '—'],
       ['___ sun is very hot today.', 'The', 'A', 'An', '—'],
       ['She is ___ university student.', 'a', 'an', 'the', '—'],
       ['I usually have ___ breakfast at 7.', '—', 'a', 'an', 'the'],
@@ -989,7 +989,7 @@ const CORE = (() => {
     ['e9', 6, 'gram', 'Past Simple', 'Past Simple', ['e2'], 0, eq(E.fill, [
       ['Yesterday I ___ to the cinema.', 'went', 'go', 'goed', 'have gone'],
       ['She ___ the email last night.', "didn't send", "didn't sent", "doesn't send", 'not sent'],
-      ['When ___ you arrive?', 'did', 'do', 'were', 'have'],
+      ['When ___ you arrive yesterday?', 'did', 'do', 'were', 'have'],
       ['We ___ a great time in Turkey last summer.', 'had', 'have', 'haved', 'has'],
       ['He ___ his leg two years ago.', 'broke', 'breaked', 'broken', 'breaks'],
     ])],
@@ -1030,7 +1030,7 @@ const CORE = (() => {
     ['e15', 6, 'write', 'and / but / because / so', 'and / but / because / so', ['e7'], 0, eq(E.link, [
       ['I wanted to buy the jacket, ___ it was too expensive.', 'but', 'so', 'because', 'and'],
       ['It was raining, ___ we stayed at home.', 'so', 'because', 'but', 'or'],
-      ['She was late ___ she missed the bus.', 'because', 'so', 'but', 'and'],
+      ['She missed the bus ___ she got up late.', 'because', 'so', 'but', 'or'],
       ['He plays the piano ___ the guitar.', 'and', 'but', 'so', 'because'],
       ['The test was difficult, ___ most students passed.', 'but', 'so', 'because', 'and'],
     ])],
@@ -1086,7 +1086,7 @@ const CORE = (() => {
     ])],
     ['e23', 7, 'vocab', 'Фразалық етістіктер', 'Фразовые глаголы', ['e13'], 0, eq(E.mean, [
       ['Please ___ the form and give it back. (complete)', 'fill in', 'fill up', 'take in', 'give in'],
-      ['I need to ___ this word in a dictionary. (find)', 'look up', 'look after', 'look for', 'look out'],
+      ['I need to ___ this word in a dictionary. (find)', 'look up', 'look after', 'look over', 'look out'],
       ['The meeting was ___ until Friday. (postponed)', 'put off', 'put on', 'put up', 'put out'],
       ['He ___ smoking last year. (stopped)', 'gave up', 'gave in', 'gave out', 'gave away'],
       ['Can you ___ my cat while I\'m away? (take care of)', 'look after', 'look up', 'look into', 'look down'],
@@ -1232,7 +1232,7 @@ const CORE = (() => {
     ])],
     ['e45', 9, 'vocab', 'Академиялық тіркестер', 'Академические коллокации', ['e34', 'e13'], 0, eq(E.fill, [
       ['The study ___ light on the causes of the disease.', 'sheds', 'makes', 'gives', 'does'],
-      ['These findings ___ a significant role in policy-making.', 'play', 'make', 'do', 'have'],
+      ['These findings ___ a significant role in policy-making.', 'play', 'make', 'do', 'act'],
       ['The government must ___ measures to reduce crime.', 'take', 'make', 'do', 'put'],
       ['The results ___ serious questions about safety.', 'raise', 'rise', 'arise', 'lift'],
       ['This approach has ___ criticism from experts.', 'attracted', 'pulled', 'made', 'done'],
@@ -1366,7 +1366,7 @@ const CORE = (() => {
   }
 
   // ---------- CEFR estimate (IELTS graph: grade 5..9 = A1..C1) ----------
-  const CEFR = { 4: ['A0', '<3'], 5: ['A1', '3'], 6: ['A2', '3.5–4'], 7: ['B1', '4.5–5.5'], 8: ['B2', '6–6.5'], 9: ['C1', '7–8'] };
+  const CEFR = { 4: ['A0', '<2'], 5: ['A1', '2–2.5'], 6: ['A2', '3–3.5'], 7: ['B1', '4–5'], 8: ['B2', '5.5–6.5'], 9: ['C1', '7–8'] };
   function cefr(G, res) {
     // a level is passed when >= 60% of its topics are known; the estimate never sits above the lowest root gap
     const cap = res.roots.length ? Math.min(...res.roots.map(id => G.BY[id].grade)) : 9;
