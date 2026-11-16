@@ -346,6 +346,12 @@ pre.code { margin: 0; font-family: var(--f-mono); font-size: var(--t-16); line-h
 .reshead { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); align-items: end; justify-content: space-between; }
 .reshead h1 { font-size: var(--t-32); }
 .field[hidden], .btn[hidden] { display: none; }
+.grps { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--s-3); margin-top: var(--s-3); }
+.grps:empty { display: none; }
+.grp { border: 1px solid var(--line); border-radius: 16px; padding: var(--s-3); display: grid; gap: 6px; background: var(--surface); }
+.grp-h { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); }
+.grp-h b { font-family: var(--f-display); font-size: var(--t-20); }
+.grp-names { font-size: var(--t-14); color: var(--muted); }
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); }
 .tiles.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-2); } .tiles.three { grid-template-columns: minmax(0, 1fr); } }
@@ -1128,7 +1134,10 @@ const I = {
       ? `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\nОлқылық табылмады. Келесі қадам: IELTS форматындағы сынақ тесттері.` : 'Олқылық табылмады. Келесі қадам: ҰБТ деңгейіндегі тапсырмалар.'}`
       : `${o.name}: ${o.subj} бойынша диагностика (${o.date})\nТексерілді: ${o.scope} тақырып, ${o.q} сұрақ.\n${o.eng ? `Деңгейі: ${o.lvl}.\n` : ''}Меңгерген: ${o.known} тақырып. Олқылық: ${o.gaps} тақырып.\nНегізгі себеп: ${o.rootGrade}${o.eng ? ' деңгейіндегі' : 'тағы'} «${o.root}» тақырыбы. Осыған байланысты тағы ${o.impact} тақырыпта қиындық бар${o.top ? `, соның ішінде «${o.top}»` : ''}.\nҰсыныс: алдымен «${o.root}» тақырыбын қайталау (1–2 сабақ), содан кейін жеке жоспар бойынша: ${o.path} тақырып, шамамен ${o.weeks} апта.`,
     clsTitle: '9 «Б» сыныбы', clsSub: n => `${n} оқушы · мысал деректер: әр оқушыға диагностика симуляцияланды`,
-    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cDeepEng: 'Түбірі A1–A2 деңгейінде', cTop: 'Ең жиі түбір',
+    cAvg: 'Орташа меңгеру', cDeep: 'Түбірі 5–6 сыныпта', cDeepEng: 'Түбірі A1–A2 деңгейінде',
+    grpTitle: 'Топтарға бөлу', grpLead: 'Оқушылар деңгейі бойынша топтарға бөлінеді. Әр топқа ортақ түбір олқылық көрсетіледі: топ сабағын содан бастаңыз.', grpBtn: 'Топтарға бөлу',
+    grpName: { low: 'Бастапқы', mid: 'Орта', high: 'Жоғары' }, grpRange: { low: 'Меңгеру 50%-дан төмен', mid: 'Меңгеру 50–79%', high: 'Меңгеру 80% және жоғары' },
+    grpN: n => `${n} оқушы`, grpRoot: 'Ортақ түбір', grpNoRoot: 'Ортақ түбір олқылық жоқ', cTop: 'Ең жиі түбір',
     cRootsTitle: 'Сыныптағы түбір олқылықтар', cRootsLead: 'Пайыз: осы түбір олқылығы бар оқушылар үлесі.',
     recTitle: 'Мұғалімге ұсыныс', rec: (x, p, n) => `Сыныптың ${p}%-ының түбір олқылығы «${x}» тақырыбында. Келесі аптада осы тақырыпқа 1–2 қайталау сабағын берсеңіз, оған тікелей тәуелді ${n} тақырыптағы нәтиже де көтеріледі.`,
     rec2: (x, p) => `Екінші орында: «${x}» (${p}%). Бұл оқушыларды бөлек топқа бөліп, 15 минуттық тапсырма беруге болады.`,
@@ -1189,7 +1198,10 @@ const I = {
       ? `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\nПробелов не найдено. Следующий шаг: пробные тесты в формате IELTS.` : 'Пробелов не найдено. Следующий шаг: задания уровня ЕНТ.'}`
       : `${o.name}: диагностика по предмету «${o.subj}» (${o.date})\nПроверено тем: ${o.scope}, вопросов: ${o.q}.\n${o.eng ? `Уровень: ${o.lvl}.\n` : ''}Освоено тем: ${o.known}. Тем с пробелами: ${o.gaps}.\nГлавная причина: тема «${o.root}» (${o.rootGrade}). Из-за неё есть трудности и в зависимых темах (${o.impact})${o.top ? `, в том числе «${o.top}»` : ''}.\nРекомендация: сначала повторить «${o.root}» (1–2 урока), затем идти по личному плану (тем: ${o.path}, примерно ${o.weeks} нед.).`,
     clsTitle: '9 «Б» класс', clsSub: n => `Учеников: ${n} · пример данных: диагностика смоделирована для каждого ученика`,
-    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cDeepEng: 'Корень на уровне A1–A2', cTop: 'Самый частый корень',
+    cAvg: 'Среднее освоение', cDeep: 'Корень в 5–6 классе', cDeepEng: 'Корень на уровне A1–A2',
+    grpTitle: 'Разбивка на группы', grpLead: 'Ученики делятся на группы по уровню. Для каждой группы показан общий корневой пробел: с него стоит начать занятия группы.', grpBtn: 'Разбить на группы',
+    grpName: { low: 'Начальный', mid: 'Средний', high: 'Высокий' }, grpRange: { low: 'Освоение ниже 50%', mid: 'Освоение 50–79%', high: 'Освоение 80% и выше' },
+    grpN: n => `учеников: ${n}`, grpRoot: 'Общий корень', grpNoRoot: 'Общего корневого пробела нет', cTop: 'Самый частый корень',
     cRootsTitle: 'Корневые пробелы класса', cRootsLead: 'Процент: доля учеников с этим корневым пробелом.',
     recTitle: 'Рекомендация учителю', rec: (x, p, n) => `У ${p}% класса корневой пробел в теме «${x}». Если на следующей неделе дать 1–2 урока повторения, вырастут результаты и в непосредственно зависимых темах (${n}).`,
     rec2: (x, p) => `На втором месте: «${x}» (${p}%). Этих учеников можно выделить в отдельную группу и дать 15-минутное задание.`,
@@ -2045,6 +2057,14 @@ function buildClass(key) {
   const deep = Math.round(100 * students.filter(s => s.res.roots.some(r => G.BY[r].grade <= 6)).length / n);
   return (S.cls[key] = { G, students, heat, topRoots, avg, deep, n });
 }
+function groupsHTML(C) { // students split by level; IELTS by CEFR, other subjects by mastery
+  const Lx = T(), G = C.G, eng = G.key === 'eng';
+  const gs0 = groupStudents(G, C.students.map(x => ({ name: x.name, res: x.res })));
+  return gs0.map((g, i) => `<article class="grp" style="--i:${i}"><div class="grp-h"><b>${esc(eng ? g.key : Lx.grpName[g.key])}</b><span class="chip">${Lx.grpN(g.n)}</span></div>
+    ${eng ? `<p class="small muted">IELTS ≈ ${esc(cefr(G, C.students.find(x => x.name === g.names[0]).res).band)}</p>` : `<p class="small muted">${esc(Lx.grpRange[g.key])}</p>`}
+    ${g.topRoot ? `<p class="small">${Lx.grpRoot}: <b>${esc(gs(G.BY[g.topRoot].grade, G))} · ${esc(nm(G, g.topRoot))}</b></p>` : `<p class="small">${Lx.grpNoRoot}</p>`}
+    <p class="grp-names">${g.names.map(esc).join(', ')}</p></article>`).join('');
+}
 function renderClass() {
   const Lx = T(), C = buildClass(S.clsSubj), G = C.G;
   const pct = c => Math.round(100 * c / C.n);
@@ -2057,6 +2077,8 @@ function renderClass() {
     <div class="tile t-gap" style="--i:1"><span class="v"><span data-count="${C.deep}">${C.deep}</span><small>%</small></span><span class="k">${G.key === 'eng' ? Lx.cDeepEng : Lx.cDeep}</span></div>
     <div class="tile" style="--i:2"><span class="v txt">${r1 ? esc(nm(G, r1[0])) : '—'}</span><span class="k">${Lx.cTop}${r1 ? ` · ${pct(r1[1])}% ${Lx.pctStud}` : ''}</span></div>
   </div>
+  <section class="card" id="grpCard"><div class="sec-head"><h2>${Lx.grpTitle}</h2></div><p class="muted" style="margin-bottom:var(--s-3)">${Lx.grpLead}</p>
+    <button class="btn btn-primary btn-sm" type="button" id="grpBtn">${ico('users')}${Lx.grpBtn}</button><div class="grps" id="grps">${S.grpOn ? groupsHTML(C) : ''}</div></section>
   <div class="two">
     <section class="card"><div class="sec-head"><h2>${Lx.cRootsTitle}</h2></div><p class="muted" style="margin-bottom:14px">${Lx.cRootsLead}</p>
       <div class="bars">${C.topRoots.slice(0, 7).map(([id, c]) => `<div class="b"><div class="t"><span>${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span><span>${pct(c)}%</span></div><div class="bar"><i style="width:${pct(c)}%"></i></div></div>`).join('')}</div></section>
@@ -2076,6 +2098,7 @@ function renderClass() {
     </tbody></table></div>
   </section>`;
   bindMap(G, $('#clsMap'), $('#clsDetail'), null);
+  $('#grpBtn').addEventListener('click', () => { S.grpOn = true; $('#grps').innerHTML = groupsHTML(C); });
   document.querySelectorAll('.subjseg button').forEach(b => b.addEventListener('click', () => {
     const k = b.dataset.s; if (k === S.clsSubj) return;
     const done = () => { S.clsSubj = k; renderClass(); enhanceMaps(); const nb = document.querySelector(`.subjseg button[data-s="${k}"]`); if (nb) nb.focus({ preventScroll: true }); };

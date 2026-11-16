@@ -60,6 +60,7 @@ else {
   check(top.label === 'C1' && top.band === '7–8', `no gaps → ${JSON.stringify(top)}, expected C1 / 7–8`);
   check(CORE.cefr(eng, res(['e1', 'e5'])).label === 'A0', `roots e1,e5 → ${CORE.cefr(eng, res(['e1', 'e5'])).label}, expected A0`);
   check(CORE.cefr(eng, res(['e2'])).label === 'A1', `root e2 → ${CORE.cefr(eng, res(['e2'])).label}, expected A1`);
+  check(CORE.cefr(eng, res(['e26'])).label === 'B1', `root e26 (B1) → ${CORE.cefr(eng, res(['e26'])).label}, expected B1: a level cannot sit above the student's root gap`);
   const math = CORE.SUBJ.math, mres = roots => CORE.simulate(math, roots, 1).result();
   const g = CORE.groupStudents(math, [{ name: 'A', res: mres([]) }, { name: 'B', res: mres(['n1']) }, { name: 'C', res: mres(['n1']) }]);
   check(JSON.stringify(g.map(x => x.key)) === '["low","high"]', `math groups ${JSON.stringify(g.map(x => x.key))}`);

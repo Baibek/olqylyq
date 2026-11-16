@@ -1368,8 +1368,11 @@ const CORE = (() => {
   // ---------- CEFR estimate (IELTS graph: grade 5..9 = A1..C1) ----------
   const CEFR = { 4: ['A0', '<3'], 5: ['A1', '3'], 6: ['A2', '3.5–4'], 7: ['B1', '4.5–5.5'], 8: ['B2', '6–6.5'], 9: ['C1', '7–8'] };
   function cefr(G, res) {
+    // a level is passed when >= 60% of its topics are known; the estimate never sits above the lowest root gap
+    const cap = res.roots.length ? Math.min(...res.roots.map(id => G.BY[id].grade)) : 9;
     let lvl = 4;
     for (const g of [5, 6, 7, 8, 9]) {
+      if (g > cap) break;
       const ts = G.TOPICS.filter(t => t.grade === g);
       if (!ts.length || ts.filter(t => res.st[t.id] === 'known').length / ts.length < 0.6) break;
       lvl = g;
