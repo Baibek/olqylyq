@@ -911,6 +911,346 @@ const CORE = (() => {
   ];
 
 
+  // ---------- IELTS (English): levels stored in `grade`: 5=A1, 6=A2, 7=B1, 8=B2, 9=C1 ----------
+  const E = {
+    fill: L('Бос орынды толтырыңыз', 'Заполните пропуск'),
+    choose: L('Дұрыс сөйлемді таңдаңыз', 'Выберите верное предложение'),
+    read: L('Мәтінді оқып, сұраққа жауап беріңіз', 'Прочитайте текст и ответьте на вопрос'),
+    tfng: L('Тұжырым мәтінге сәйкес пе: True, False әлде Not Given?', 'Соответствует ли утверждение тексту: True, False или Not Given?'),
+    mean: L('Мағынасы ең жақын нұсқаны таңдаңыз', 'Выберите ближайший по смыслу вариант'),
+    link: L('Сөйлемдерді ең жақсы байланыстыратын сөзді таңдаңыз', 'Выберите слово, которое лучше всего связывает предложения'),
+    form: L('Сөздің дұрыс формасын таңдаңыз', 'Выберите правильную форму слова'),
+    head: L('Абзацқа ең сәйкес тақырыпты таңдаңыз', 'Выберите заголовок, который лучше всего подходит абзацу'),
+    acad: L('Академиялық жазуға ең сәйкес нұсқаны таңдаңыз', 'Выберите вариант, наиболее подходящий для академического письма'),
+  };
+  // item = [expr, correct, distractor, distractor, distractor]
+  const eq = (stem, pool) => r => { const [expr, c, ...d] = pick(r, pool); return mc(r, stem, expr, c, d); };
+  const TF = ['True', 'False', 'Not Given', 'Partly true'];
+  const tf = (passage, claim, ans) => [[passage, 'Statement: ' + claim], ans, ...TF.filter(x => x !== ans)];
+
+  const RAW_ENG = [
+    // ===== A1 =====
+    ['e1', 5, 'gram', 'to be етістігі', 'Глагол to be', [], 0, eq(E.fill, [
+      ['My sister ___ a doctor.', 'is', 'are', 'am', 'be'],
+      ['We ___ from Almaty.', 'are', 'is', 'am', 'be'],
+      ['I ___ 15 years old.', 'am', 'is', 'are', 'have'],
+      ['___ your parents at home now?', 'Are', 'Is', 'Am', 'Do'],
+      ['The books ___ on the table.', 'are', 'is', 'am', 'be'],
+    ])],
+    ['e2', 5, 'gram', 'Present Simple', 'Present Simple', ['e1'], 0, eq(E.fill, [
+      ['She ___ to school by bus every day.', 'goes', 'go', 'is go', 'going'],
+      ['My father ___ coffee in the morning.', "doesn't drink", "don't drink", "isn't drink", 'not drinks'],
+      ['___ you speak English?', 'Do', 'Does', 'Are', 'Is'],
+      ['Water ___ at 100 degrees.', 'boils', 'boil', 'is boil', 'boiling'],
+      ['They ___ football on Sundays.', 'play', 'plays', 'are play', 'playing'],
+    ])],
+    ['e3', 5, 'gram', 'Артикльдер a/an/the', 'Артикли a/an/the', [], 0, eq(E.fill, [
+      ['I saw ___ elephant at the zoo.', 'an', 'a', 'the', '—'],
+      ['___ sun is very hot today.', 'The', 'A', 'An', '—'],
+      ['She is ___ university student.', 'a', 'an', 'the', '—'],
+      ['I usually have ___ breakfast at 7.', '—', 'a', 'an', 'the'],
+      ['Can you close ___ door, please?', 'the', 'a', 'an', '—'],
+    ])],
+    ['e4', 5, 'gram', 'Көпше түр, саналатын және саналмайтын', 'Множественное число, исчисляемые и неисчисляемые', ['e3'], 0, eq(E.fill, [
+      ['There are three ___ in the room.', 'children', 'childs', 'child', 'childrens'],
+      ['How ___ water do you drink a day?', 'much', 'many', 'a lot', 'few'],
+      ['I need some ___ about the course.', 'information', 'informations', 'an information', 'information s'],
+      ['There aren\'t ___ apples left.', 'any', 'some', 'much', 'a'],
+      ['He bought two ___ of bread.', 'loaves', 'loafs', 'loaf', 'breads'],
+    ])],
+    ['e5', 5, 'vocab', 'Күнделікті сөздер', 'Повседневная лексика', [], 0, eq(E.mean, [
+      ['My mother\'s brother is my ___.', 'uncle', 'cousin', 'nephew', 'grandfather'],
+      ['A person who works in a hospital and helps doctors is a ___.', 'nurse', 'pilot', 'waiter', 'farmer'],
+      ['You buy medicine at a ___.', 'pharmacy', 'library', 'bakery', 'stadium'],
+      ['The opposite of "cheap" is ___.', 'expensive', 'cold', 'empty', 'early'],
+      ['We eat lunch in the school ___.', 'canteen', 'garage', 'bedroom', 'office'],
+    ])],
+    ['e6', 5, 'gram', 'Уақыт пен орын предлогтары', 'Предлоги времени и места', ['e5'], 0, eq(E.fill, [
+      ['The lesson starts ___ 9 o\'clock.', 'at', 'in', 'on', 'by'],
+      ['My birthday is ___ May.', 'in', 'at', 'on', 'to'],
+      ['We have a test ___ Monday.', 'on', 'in', 'at', 'for'],
+      ['The keys are ___ the table.', 'on', 'at', 'in', 'to'],
+      ['She lives ___ Astana.', 'in', 'at', 'on', 'to'],
+    ])],
+    ['e7', 5, 'read', 'Қысқа хабарландыру', 'Короткие объявления', ['e1', 'e5'], 0, eq(E.read, [
+      [['LIBRARY: Open Monday–Friday 9:00–18:00. Closed on weekends.', 'When can you visit the library?'], 'On Wednesday at 10:00', 'On Saturday at 10:00', 'On Sunday at 12:00', 'On Friday at 19:00'],
+      [['Swimming pool: children under 12 must come with an adult.', 'Who can swim alone?'], 'A 14-year-old', 'A 10-year-old', 'An 8-year-old', 'A 5-year-old'],
+      [['Café: Buy two coffees, get one free!', 'How many coffees do you pay for if you get three?'], 'Two', 'Three', 'One', 'None'],
+      [['Bus 32 does not stop at Central Park today because of road works.', 'What is true today?'], 'Bus 32 will not stop at Central Park', 'Bus 32 is not working at all', 'Central Park is closed', 'The road works are finished'],
+    ])],
+    // ===== A2 =====
+    ['e8', 6, 'gram', 'Present Continuous', 'Present Continuous', ['e2'], 0, eq(E.fill, [
+      ['Be quiet! The baby ___.', 'is sleeping', 'sleeps', 'sleep', 'sleeping'],
+      ['Look! It ___ outside.', 'is raining', 'rains', 'rain', 'raining'],
+      ['What ___ you ___ now?', 'are / doing', 'do / do', 'are / do', 'do / doing'],
+      ['I ___ for my exam this week.', 'am studying', 'study', 'studies', 'studying'],
+      ['They ___ TV at the moment.', "aren't watching", "don't watch", "isn't watching", 'not watch'],
+    ])],
+    ['e9', 6, 'gram', 'Past Simple', 'Past Simple', ['e2'], 0, eq(E.fill, [
+      ['Yesterday I ___ to the cinema.', 'went', 'go', 'goed', 'have gone'],
+      ['She ___ the email last night.', "didn't send", "didn't sent", "doesn't send", 'not sent'],
+      ['When ___ you arrive?', 'did', 'do', 'were', 'have'],
+      ['We ___ a great time in Turkey last summer.', 'had', 'have', 'haved', 'has'],
+      ['He ___ his leg two years ago.', 'broke', 'breaked', 'broken', 'breaks'],
+    ])],
+    ['e10', 6, 'gram', 'Салыстырмалы шырай', 'Степени сравнения', ['e4'], 0, eq(E.fill, [
+      ['Almaty is ___ than Taraz.', 'bigger', 'more big', 'biggest', 'big'],
+      ['This is the ___ film I have ever seen.', 'worst', 'baddest', 'worse', 'most bad'],
+      ['English is ___ than Chinese for me.', 'easier', 'more easy', 'easiest', 'more easier'],
+      ['She is the ___ student in our class.', 'most intelligent', 'intelligentest', 'more intelligent', 'most intelligentest'],
+      ['My brother is not as tall ___ me.', 'as', 'than', 'that', 'like'],
+    ])],
+    ['e11', 6, 'gram', 'Модальдар can/must/should', 'Модальные глаголы can/must/should', ['e2'], 0, eq(E.fill, [
+      ['You look tired. You ___ go to bed early.', 'should', 'must to', 'can to', 'should to'],
+      ['Students ___ use phones during the exam. It is forbidden.', "mustn't", "don't have to", 'should', 'can'],
+      ['___ you help me with this bag?', 'Could', 'Must', 'Should', 'Have'],
+      ['You ___ bring food — lunch is included.', "don't have to", "mustn't", "can't", 'must'],
+      ['My grandmother ___ speak three languages.', 'can', 'cans', 'can to', 'is can'],
+    ])],
+    ['e12', 6, 'gram', 'Future: will / going to', 'Future: will / going to', ['e2'], 0, eq(E.fill, [
+      ['Look at those clouds! It ___ rain.', 'is going to', 'will to', 'goes to', 'is will'],
+      ['The phone is ringing. I ___ answer it.', "'ll", 'am going to', 'going to', 'will to'],
+      ['We have bought tickets. We ___ visit London in June.', 'are going to', 'will to', 'go to', 'are will'],
+      ['I think robots ___ do most jobs in the future.', 'will', 'are going', 'going to', 'will to'],
+      ['___ you come to my party tomorrow?', 'Will', 'Are', 'Do', 'Going'],
+    ])],
+    ['e13', 6, 'vocab', 'Негізгі тіркестер make/do/have/take', 'Базовые коллокации make/do/have/take', ['e5'], 0, eq(E.fill, [
+      ['Please don\'t ___ a noise in the library.', 'make', 'do', 'take', 'have'],
+      ['I need to ___ my homework tonight.', 'do', 'make', 'take', 'have'],
+      ['Let\'s ___ a break for ten minutes.', 'take', 'make', 'do', 'go'],
+      ['Did you ___ a good time at the party?', 'have', 'make', 'do', 'take'],
+      ['He ___ a mistake in the first question.', 'made', 'did', 'took', 'had'],
+    ])],
+    ['e14', 6, 'read', 'Мәтіннің негізгі ойы', 'Главная мысль текста', ['e7'], 0, eq(E.read, [
+      [['Many teenagers sleep less than eight hours a night. Doctors say this affects their memory, mood and marks at school.', 'What is the main idea?'], 'Lack of sleep harms teenagers', 'Teenagers like going to school', 'Doctors sleep eight hours', 'Marks are not important'],
+      [['Cycling to work is becoming popular in big cities. It is cheap, healthy and does not pollute the air.', 'What is the text mainly about?'], 'The benefits of cycling to work', 'How to repair a bicycle', 'Pollution in small villages', 'The price of cars'],
+      [['Our town has opened a new park. It has a lake, a playground and free Wi-Fi, and it is open until midnight.', 'What is the purpose of the text?'], 'To describe a new park', 'To complain about a lake', 'To sell Wi-Fi', 'To close a playground'],
+      [['Learning a language is easier when you use it every day: watch films, read news and talk to people.', 'What does the writer suggest?'], 'Use the language daily', 'Study grammar only', 'Avoid watching films', 'Learn many languages at once'],
+    ])],
+    ['e15', 6, 'write', 'and / but / because / so', 'and / but / because / so', ['e7'], 0, eq(E.link, [
+      ['I wanted to buy the jacket, ___ it was too expensive.', 'but', 'so', 'because', 'and'],
+      ['It was raining, ___ we stayed at home.', 'so', 'because', 'but', 'or'],
+      ['She was late ___ she missed the bus.', 'because', 'so', 'but', 'and'],
+      ['He plays the piano ___ the guitar.', 'and', 'but', 'so', 'because'],
+      ['The test was difficult, ___ most students passed.', 'but', 'so', 'because', 'and'],
+    ])],
+    // ===== B1 =====
+    ['e16', 7, 'gram', 'Present Perfect', 'Present Perfect', ['e9'], 1, eq(E.fill, [
+      ['I ___ never ___ to Japan.', 'have / been', 'have / went', 'did / go', 'was / been'],
+      ['She ___ here since 2019.', 'has lived', 'lives', 'lived', 'is living'],
+      ['___ you ever ___ sushi?', 'Have / eaten', 'Did / eaten', 'Have / ate', 'Do / eat'],
+      ['We ___ our project yet.', "haven't finished", "didn't finish yet", "don't finish", "hasn't finished"],
+      ['He ___ his keys, so he can\'t open the door.', 'has lost', 'lost', 'loses', 'is losing'],
+    ])],
+    ['e17', 7, 'gram', 'Past Continuous және Past Simple', 'Past Continuous и Past Simple', ['e9', 'e8'], 1, eq(E.fill, [
+      ['I ___ dinner when the phone rang.', 'was cooking', 'cooked', 'am cooking', 'have cooked'],
+      ['While we were walking, it ___ to rain.', 'started', 'was starting', 'starts', 'has started'],
+      ['What ___ you doing at 8 pm yesterday?', 'were', 'did', 'was', 'are'],
+      ['She ___ her leg while she was skiing.', 'broke', 'was breaking', 'breaks', 'has broken'],
+      ['They ___ TV when the lights went out.', 'were watching', 'watched', 'are watching', 'have watched'],
+    ])],
+    ['e18', 7, 'gram', '1 және 2 шартты сөйлем', 'Условные предложения 1 и 2 типа', ['e12', 'e9'], 1, eq(E.fill, [
+      ['If it rains tomorrow, we ___ at home.', 'will stay', 'would stay', 'stayed', 'stay will'],
+      ['If I ___ rich, I would travel the world.', 'were', 'am', 'will be', 'would be'],
+      ['If you heat ice, it ___.', 'melts', 'would melt', 'melted', 'will melted'],
+      ['What would you do if you ___ the lottery?', 'won', 'win', 'will win', 'would win'],
+      ['If she studies hard, she ___ the exam.', 'will pass', 'would pass', 'passed', 'passes will'],
+    ])],
+    ['e19', 7, 'gram', 'Ырықсыз етіс', 'Пассивный залог', ['e9', 'e2'], 1, eq(E.fill, [
+      ['English ___ in many countries.', 'is spoken', 'speaks', 'is speaking', 'spoken'],
+      ['This bridge ___ in 1990.', 'was built', 'built', 'is built', 'has build'],
+      ['The letters ___ every morning.', 'are delivered', 'deliver', 'are delivering', 'delivered'],
+      ['The results ___ next week.', 'will be announced', 'will announce', 'are announce', 'announced'],
+      ['Paper ___ from wood.', 'is made', 'makes', 'is making', 'made is'],
+    ])],
+    ['e20', 7, 'gram', 'who/which/that сөйлемдері', 'Придаточные who/which/that', ['e3', 'e2'], 1, eq(E.fill, [
+      ['The woman ___ lives next door is a teacher.', 'who', 'which', 'what', 'whose'],
+      ['This is the phone ___ I bought yesterday.', 'that', 'who', 'what', 'whom'],
+      ['The man ___ car was stolen called the police.', 'whose', 'who', 'which', 'that'],
+      ['I like books ___ have happy endings.', 'which', 'who', 'what', 'whose'],
+      ['That\'s the place ___ we first met.', 'where', 'which', 'who', 'what'],
+    ])],
+    ['e21', 7, 'gram', 'Gerund және infinitive', 'Gerund и infinitive', ['e11'], 1, eq(E.fill, [
+      ['I enjoy ___ to music.', 'listening', 'to listen', 'listen', 'listened'],
+      ['She decided ___ medicine.', 'to study', 'studying', 'study', 'studied'],
+      ['He avoided ___ the question.', 'answering', 'to answer', 'answer', 'answered'],
+      ['We hope ___ you soon.', 'to see', 'seeing', 'see', 'seen'],
+      ['Would you mind ___ the window?', 'opening', 'to open', 'open', 'opened'],
+    ])],
+    ['e22', 7, 'vocab', 'Сөзжасам', 'Словообразование', ['e13'], 1, eq(E.form, [
+      ['The ___ of the new road took two years. (CONSTRUCT)', 'construction', 'constructive', 'constructor', 'constructed'],
+      ['Air pollution is a serious ___ problem. (ENVIRONMENT)', 'environmental', 'environment', 'environmentally', 'environmentalist'],
+      ['It is ___ to drive without a licence. (LEGAL)', 'illegal', 'unlegal', 'dislegal', 'inlegal'],
+      ['She answered the question ___. (CORRECT)', 'correctly', 'correct', 'correction', 'correctness'],
+      ['There has been a big ___ in prices. (INCREASE)', 'increase', 'increasing', 'increased', 'increasingly'],
+    ])],
+    ['e23', 7, 'vocab', 'Фразалық етістіктер', 'Фразовые глаголы', ['e13'], 1, eq(E.mean, [
+      ['Please ___ the form and give it back. (complete)', 'fill in', 'fill up', 'take in', 'give in'],
+      ['I need to ___ this word in a dictionary. (find)', 'look up', 'look after', 'look for', 'look out'],
+      ['The meeting was ___ until Friday. (postponed)', 'put off', 'put on', 'put up', 'put out'],
+      ['He ___ smoking last year. (stopped)', 'gave up', 'gave in', 'gave out', 'gave away'],
+      ['Can you ___ my cat while I\'m away? (take care of)', 'look after', 'look up', 'look into', 'look down'],
+    ])],
+    ['e24', 7, 'read', 'Нақты ақпаратты табу', 'Поиск деталей', ['e14'], 1, eq(E.read, [
+      [['The museum was founded in 1856 by a group of local doctors. Today it has over 20,000 objects and receives about 300,000 visitors a year.', 'Who founded the museum?'], 'Local doctors', 'Local teachers', 'The government', '300,000 visitors'],
+      [['The course lasts twelve weeks. Classes take place on Tuesday and Thursday evenings, and the final exam is in week thirteen.', 'When is the final exam?'], 'In week thirteen', 'In week twelve', 'On Tuesday evening', 'After twenty weeks'],
+      [['Bamboo can grow up to 91 centimetres in a single day, which makes it one of the fastest-growing plants on Earth.', 'How fast can bamboo grow?'], 'Up to 91 cm per day', 'Up to 91 cm per year', '19 cm per day', '91 metres per day'],
+      [['The survey asked 1,200 students; 64% said they used social media for more than three hours a day.', 'How many students took part?'], '1,200', '64', '3', '768'],
+    ])],
+    ['e25', 7, 'read', 'True / False / Not Given', 'True / False / Not Given', ['e14'], 1, eq(E.tfng, [
+      tf('The library opened in 2010 and now lends more than 5,000 books every month.', 'The library opened in 2010.', 'True'),
+      tf('The library opened in 2010 and now lends more than 5,000 books every month.', 'The library has a café.', 'Not Given'),
+      tf('Most of the students who took part in the study were from rural areas.', 'The majority of participants lived in cities.', 'False'),
+      tf('The new drug reduced symptoms in 70% of patients, but it was expensive to produce.', 'The drug was cheap to make.', 'False'),
+      tf('The new drug reduced symptoms in 70% of patients, but it was expensive to produce.', 'The drug will be sold in Europe next year.', 'Not Given'),
+    ])],
+    ['e26', 7, 'write', 'however, moreover, therefore', 'however, moreover, therefore', ['e15'], 1, eq(E.link, [
+      ['Public transport is cheap. ___, it reduces traffic.', 'Moreover', 'However', 'Therefore', 'Otherwise'],
+      ['The plan was expensive. ___, the council approved it.', 'However', 'Moreover', 'Therefore', 'Similarly'],
+      ['The roads were icy. ___, many flights were cancelled.', 'As a result', 'However', 'In contrast', 'For example'],
+      ['Some people prefer cities. ___, others enjoy village life.', 'On the other hand', 'Therefore', 'Moreover', 'As a result'],
+      ['Exercise improves health. ___, it can reduce stress.', 'In addition', 'However', 'Nevertheless', 'In contrast'],
+    ])],
+    ['e27', 7, 'write', 'Өсу мен кемуді сипаттау', 'Описание трендов', ['e10', 'e13'], 1, eq(E.fill, [
+      ['Sales ___ sharply from 200 to 800 units.', 'rose', 'raised', 'grew up', 'risen'],
+      ['The number of visitors ___ steadily over the decade.', 'declined', 'reduced', 'fallen', 'decreased down'],
+      ['There was a ___ in unemployment in 2020.', 'dramatic increase', 'dramatically increase', 'dramatic increasing', 'drama increase'],
+      ['Prices remained ___ at about $5.', 'stable', 'stably', 'stability', 'stabilise'],
+      ['The figure ___ a peak of 90% in 2015.', 'reached', 'arrived', 'got to up', 'achieved at'],
+    ])],
+    // ===== B2 =====
+    ['e28', 8, 'gram', 'Present Perfect Continuous', 'Present Perfect Continuous', ['e16', 'e8'], 1, eq(E.fill, [
+      ['I ___ for you for two hours!', 'have been waiting', 'am waiting', 'waited', 'have waited since'],
+      ['She looks tired because she ___ all day.', 'has been working', 'works', 'worked', 'is worked'],
+      ['How long ___ you ___ English?', 'have / been learning', 'are / learning', 'did / learn', 'do / learn'],
+      ['It ___ since morning, so the streets are wet.', 'has been raining', 'rains', 'is raining', 'rained'],
+      ['They ___ this problem for years without success.', 'have been studying', 'study', 'are studying', 'studied since'],
+    ])],
+    ['e29', 8, 'gram', 'Past Perfect', 'Past Perfect', ['e16', 'e17'], 1, eq(E.fill, [
+      ['When we arrived, the film ___.', 'had already started', 'already started', 'has already started', 'was already start'],
+      ['She was nervous because she ___ by plane before.', 'had never travelled', 'never travelled', 'has never travelled', "didn't travelled"],
+      ['After he ___ his work, he went home.', 'had finished', 'has finished', 'finishes', 'was finish'],
+      ['I realised I ___ my passport at home.', 'had left', 'have left', 'leave', 'was leaving'],
+      ['By 2010, the company ___ 500 people.', 'had employed', 'has employed', 'employs', 'is employing'],
+    ])],
+    ['e30', 8, 'gram', '3 және аралас шартты сөйлем', 'Условные 3 типа и смешанные', ['e18', 'e29'], 1, eq(E.fill, [
+      ['If I had studied harder, I ___ the exam.', 'would have passed', 'would pass', 'will pass', 'passed'],
+      ['If she ___ the bus, she wouldn\'t have been late.', "hadn't missed", "didn't miss", "wouldn't miss", "hasn't missed"],
+      ['If I had taken the job, I ___ in London now.', 'would be living', 'would have lived', 'will live', 'lived'],
+      ['We ___ the match if our best player hadn\'t been injured.', 'might have won', 'might win', 'will win', 'won'],
+      ['If he were more careful, he ___ the accident yesterday.', "wouldn't have had", "wouldn't have", "won't have", "didn't have"],
+    ])],
+    ['e31', 8, 'gram', 'Модальмен ырықсыз етіс', 'Пассив с модальными и перфектом', ['e19', 'e11'], 1, eq(E.fill, [
+      ['The report must ___ by Friday.', 'be finished', 'finish', 'finished', 'be finishing'],
+      ['The road has ___ for repairs.', 'been closed', 'closed', 'be closed', 'being closed'],
+      ['This problem should have ___ earlier.', 'been solved', 'solved', 'be solved', 'solving'],
+      ['The new rules are ___ next month.', 'being introduced', 'introducing', 'introduce', 'been introduced'],
+      ['Mobile phones may not ___ in the exam room.', 'be used', 'use', 'used', 'being used'],
+    ])],
+    ['e32', 8, 'gram', 'Төлеу сөз (Reported speech)', 'Косвенная речь', ['e29', 'e12'], 1, eq(E.choose, [
+      ['"I am tired," she said.', 'She said that she was tired.', 'She said that she is tired yesterday.', 'She said me she was tired.', 'She told that she was tired.'],
+      ['"We will call you tomorrow," they said.', 'They said they would call me the next day.', 'They said they will call me tomorrow day.', 'They told they would call me.', 'They said they called me tomorrow.'],
+      ['"Where do you live?" he asked.', 'He asked where I lived.', 'He asked where did I live.', 'He asked where do I live.', 'He asked me where I live?'],
+      ['"I have finished the essay," Tom said.', 'Tom said he had finished the essay.', 'Tom said he has finish the essay.', 'Tom told he finished the essay.', 'Tom said me he had finished the essay.'],
+    ])],
+    ['e33', 8, 'gram', 'Қосымша анықтауыш сөйлем (non-defining)', 'Неопределительные придаточные', ['e20'], 1, eq(E.choose, [
+      ['Add extra information about my brother:', 'My brother, who lives in Paris, is a chef.', 'My brother who lives in Paris, is a chef.', 'My brother, that lives in Paris, is a chef.', 'My brother, who lives in Paris is a chef.'],
+      ['Add extra information about Astana:', 'Astana, which became the capital in 1997, has grown fast.', 'Astana, that became the capital in 1997, has grown fast.', 'Astana which became the capital in 1997, has grown fast.', 'Astana, what became the capital in 1997, has grown fast.'],
+      ['Add extra information about the project:', 'The project, which cost $2 million, was cancelled.', 'The project, that cost $2 million, was cancelled.', 'The project, who cost $2 million, was cancelled.', 'The project which, cost $2 million was cancelled.'],
+      ['Add extra information about Dr Lee:', 'Dr Lee, whose book I read, is speaking today.', 'Dr Lee, who book I read, is speaking today.', 'Dr Lee, that book I read, is speaking today.', 'Dr Lee whose book, I read is speaking today.'],
+    ])],
+    ['e34', 8, 'vocab', 'Академиялық сөздік', 'Академическая лексика', ['e22'], 1, eq(E.mean, [
+      ['The government plans to ___ new taxes. (bring in)', 'introduce', 'produce', 'reduce', 'induce'],
+      ['Scientists ___ the data carefully. (studied in detail)', 'analysed', 'ignored', 'invented', 'removed'],
+      ['There is a strong ___ between diet and health. (link)', 'correlation', 'collection', 'collision', 'conclusion'],
+      ['The results were not ___ with earlier studies. (in agreement)', 'consistent', 'constant', 'considerable', 'conscious'],
+      ['Many factors ___ to climate change. (help cause)', 'contribute', 'distribute', 'attribute', 'constitute'],
+    ])],
+    ['e35', 8, 'vocab', 'Перифраз және синонимдер', 'Перефраз и синонимы', ['e34'], 1, eq(E.mean, [
+      ['"The number of tourists went up a lot."', 'There was a significant rise in tourist numbers.', 'Tourists went up the mountain.', 'There were not many tourists.', 'Tourists were a lot of numbers.'],
+      ['"Young people use phones too much."', 'Excessive phone use is common among young people.', 'Young people do not have phones.', 'Phones are too expensive for young people.', 'Older people use phones more.'],
+      ['"Cars make the air dirty."', 'Vehicles contribute to air pollution.', 'Cars clean the air.', 'Air is used by cars.', 'Dirty cars need washing.'],
+      ['"Many people think that..."', 'It is widely believed that...', 'Nobody thinks that...', 'People think many that...', 'It is rarely believed that...'],
+    ])],
+    ['e36', 8, 'read', 'Matching headings', 'Matching headings', ['e25', 'e24'], 1, eq(E.head, [
+      [['Many cities now offer free buses at night. Officials say the aim is to reduce drink-driving and help shift workers get home safely.'], 'Reasons for free night transport', 'The history of buses', 'Problems with day trains', 'Why workers prefer cars'],
+      [['Although solar panels are cheaper than ever, many households still cannot afford the installation costs, and some roofs are unsuitable.'], 'Obstacles to using solar power at home', 'How solar panels are made', 'The falling price of electricity', 'Benefits of new roofs'],
+      [['Researchers followed 5,000 children for twenty years and found that those who read for pleasure had larger vocabularies as adults.'], 'Long-term effects of reading for pleasure', 'How to choose a children\'s book', 'Problems in modern schools', 'Why adults stop reading'],
+      [['Bees pollinate around a third of the crops we eat. Without them, the price of fruit and vegetables would rise dramatically.'], 'The economic importance of bees', 'How bees make honey', 'Types of fruit in supermarkets', 'Why bees sting'],
+    ])],
+    ['e37', 8, 'read', 'Автордың көзқарасы', 'Позиция автора', ['e25'], 1, eq(E.read, [
+      [['Supporters claim that homework improves discipline, yet there is surprisingly little evidence that it raises results in primary school.', 'What is the writer\'s view?'], 'Doubtful about the value of homework for young pupils', 'Strongly in favour of more homework', 'Neutral and has no opinion', 'Angry with primary teachers'],
+      [['It would be naive to think that a single policy could solve traffic congestion; a combination of measures is clearly needed.', 'What does the writer believe?'], 'Several measures are required', 'One policy will be enough', 'Traffic is not a problem', 'Policies are useless'],
+      [['The new museum is, admittedly, expensive to visit, but the quality of its exhibitions more than justifies the price.', 'What is the writer\'s attitude?'], 'Positive overall', 'Mainly negative', 'Uninterested', 'Confused'],
+      [['Critics dismiss online learning as a poor substitute for the classroom, but this view ignores the flexibility it offers working adults.', 'What does the writer suggest?'], 'Critics overlook an advantage of online learning', 'Online learning should be banned', 'Classrooms are always better', 'Working adults dislike flexibility'],
+    ])],
+    ['e38', 8, 'write', 'Деректерді салыстыру', 'Сравнение данных', ['e27', 'e10'], 1, eq(E.fill, [
+      ['Men spent 3 hours online, ___ women spent 5 hours.', 'whereas', 'despite', 'because of', 'in spite'],
+      ['The number of cars in 2020 was ___ that in 2000. (2 × more)', 'twice as high as', 'two times higher', 'double higher than', 'twice higher as'],
+      ['Germany produced ___ energy than France.', 'slightly more', 'slightly much', 'more slightly', 'a slightly'],
+      ['___ Japan, China saw a sharp rise.', 'Unlike', 'Like as', 'Different', 'Whereas'],
+      ['Spending on food was ___ to spending on transport, at about 20%.', 'similar', 'same', 'like', 'equally'],
+    ])],
+    ['e39', 8, 'write', 'Эссе құрылымы', 'Структура эссе', ['e26'], 1, eq(E.acad, [
+      [['Task: "Some people think university should be free. Discuss."', 'Which is the best thesis statement?'], 'This essay will argue that free university benefits society, although some costs should be shared.', 'University is a big building.', 'I want to talk about many things.', 'Free things are good and bad and also interesting.'],
+      [['Which sentence is the best topic sentence for a body paragraph?'], 'One major advantage of remote work is that it saves commuting time.', 'Also there are many other things too.', 'In conclusion, remote work is good.', 'My friend works from home.'],
+      [['What should a conclusion in IELTS Task 2 do?'], 'Summarise the main points and restate the opinion', 'Introduce a completely new argument', 'Give a personal story only', 'Repeat the question word for word'],
+      [['Which is the best way to start an introduction?'], 'Paraphrase the question and state your position', 'Copy the task exactly', 'Start with a joke', 'Write a list of examples'],
+    ])],
+    ['e40', 8, 'write', 'Сілтеме сөздер: this, which, the former', 'Связность: this, which, the former', ['e26', 'e33'], 1, eq(E.fill, [
+      ['Prices rose by 40%. ___ increase affected poor families most.', 'This', 'These', 'That is', 'It\'s'],
+      ['Cities and villages both have problems; ___ suffer from traffic, the latter from lack of jobs.', 'the former', 'the first one', 'formerly', 'the latter'],
+      ['Many students work part-time, ___ can affect their studies.', 'which', 'that', 'what', 'who'],
+      ['The government built new schools. ___ were opened in 2022.', 'These', 'This', 'Which', 'That'],
+      ['Some experts disagree with ___ view.', 'this', 'these', 'those', 'which'],
+    ])],
+    // ===== C1 =====
+    ['e41', 9, 'gram', 'Инверсия', 'Инверсия', ['e30'], 1, eq(E.fill, [
+      ['Not only ___ the exam, but she also got the highest score.', 'did she pass', 'she passed', 'she did pass', 'passed she'],
+      ['Rarely ___ such a beautiful sunset.', 'have I seen', 'I have seen', 'I saw', 'saw I'],
+      ['___ I known about the traffic, I would have left earlier.', 'Had', 'If', 'Have', 'Did'],
+      ['Under no circumstances ___ open this door.', 'should you', 'you should', 'you must', 'must not you'],
+      ['No sooner ___ home than it started to rain.', 'had we arrived', 'we had arrived', 'we arrived', 'did we arrived'],
+    ])],
+    ['e42', 9, 'gram', 'Екпін құрылымдары', 'Эмфатические конструкции', ['e33'], 1, eq(E.choose, [
+      ['Emphasise the cause: "Poor planning caused the delay."', 'It was poor planning that caused the delay.', 'It was the delay what caused poor planning.', 'What caused was poor planning the delay.', 'Poor planning it was caused the delay.'],
+      ['Emphasise what you need: "I need more time."', 'What I need is more time.', 'What I need it is more time.', 'That I need is more time.', 'It is need I more time.'],
+      ['Emphasise the person: "Maria found the answer."', 'It was Maria who found the answer.', 'It was Maria which found the answer.', 'Who found the answer it was Maria.', 'Maria was it who found.'],
+      ['Emphasise the action: "He forgot to save the file."', 'What he did was forget to save the file.', 'What he did was forgot saving the file.', 'He did what was forget the file.', 'It was forget that he did.'],
+    ])],
+    ['e43', 9, 'gram', 'Hedging: may, tends to, it is likely', 'Hedging: may, tends to, it is likely', ['e31', 'e11'], 1, eq(E.acad, [
+      ['Choose the most appropriately cautious claim.', 'Social media may contribute to anxiety among teenagers.', 'Social media always causes anxiety.', 'Social media is 100% the reason for anxiety.', 'Everyone knows social media destroys teenagers.'],
+      ['Choose the most academic hedge.', 'Older people tend to read more newspapers.', 'Old people read newspapers, period.', 'All old people love newspapers.', 'Old people read newspapers a lot, obviously.'],
+      ['Choose the best cautious conclusion.', 'It is likely that prices will continue to rise.', 'Prices will definitely rise forever.', 'Prices rise, end of story.', 'Nobody can say anything about prices.'],
+      ['Choose the most balanced statement.', 'This evidence suggests that the policy was partly effective.', 'This proves the policy is perfect.', 'The policy was totally useless.', 'Evidence shows everything about the policy.'],
+    ])],
+    ['e44', 9, 'vocab', 'Номинализация', 'Номинализация', ['e34', 'e22'], 1, eq(E.acad, [
+      ['"Prices increased quickly, and this worried people." → more academic:', 'The rapid increase in prices caused concern.', 'Prices quickly increased worried.', 'Increasing quick prices were worry.', 'People were worried because prices go up fast.'],
+      ['"Scientists discovered the virus, so they could develop a vaccine." → more academic:', 'The discovery of the virus enabled the development of a vaccine.', 'Scientists discover virus and vaccine developing.', 'Discovering scientists made vaccine.', 'The virus discovered scientists for a vaccine.'],
+      ['"If we reduce waste, the environment will improve." → more academic:', 'A reduction in waste would lead to environmental improvement.', 'Reduce waste environment improves.', 'Waste reducing will improving environment.', 'If waste is reduce, environment improve.'],
+      ['"People are using more energy." → more academic:', 'Energy consumption is increasing.', 'Energy is using more people.', 'People energy more use.', 'More energy people are using it.'],
+    ])],
+    ['e45', 9, 'vocab', 'Академиялық тіркестер', 'Академические коллокации', ['e34', 'e13'], 1, eq(E.fill, [
+      ['The study ___ light on the causes of the disease.', 'sheds', 'makes', 'gives', 'does'],
+      ['These findings ___ a significant role in policy-making.', 'play', 'make', 'do', 'have'],
+      ['The government must ___ measures to reduce crime.', 'take', 'make', 'do', 'put'],
+      ['The results ___ serious questions about safety.', 'raise', 'rise', 'arise', 'lift'],
+      ['This approach has ___ criticism from experts.', 'attracted', 'pulled', 'made', 'done'],
+    ])],
+    ['e46', 9, 'read', 'Күрделі аргумент', 'Сложная аргументация', ['e37', 'e36'], 1, eq(E.read, [
+      [['While it is tempting to attribute rising obesity solely to individual choice, such an explanation overlooks the role of food marketing, urban design and income inequality.', 'What is the writer\'s main argument?'], 'Obesity has several social causes, not only personal choice', 'Obesity is only caused by personal choice', 'Food marketing has no effect', 'Income has nothing to do with health'],
+      [['Far from being a waste of resources, space exploration has produced technologies — from water filters to medical imaging — that we now take for granted.', 'How does the writer view space exploration?'], 'As useful because of its practical benefits', 'As a waste of money', 'As dangerous for health', 'As too expensive to continue'],
+      [['The policy was hailed as a success, but its apparent effect may simply reflect a wider economic recovery that began a year earlier.', 'What is the writer questioning?'], 'Whether the policy really caused the improvement', 'Whether there was an economic recovery', 'Whether the policy existed', 'Whether success is important'],
+      [['Admittedly, standardised tests are efficient; nevertheless, they reward a narrow range of skills and may disadvantage creative students.', 'What is the writer\'s overall position?'], 'Critical of standardised tests despite one advantage', 'Fully supportive of standardised tests', 'Against all forms of testing', 'Not interested in testing'],
+    ])],
+    ['e47', 9, 'write', 'Task 2: дәлелді эссе', 'Task 2: аргументация', ['e39', 'e43', 'e40'], 1, eq(E.acad, [
+      [['Which body paragraph sentence is best developed for IELTS Task 2?'], 'For instance, Finland, which abolished most homework, still ranks among the top countries in PISA, suggesting that homework may not be essential.', 'Homework is bad. Very bad. Everyone hates it.', 'There are many reasons and also other reasons.', 'In my opinion I think that homework is a thing.'],
+      [['Which sentence best acknowledges and answers the opposing view?'], 'Although critics argue that taxes on sugar hurt the poor, the revenue could fund free healthy meals in schools.', 'Some people disagree but they are wrong.', 'Taxes are taxes and sugar is sugar.', 'There is no other opinion about this topic.'],
+      [['Which conclusion is most effective?'], 'In conclusion, while technology brings risks, its benefits for education clearly outweigh them if it is used responsibly.', 'In conclusion, I have written about technology.', 'Technology. Education. The end.', 'Finally, another new point is that robots are cool.'],
+      [['Which sentence uses cohesion most effectively?'], 'This trend, which has accelerated since 2010, has serious consequences for rural areas.', 'This is trend and it is fast and it is bad.', 'Which trend accelerated 2010 consequences.', 'The trend. It accelerated. Since 2010.'],
+    ])],
+  ];
+
   // ---------- graph builder (one per subject) ----------
   function makeGraph(key, raw, strands, depth) {
     const TOPICS = raw.map(([id, grade, strand, kk, ru, pre, unt, gen]) => ({ id, grade, strand, name: { kk, ru }, pre, unt: !!unt, gen }));
@@ -931,6 +1271,7 @@ const CORE = (() => {
     hist: makeGraph('hist', RAW_HIST, ['skill', 'anc', 'med', 'cult', 'mong', 'khan', 'col', 'sov', 'ind'], 2),
     mlit: makeGraph('mlit', RAW_MLIT, ['arith', 'unit', 'frac', 'pct', 'ratio', 'motion', 'data', 'logic', 'geo', 'comb'], Infinity),
     inf: makeGraph('inf', RAW_INF, ['info', 'hw', 'file', 'data', 'num', 'logic', 'alg', 'py', 'sheet', 'db', 'net', 'sec'], Infinity),
+    eng: makeGraph('eng', RAW_ENG, ['gram', 'vocab', 'read', 'write'], Infinity),
   };
 
   // ---------- seeded RNG ----------
