@@ -60,7 +60,7 @@ for (const lang of ['ru', 'kk']) {
   check(!/undefined/.test(all), `[${lang}] class view contains "undefined"`);
 }
 
-// 5. Tutor bot knows the IELTS level (AI mocked)
+// 5. AI analysis knows IELTS; the math video-lesson bot stays on math (AI mocked)
 {
   const c2 = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   await c2.addInitScript(() => {
@@ -76,12 +76,22 @@ for (const lang of ['ru', 'kk']) {
   await p2.click('#aiBtn'); await p2.waitForTimeout(400);
   const ai = await p2.evaluate(() => window.__aiPrompt || '');
   check(/IELTS/.test(ai) && !/\d\s*(класс|сынып)/.test(ai), 'AI analysis prompt for IELTS uses school grades or lacks IELTS: ' + (ai.match(/.{0,30}\d\s*(класс|сынып).{0,10}/) || [''])[0]);
+  // the video lesson is a MATH lesson: after an IELTS diagnosis the bot must stay a math teacher
   await p2.evaluate(() => { location.hash = '#course'; }); await p2.waitForTimeout(600);
   const hello = await p2.innerText('#chatLog');
-  check(LEVEL.test(hello) && /IELTS/.test(hello), 'bot greeting does not name the IELTS level');
+  check(!/IELTS/.test(hello) && !LEVEL.test(hello), 'math lesson bot greets with the IELTS level: ' + hello.slice(0, 120));
   await p2.click('.qchip'); await p2.waitForTimeout(600);
   const sys = await p2.evaluate(() => (window.__prompts[0] || [{}])[0].content || '');
-  check(/IELTS/.test(sys) && LEVEL.test(sys), 'bot system context lacks IELTS role or level');
+  check(!/IELTS|английск/i.test(sys), 'math lesson bot context talks about English/IELTS');
+  // after a math diagnosis the same bot uses it
+  await p2.evaluate(() => { location.hash = '#class'; }); await p2.waitForTimeout(300);
+  await p2.click('.subjseg button[data-s="math"]'); await p2.waitForSelector('tr.click', { timeout: 30000 });
+  await p2.click('tr.click'); await p2.waitForTimeout(400);
+  await p2.evaluate(() => { window.__prompts = []; location.hash = '#course'; }); await p2.waitForTimeout(600);
+  await p2.click('#botNew'); await p2.waitForTimeout(200);
+  await p2.click('.qchip'); await p2.waitForTimeout(600);
+  const sys2 = await p2.evaluate(() => (window.__prompts[0] || [{}])[0].content || '');
+  check(/Диагностика этого ученика/.test(sys2) && !/IELTS|английск/i.test(sys2), 'math lesson bot ignores the math diagnosis or mentions English');
   await c2.close();
 }
 

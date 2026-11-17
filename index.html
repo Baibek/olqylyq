@@ -3541,7 +3541,7 @@ const CK = {
     hello: 'Сәлем! Мен Ұстаз-ботпын. Видеоны бірге көреміз. Түсініксіз жер болса, кез келген сәтте сұра: мен видеоның дәл сол жерін түсіндіремін.',
     chips: ['Осы жерді түсіндір', 'Оңайырақ түсіндір', 'Басқа мысал келтір', 'Мені тексер'],
     myGap: 'Менің олқылығымды түсіндір', helloGap: (x, g) => `Диагностика бойынша түбір олқылығың: «${x}» (${g}). Барлық тақырыпты қайталамаймыз, дәл осыдан бастаймыз. «Менің олқылығымды түсіндір» батырмасын бас немесе видеодан сұрақ қой.`,
-    stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.', helloLvl: (l, b) => `Сенің деңгейің: ${l} (IELTS ≈ ${b}). Енді осы деңгейден жоғары көтерілеміз.`,
+    stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.',
     modes: { chat: 'Сұрақ-жауап', guide: 'Қадамдап үйрен', quiz: 'Тест' }, modeLbl: 'Бот режимі', modeStart: { guide: 'Қадамдап үйретуді бастайық', quiz: 'Тест баста' },
     memTitle: n => `Бот жады: ${n} жазба`, memHint: 'Бот өткен сабақтардан есте сақтағаны. Тек осы браузерде сақталады.', memEmpty: 'Әзірге бос.', memClear: 'Жадыны тазалау', memDiag: 'Соңғы диагностика',
     ask: 'Сұрағыңды жаз…', send: 'Жіберу', at: 'сәт', off: 'Ұстаз-бот бет claude.ai ішінде ашылғанда жұмыс істейді.',
@@ -3556,7 +3556,7 @@ const CK = {
     hello: 'Привет! Я Ұстаз-бот. Смотрим видео вместе. Если что-то непонятно, спрашивай в любой момент: я объясню именно это место видео.',
     chips: ['Объясни этот момент', 'Объясни проще', 'Дай другой пример', 'Проверь меня'],
     myGap: 'Объясни мой пробел', helloGap: (x, g) => `По диагностике твой корневой пробел: «${x}» (${g}). Не будем повторять всё подряд, начнём именно с него. Нажми «Объясни мой пробел» или задай вопрос по видео.`,
-    stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.', helloLvl: (l, b) => `Твой уровень: ${l} (IELTS ≈ ${b}). Теперь будем подниматься выше.`,
+    stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.',
     modes: { chat: 'Вопрос-ответ', guide: 'По шагам', quiz: 'Тест' }, modeLbl: 'Режим бота', modeStart: { guide: 'Давай учиться по шагам', quiz: 'Начни тест' },
     memTitle: n => `Память бота: записей ${n}`, memHint: 'Что бот запомнил с прошлых занятий. Хранится только в этом браузере.', memEmpty: 'Пока пусто.', memClear: 'Очистить память', memDiag: 'Последняя диагностика',
     ask: 'Напиши вопрос…', send: 'Отправить', at: 'момент', off: 'Ұстаз-бот работает, когда страница открыта в claude.ai.',
@@ -3700,9 +3700,11 @@ async function frameBlob() {
   c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
   return new Promise(res => c.toBlob(b => res(b), 'image/jpeg', .85));
 }
-function botStudent() { // the diagnosed student the tutor is working with (null before any diagnostic)
+const COURSE_SUBJ = 'math'; // the video lessons belong to this subject; the tutor only uses a diagnosis of the same subject
+function botStudent() { // the diagnosed student the tutor is working with (null before a diagnosis of the lesson's subject)
   const r = S.result; if (!r || !r.engine) return null;
-  const G = r.engine.G, res = r.engine.result();
+  const G = r.engine.G; if (G.key !== COURSE_SUBJ) return null;
+  const res = r.engine.result();
   return { G, res, grade: r.engine.grade, roots: res.roots.slice(0, 3), demo: !!r.demo };
 }
 function splitSug(t) { // reply tail: ">>> a | b | c" = follow-up suggestions, "@@@ note" = one line for the tutor's memory
@@ -3716,11 +3718,11 @@ function splitSug(t) { // reply tail: ">>> a | b | c" = follow-up suggestions, "
 const MEM_KEY = 'olqylyq.bot.mem';
 function memLoad() { try { const m = JSON.parse(localStorage.getItem(MEM_KEY) || 'null'); if (m && Array.isArray(m.notes)) return m; } catch (e) {} return { notes: [], diag: '' }; }
 function memSave(m) { try { localStorage.setItem(MEM_KEY, JSON.stringify(m)); } catch (e) {} }
-function memAdd(note) { if (!note) return; const m = memLoad(); if (m.notes.some(n => n.s === note)) return; m.notes.push({ d: new Date().toISOString().slice(0, 10), s: note }); m.notes = m.notes.slice(-12); memSave(m); botMemUI(); }
+function memAdd(note) { if (!note) return; const m = memLoad(); if (m.notes.some(n => n.s === note)) return; m.notes.push({ d: new Date().toISOString().slice(0, 10), s: note, k: COURSE_SUBJ }); m.notes = m.notes.slice(-12); memSave(m); botMemUI(); }
 function memDiag(st) { // remember the last diagnosis so the tutor still knows it after a reload
   if (!st || st.demo || !st.roots.length) return; const m = memLoad(); // virtual demo students are not remembered
   const d = `${sname(st.G)}: ${st.roots.map(id => `${nm(st.G, id)} (${st.G.BY[id].grade})`).join('; ')}`;
-  if (m.diag !== d) { m.diag = d; memSave(m); }
+  if (m.diag !== d || m.diagKey !== st.G.key) { m.diag = d; m.diagKey = st.G.key; memSave(m); }
 }
 function botMemUI() {
   const X = CT(), box = $('#botMem'); if (!box) return; const m = memLoad();
@@ -3734,7 +3736,6 @@ function botChips() {
 function botHello() {
   const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
   box.innerHTML = ''; bubble('bot', esc(X.hello)); memDiag(st);
-  if (st && st.G.key === 'eng') { const lv = cefr(st.G, st.res); bubble('bot', esc(X.helloLvl(lv.label, lv.band))); }
   if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade, st.G))));
 }
 async function askBot(q) {
@@ -3749,16 +3750,15 @@ async function askBot(q) {
   const diag = st && st.roots.length ? `Диагностика этого ученика (${st.G.key === 'eng' ? 'английский' : (st.grade > 9 ? '10–11' : st.grade) + ' класс'}) по предмету «${sname(st.G)}»: всего тем с пробелами: ${st.res.gaps.length}. Корневые пробелы: ${st.roots.map(id => `«${nm(st.G, id)}» (${st.G.key === 'eng' ? CEFR_L[st.G.BY[id].grade] : st.G.BY[id].grade + ' класс'})`).join('; ')}. Цепочки последствий: ${st.roots.map(id => st.res.chain(id).map(c => nm(st.G, c)).join(' → ')).join(' || ')}.
 Главная цель: закрыть именно эти пробелы за короткое время, не повторяя то, что ученик уже знает. Если вопрос связан с этими темами или ученик просит объяснить свой пробел, начни с самого раннего корневого пробела, объясняй с основания и покажи, как он мешает в следующих темах.` : '';
   const mem = memLoad(), focus = st && st.roots.length ? `корневой пробел «${nm(st.G, st.roots[0])}»` : `тема урока «${info.title}»`;
-  const memTxt = (!diag && mem.diag ? `Последняя диагностика ученика (из памяти), корневые пробелы: ${mem.diag}. Главная цель: закрыть именно их, не повторяя то, что ученик уже знает.\n` : '') + (mem.notes.length ? `Твои заметки с прошлых занятий с этим учеником (учитывай их, не повторяй уже усвоенное, возвращайся к тому, что было трудно):\n${mem.notes.map(n => `- ${n.d}: ${n.s}`).join('\n')}` : '');
+  const notes = mem.notes.filter(n => n.k === COURSE_SUBJ);
+  const memTxt = (!diag && mem.diag && mem.diagKey === COURSE_SUBJ ? `Последняя диагностика ученика (из памяти), корневые пробелы: ${mem.diag}. Главная цель: закрыть именно их, не повторяя то, что ученик уже знает.\n` : '') + (notes.length ? `Твои заметки с прошлых занятий с этим учеником (учитывай их, не повторяй уже усвоенное, возвращайся к тому, что было трудно):\n${notes.map(n => `- ${n.d}: ${n.s}`).join('\n')}` : '');
   const modeTxt = CS.botMode === 'guide' ? `РЕЖИМ «ПО ШАГАМ»: проведи ученика через ${focus} маленькими шагами. В первом сообщении дай план из 3–5 шагов одной строкой и сразу начни шаг 1. Дальше один шаг за сообщение: начни с «Шаг N из M», короткое объяснение (2–3 предложения) и один вопрос. К следующему шагу переходи только после верного ответа. После последнего шага подведи итог в 2 предложениях.`
     : CS.botMode === 'quiz' ? `РЕЖИМ «ТЕСТ»: проведи тест из 5 вопросов: ${focus}. Один вопрос за сообщение, начни с «Вопрос N из 5», четыре варианта ответа на отдельных строках: A) … B) … C) … D) …. Сложность повышай постепенно. Когда ученик ответил: одной-двумя фразами скажи, верно или нет и почему, затем сразу следующий вопрос. После 5-го вопроса подведи итог: сколько верно из 5 и что повторить. В этом режиме строка вариантов в конце всегда такая: >>> A | B | C | D (после итога — обычные три варианта).` : '';
-  const engTxt = st && st.G.key === 'eng' ? (lv => `РОЛЬ: ты преподаватель английского языка, готовишь ученика к IELTS (Academic и General). Текущий уровень ученика по диагностике: ${lv.label} (IELTS ≈ ${lv.band}). Объясняй правила на языке интерфейса, а примеры, упражнения и вопросы теста давай на английском (уровень на одну ступень выше текущего). Обращай внимание на типичные ошибки казахстанских учеников и на критерии IELTS Writing (Task Achievement, Coherence and Cohesion, Lexical Resource, Grammatical Range and Accuracy). Видеоурок в этом режиме не про английский — опирайся на диагностику, а не на видео.`)(cefr(st.G, st.res)) : '';
   const ctx = `Ты — «Ұстаз-бот», добрый робот-учитель, который смотрит видеоурок вместе со школьником (12–17 лет) и объясняет понятно и интересно.
 Курс: «${X.courseName}». Урок: «${info.title}». Видео сейчас на моменте ${mmss(info.t)}${info.dur ? ' из ' + mmss(info.dur) : ''}.
 ${CS.mode === 'video' ? (info.text ? `Субтитр в этот момент: «${info.text}». Рядом звучит: «${info.prev}».` : 'Субтитров нет — смотри на кадр видео в этот момент (картинка приложена, если есть).') : `В этот момент в видео говорится: «${info.text}».${info.prev ? ` Перед этим: «${info.prev}».` : ''}${info.next ? ` Дальше будет: «${info.next}».` : ''}`}
 ${CS.mode === 'anim' ? 'План урока: ' + LESSONS[CS.lesson].scenes.map((s, k) => `${mmss(LESSONS[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))} ${tr(s.text).split('.')[0]}`).join(' | ') : ''}
 ${diag}
-${engTxt}
 ${memTxt}
 ${modeTxt}
 Правила ответа:
