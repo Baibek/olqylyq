@@ -484,6 +484,9 @@ details.more summary { color: var(--primary); }
 .pkg-h { margin-bottom: var(--s-3); }
 /* course: player + robot teacher */
 .crs-head { display: grid; gap: var(--s-3); }
+.crs-pick { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--sunk); margin-bottom: var(--s-3); }
+.crs-pick button { flex: 1; min-height: 40px; border: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: var(--t-14); font-weight: 600; cursor: pointer; }
+.crs-pick button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
 .crs-head h1 { font-size: var(--t-32); margin-top: var(--s-2); }
 .crs-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); gap: var(--s-4); align-items: start; }
 @media (max-width: 960px) { .crs-grid { grid-template-columns: minmax(0, 1fr); } }
@@ -1651,7 +1654,7 @@ function renderHome() {
         <div class="gradeseg" role="group" aria-labelledby="gradeLbl">${[7, 8, 9, 11].map(g => `<button type="button" data-g="${g}" aria-pressed="${S.grade === g}">${g > 9 ? Lx.g1011 : g}</button>`).join('')}</div></div>
       <button class="btn btn-primary" type="submit">${Lx.start}${ico('arrow')}</button>
       <button class="btn btn-ghost" type="button" id="demoBtn">${ico('play')}${Lx.demo}</button>
-      <button class="btn btn-ghost" type="button" id="courseBtn">${ROBOT_MINI}${S.subj === 'math' ? CT().demoCourse : CT().demoCourseMath}</button>
+      <button class="btn btn-ghost" type="button" id="courseBtn">${ROBOT_MINI}${S.subj === 'eng' ? CT().demoCourseEng : S.subj === 'math' ? CT().demoCourse : CT().demoCourseMath}</button>
       <p class="note">${esc(Lx.demoNote(nm(G, meta.demo[0]), nm(G, meta.demo[1])))}</p>
     </form>
   </div>
@@ -1660,6 +1663,7 @@ function renderHome() {
     <div class="home-courses">
       <button type="button" class="hc" id="hcPy"><span class="hc-ic"><svg viewBox="0 0 24 24" aria-hidden="true">${SUBJ_ICON.inf}</svg></span><span><b>${PYT().courseCard}</b><span class="muted">${PYT().courseCardSub} · ${PY_TASKS.length} ${lang === 'kk' ? 'тапсырма' : 'заданий'}</span></span>${ico('arrow')}</button>
       <button type="button" class="hc alt" id="hcMath"><span class="hc-ic">${ROBOT_MINI}</span><span><b>${PYT().mathCard}</b><span class="muted">${PYT().mathCardSub}</span></span>${ico('arrow')}</button>
+      <button type="button" class="hc alt" id="hcEng"><span class="hc-ic"><svg viewBox="0 0 24 24" aria-hidden="true">${SUBJ_ICON.eng}</svg></span><span><b>${PYT().engCard}</b><span class="muted">${PYT().mathCardSub}</span></span>${ico('arrow')}</button>
     </div>
   </section>
   <section>
@@ -1683,10 +1687,11 @@ function renderHome() {
   document.querySelectorAll('.subj').forEach(b => b.addEventListener('click', () => { setSubj(b.dataset.s); renderHeader(); renderHome(); enhanceMaps(); const nb = document.querySelector(`.subj[data-s="${b.dataset.s}"]`); if (nb) nb.focus({ preventScroll: true }); }));
   $('#nameIn').addEventListener('input', e => { S.name = e.target.value; const c = $('#coverName'); if (c) c.textContent = S.name; });
   document.querySelectorAll('.gradeseg button').forEach(b => b.addEventListener('click', () => { S.grade = +b.dataset.g; document.querySelectorAll('.gradeseg button').forEach(x => x.setAttribute('aria-pressed', x === b)); }));
-  $('#courseBtn').addEventListener('click', openCourse);
+  $('#courseBtn').addEventListener('click', () => openCourse(S.subj === 'eng' ? 'eng' : 'math'));
   $('#hcPy').addEventListener('click', openPython);
   const selT = document.querySelector('.subj[aria-pressed="true"]'); if (selT) { const row = selT.parentElement; if (row.scrollWidth > row.clientWidth) row.scrollLeft = selT.offsetLeft - row.offsetLeft - 16; }
-  $('#hcMath').addEventListener('click', openCourse);
+  $('#hcMath').addEventListener('click', () => openCourse('math'));
+  $('#hcEng').addEventListener('click', () => openCourse('eng'));
 }
 
 // ---------- test ----------
@@ -1896,7 +1901,7 @@ function renderResult() {
   const rs = { st: res.st, roots: res.roots };
   bindMap(G, $('#resMap'), $('#resDetail'), () => rs);
   bindAI(r, e, G, res);
-  document.querySelectorAll('[data-open-course]').forEach(b => b.addEventListener('click', G.key === 'inf' ? openPython : openCourse));
+  document.querySelectorAll('[data-open-course]').forEach(b => b.addEventListener('click', G.key === 'inf' ? openPython : () => openCourse(G.key === 'eng' ? 'eng' : 'math')));
   $('#retake').addEventListener('click', () => go('home'));
   $('#toClass').addEventListener('click', () => { S.clsSubj = G.key; go('cls'); });
   $('#copyBtn').addEventListener('click', () => {
@@ -1971,7 +1976,7 @@ function coursesHTML(G, res) {
     <p class="muted">${Lx.yourGaps(c.mine.length)}</p>
     <div class="row" style="gap:var(--s-1)">${c.mine.map(id => `<span class="chip ${res.roots.includes(id) ? 'root' : 'gap'}">${esc(gs(G.BY[id].grade, G))} · ${esc(nm(G, id))}</span>`).join('')}</div>
     <div class="course-foot"><span>${Lx.lessons(c.lessons)}</span><b class="num">${big(c.price)} ₸</b></div>
-    ${G.key === 'eng' ? '' : `<button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>`}
+    <button class="btn btn-ghost btn-sm crs-cta" type="button" data-open-course>${ico('play')}${CT().demoLesson}</button>
   </article>`).join('')}</div><p class="small" style="margin-top:var(--s-3)">${Lx.priceNote}</p>`;
 }
 const big = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -2149,12 +2154,12 @@ const CK = {
     hello: 'Сәлем! Мен Ұстаз-ботпын. Видеоны бірге көреміз. Түсініксіз жер болса, кез келген сәтте сұра: мен видеоның дәл сол жерін түсіндіремін.',
     chips: ['Осы жерді түсіндір', 'Оңайырақ түсіндір', 'Басқа мысал келтір', 'Мені тексер'],
     myGap: 'Менің олқылығымды түсіндір', helloGap: (x, g) => `Диагностика бойынша түбір олқылығың: «${x}» (${g}). Барлық тақырыпты қайталамаймыз, дәл осыдан бастаймыз. «Менің олқылығымды түсіндір» батырмасын бас немесе видеодан сұрақ қой.`,
-    stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.',
+    stop: 'Тоқтату', newChat: 'Жаңа сұхбат', stopped: 'Тоқтатылды.', helloLvl: (l, b) => `Сенің деңгейің: ${l} (IELTS ≈ ${b}). Осы деңгейден жоғары көтерілеміз.`,
     modes: { chat: 'Сұрақ-жауап', guide: 'Қадамдап үйрен', quiz: 'Тест' }, modeLbl: 'Бот режимі', modeStart: { guide: 'Қадамдап үйретуді бастайық', quiz: 'Тест баста' },
     memTitle: n => `Бот жады: ${n} жазба`, memHint: 'Бот өткен сабақтардан есте сақтағаны. Тек осы браузерде сақталады.', memEmpty: 'Әзірге бос.', memClear: 'Жадыны тазалау', memDiag: 'Соңғы диагностика',
     ask: 'Сұрағыңды жаз…', send: 'Жіберу', at: 'сәт', off: 'Ұстаз-бот бет claude.ai ішінде ашылғанда жұмыс істейді.',
     err: { not_granted: 'AI-ға рұқсат берілмеді.', rate_limited: 'Сұрақ көп болды, сәлден кейін қайталаңыз.', other: 'Байланыс үзілді, қайта сұрап көр.' },
-    readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', demoCourseMath: 'Демо-бейнесабақ (математика) + Ұстаз-бот', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
+    readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', demoCourseMath: 'Демо-бейнесабақ (математика) + Ұстаз-бот', demoCourseEng: 'IELTS демо-сабақтары + Ұстаз-бот', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
   },
   ru: {
     back: 'Вернуться к результату', courseName: 'Рациональные числа', courseSub: 'Демо-уроки курса «Числа, степени и корни»',
@@ -2164,12 +2169,12 @@ const CK = {
     hello: 'Привет! Я Ұстаз-бот. Смотрим видео вместе. Если что-то непонятно, спрашивай в любой момент: я объясню именно это место видео.',
     chips: ['Объясни этот момент', 'Объясни проще', 'Дай другой пример', 'Проверь меня'],
     myGap: 'Объясни мой пробел', helloGap: (x, g) => `По диагностике твой корневой пробел: «${x}» (${g}). Не будем повторять всё подряд, начнём именно с него. Нажми «Объясни мой пробел» или задай вопрос по видео.`,
-    stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.',
+    stop: 'Стоп', newChat: 'Новый чат', stopped: 'Остановлено.', helloLvl: (l, b) => `Твой уровень: ${l} (IELTS ≈ ${b}). Будем подниматься выше.`,
     modes: { chat: 'Вопрос-ответ', guide: 'По шагам', quiz: 'Тест' }, modeLbl: 'Режим бота', modeStart: { guide: 'Давай учиться по шагам', quiz: 'Начни тест' },
     memTitle: n => `Память бота: записей ${n}`, memHint: 'Что бот запомнил с прошлых занятий. Хранится только в этом браузере.', memEmpty: 'Пока пусто.', memClear: 'Очистить память', memDiag: 'Последняя диагностика',
     ask: 'Напиши вопрос…', send: 'Отправить', at: 'момент', off: 'Ұстаз-бот работает, когда страница открыта в claude.ai.',
     err: { not_granted: 'Доступ к AI не разрешён.', rate_limited: 'Слишком много вопросов, повтори чуть позже.', other: 'Связь прервалась, спроси ещё раз.' },
-    readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', demoCourseMath: 'Демо-видеоурок (математика) + Ұстаз-бот', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
+    readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', demoCourseMath: 'Демо-видеоурок (математика) + Ұстаз-бот', demoCourseEng: 'Демо-уроки IELTS + Ұстаз-бот', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
   },
 };
 const CT = () => CK[lang];
@@ -2244,10 +2249,97 @@ const LESSONS = [
   ] },
 ];
 LESSONS.forEach(l => { l.dur = l.scenes.reduce((s, c) => s + c.d, 0); });
+// ---------- IELTS demo lessons (animated, same scene format as the math lessons; content stays above y≈250, subtitles sit below) ----------
+const en = (x, y, s, size = 22, fill = 'var(--ink)', extra = '') => txt(x, y, s, size, fill, extra);
+const fadeIn = (p, a, b, inner) => `<g style="opacity:${seg(p, a, b)}">${inner}</g>`;
+const chip = (x, y, w, s, fill, ink) => card(x - w / 2, y - 18, w, 34, fill, fill) + en(x, y + 5, s, 16, ink, 'font-weight="700"');
+function badge(x, y, word, kind, p, w = 180) { // TRUE / FALSE / NOT GIVEN verdict stamp
+  const col = { t: ['var(--ok-tint, #E3F4EA)', 'var(--ok, #157347)'], f: ['var(--gap-tint, #FBE7E7)', 'var(--gap)'], n: ['var(--gold-tint)', 'var(--gold-ink)'] }[kind];
+  return `<g style="opacity:${p}">` + card(x - w / 2, y - 22, w, 42, col[0], col[1]) + en(x, y + 7, word, 20, col[1], 'font-weight="800"') + '</g>';
+}
+function chartScene(p) { // line chart for Task 1: values for 2015..2020
+  const V = [200, 260, 300, 420, 650, 800], X0 = 90, X1 = 560, Y0 = 225, Y1 = 50, k = 5 * seg(p, .05, .8);
+  const px = i => X0 + (X1 - X0) * i / 5, py = v => Y0 - (Y0 - Y1) * v / 900;
+  let s = `<line x1="${X0}" y1="${Y0}" x2="${X1 + 10}" y2="${Y0}" style="stroke:var(--line-strong)" stroke-width="2"/><line x1="${X0}" y1="${Y0}" x2="${X0}" y2="${Y1 - 8}" style="stroke:var(--line-strong)" stroke-width="2"/>`;
+  for (let i = 0; i <= 5; i++) s += en(px(i), Y0 + 20, String(2015 + i), 13, 'var(--muted)');
+  [0, 300, 600, 900].forEach(v => { s += en(X0 - 26, py(v) + 5, String(v), 12, 'var(--muted)'); });
+  const pts = []; for (let i = 0; i <= Math.floor(k); i++) pts.push([px(i), py(V[i])]);
+  if (k % 1 > 0 && k < 5) { const i = Math.floor(k), f = k - i; pts.push([px(i) + (px(i + 1) - px(i)) * f, py(V[i] + (V[i + 1] - V[i]) * f)]); }
+  s += `<polyline points="${pts.map(q => q.join(',')).join(' ')}" fill="none" style="stroke:var(--primary)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach(([x, y], i) => { if (i <= Math.floor(k)) s += `<circle cx="${x}" cy="${y}" r="5" style="fill:var(--primary)"/>`; });
+  return s + en(330, 26, 'Sales of e-books (thousand units)', 16, 'var(--muted)', 'font-weight="600"');
+}
+const passageCard = () => card(40, 26, 560, 78, 'var(--sunk)') + en(320, 58, 'The city library opened in 2010. It now lends', 19) + en(320, 86, 'more than 5,000 books every month.', 19);
+const tfScene = (claim, evidence, word, kind) => p => passageCard()
+  + fadeIn(p, .1, .3, card(60, 118, 520, 46, 'var(--surface)') + en(320, 148, claim, 19, 'var(--ink)', 'font-weight="700"'))
+  + fadeIn(p, .35, .55, en(320, 190, evidence, 17, 'var(--muted)', 'font-weight="600"'))
+  + badge(320, 228, word, kind, seg(p, .6, .8), 200);
+function timeline(p, show) {
+  const xNow = 560; let s = `<line x1="60" y1="130" x2="${60 + (xNow - 60) * (show ? 1 : seg(p, 0, .3))}" y2="130" style="stroke:var(--ink)" stroke-width="3"/>`;
+  return s + `<g style="opacity:${show ? 1 : seg(p, .25, .4)}">` + en(74, 160, 'past', 15, 'var(--muted)') + `<circle cx="${xNow}" cy="130" r="9" style="fill:var(--ink)"/>` + en(xNow, 160, 'NOW', 15, 'var(--ink)', 'font-weight="700"') + '</g>';
+}
+const LESSONS_ENG = [
+  { title: L2('Present Perfect және Past Simple', 'Present Perfect и Past Simple'), scenes: [
+    { d: 8, text: L2('Сәлем! Бүгін IELTS-те ең жиі қате жіберілетін тақырыптың бірі: Present Perfect пен Past Simple айырмасы.', 'Привет! Сегодня одна из самых частых ошибок в IELTS: разница между Present Perfect и Past Simple.'),
+      draw: p => fadeIn(p, 0, .3, en(320, 100, 'Present Perfect', 48, 'var(--primary)', 'font-weight="800"') + en(320, 146, 'vs  Past Simple', 28, 'var(--muted)', 'font-weight="700"'))
+        + fadeIn(p, .45, .75, en(320, 205, tr(L2('өткен мен қазірді байланыстыратын шақ', 'время, которое связывает прошлое и настоящее')), 19, 'var(--muted)')) },
+    { d: 11, text: L2('Past Simple — уақыты нақты көрсетілген, аяқталған іс. Мысалы: I visited London in 2020.', 'Past Simple — законченное действие с точным временем. Например: I visited London in 2020.'),
+      draw: p => timeline(p, false)
+        + fadeIn(p, .35, .55, `<circle cx="230" cy="130" r="12" style="fill:var(--gap)"/>` + en(230, 100, '2020', 20, 'var(--gap)', 'font-weight="800"'))
+        + fadeIn(p, .55, .8, card(130, 188, 380, 46, 'var(--surface)') + en(320, 218, 'I visited London in 2020.', 21, 'var(--ink)', 'font-weight="700"')) },
+    { d: 11, text: L2('Present Perfect — уақыты айтылмайды, нәтижесі қазір маңызды. Мысалы: I have visited London. Яғни менде осындай тәжірибе бар.', 'Present Perfect — время не называется, важен результат сейчас. Например: I have visited London. То есть у меня есть такой опыт.'),
+      draw: p => { const q = seg(p, .1, .6), x = 200 + 360 * q;
+        return timeline(p, true) + `<path d="M200 122 Q ${(200 + x) / 2} ${122 - 90 * q} ${x} 122" fill="none" style="stroke:var(--primary)" stroke-width="4" stroke-linecap="round"/><circle cx="200" cy="130" r="10" style="fill:var(--primary)"/>` + en(200, 160, '?', 18, 'var(--primary)', 'font-weight="800"')
+          + fadeIn(p, .6, .85, card(120, 188, 400, 46, 'var(--primary-tint)', 'var(--primary)') + en(320, 218, 'I have visited London.', 21, 'var(--primary)', 'font-weight="800"')); } },
+    { d: 10, text: L2('Құрылымы: have немесе has және етістіктің үшінші формасы. She has finished. They have lived here since 2019.', 'Схема: have или has плюс третья форма глагола. She has finished. They have lived here since 2019.'),
+      draw: p => fadeIn(p, 0, .3, card(160, 26, 320, 60, 'var(--gold-tint)', 'var(--gold)') + en(320, 66, 'have / has + V3', 28, 'var(--gold-ink)', 'font-weight="800"'))
+        + fadeIn(p, .35, .55, en(320, 128, 'She has finished the essay.', 22))
+        + fadeIn(p, .6, .8, en(320, 168, 'They have lived here since 2019.', 22))
+        + fadeIn(p, .8, .95, en(320, 220, 'finish → finished · go → gone · write → written', 16, 'var(--muted)')) },
+    { d: 11, text: L2('Белгі сөздер көмектеседі. ever, never, already, yet, since, for — Present Perfect. yesterday, ago, last year, in 2020 — Past Simple.', 'Помогают слова-маркеры. ever, never, already, yet, since, for — Present Perfect. yesterday, ago, last year, in 2020 — Past Simple.'),
+      draw: p => fadeIn(p, 0, .2, en(175, 40, 'Present Perfect', 22, 'var(--primary)', 'font-weight="800"') + en(475, 40, 'Past Simple', 22, 'var(--gap)', 'font-weight="800"'))
+        + ['ever', 'never', 'already', 'yet', 'since', 'for'].map((w, i) => fadeIn(p, .15 + i * .06, .3 + i * .06, chip(110 + (i % 2) * 130, 85 + Math.floor(i / 2) * 50, 116, w, 'var(--primary-tint)', 'var(--primary)'))).join('')
+        + ['yesterday', 'two years ago', 'last year', 'in 2020'].map((w, i) => fadeIn(p, .5 + i * .07, .65 + i * .07, chip(475, 85 + i * 45, 180, w, 'var(--sunk)', 'var(--gap)'))).join('') },
+  ] },
+  { title: L2('Reading: True / False / Not Given', 'Reading: True / False / Not Given'), scenes: [
+    { d: 8, text: L2('IELTS Reading-те ең қиын тапсырмалардың бірі — True, False, Not Given. Қазір үш жауапты қалай ажыратуды көреміз.', 'Одно из самых сложных заданий IELTS Reading — True, False, Not Given. Сейчас разберём, как различать три ответа.'),
+      draw: p => fadeIn(p, 0, .3, en(320, 100, 'True / False / Not Given', 38, 'var(--primary)', 'font-weight="800"'))
+        + ['TRUE', 'FALSE', 'NOT GIVEN'].map((w, i) => badge(125 + i * 195, 180, w, 'tfn'[i], seg(p, .35 + i * .15, .55 + i * .15))).join('') },
+    { d: 9, text: L2('Алдымен мәтінді оқимыз: The city library opened in 2010. It now lends more than 5,000 books every month.', 'Сначала читаем текст: The city library opened in 2010. It now lends more than 5,000 books every month.'),
+      draw: p => fadeIn(p, 0, .4, passageCard()) + fadeIn(p, .5, .8, en(320, 160, tr(L2('Тұжырымды мәтінмен мағынасы бойынша салыстырамыз,', 'Сравниваем утверждение с текстом по смыслу,')), 17, 'var(--muted)') + en(320, 186, tr(L2('сөзбе-сөз емес', 'а не дословно')), 17, 'var(--muted)')) },
+    { d: 10, text: L2('Тұжырым: The library has been open since 2010. Мәтінде дәл осы айтылған, басқа сөзбен. Жауап — True.', 'Утверждение: The library has been open since 2010. В тексте сказано то же самое, другими словами. Ответ — True.'),
+      draw: tfScene('The library has been open since 2010.', 'opened in 2010  =  open since 2010', 'TRUE', 't') },
+    { d: 11, text: L2('Тұжырым: The library lends fewer than 1,000 books a month. Мәтін керісінше айтады: 5,000-нан көп. Жауап — False.', 'Утверждение: The library lends fewer than 1,000 books a month. Текст говорит обратное: больше 5,000. Ответ — False.'),
+      draw: tfScene('The library lends fewer than 1,000 books a month.', 'more than 5,000  ≠  fewer than 1,000', 'FALSE', 'f') },
+    { d: 11, text: L2('Тұжырым: The library is closed at weekends. Мәтінде демалыс күндері туралы ештеңе жоқ. Жауап — Not Given.', 'Утверждение: The library is closed at weekends. В тексте ничего нет о выходных. Ответ — Not Given.'),
+      draw: tfScene('The library is closed at weekends.', 'weekends  →  ?  (the text does not say)', 'NOT GIVEN', 'n') },
+    { d: 10, text: L2('Ереже: False — мәтін керісінше айтады. Not Given — мәтінде бұл туралы ақпарат жоқ. Өз біліміңізге сүйенбеңіз, тек мәтінге.', 'Правило: False — текст говорит противоположное. Not Given — в тексте нет этой информации. Опирайтесь только на текст, а не на свои знания.'),
+      draw: p => fadeIn(p, 0, .3, card(70, 30, 500, 80, 'var(--gap-tint, #FBE7E7)', 'var(--gap)') + en(320, 64, 'FALSE', 24, 'var(--gap)', 'font-weight="800"') + en(320, 94, tr(L2('мәтін керісінше айтады', 'текст говорит обратное')), 18, 'var(--ink)'))
+        + fadeIn(p, .35, .65, card(70, 128, 500, 80, 'var(--gold-tint)', 'var(--gold)') + en(320, 162, 'NOT GIVEN', 24, 'var(--gold-ink)', 'font-weight="800"') + en(320, 192, tr(L2('мәтінде бұл туралы ақпарат жоқ', 'в тексте нет этой информации')), 18, 'var(--ink)')) },
+  ] },
+  { title: L2('Writing Task 1: трендтерді сипаттау', 'Writing Task 1: описание трендов'), scenes: [
+    { d: 10, text: L2('Writing Task 1-де графикті сипаттаймыз. Бұл графикте электронды кітап сатылымы 2015 жылдан 2020 жылға дейін өсті.', 'В Writing Task 1 мы описываем график. Здесь продажи электронных книг росли с 2015 по 2020 год.'),
+      draw: p => chartScene(p) },
+    { d: 10, text: L2('Өсуді сипаттайтын сөздер: rise, increase, grow. Етістікпен бірге үстеу қолданамыз: sharply — күрт, steadily — бірқалыпты, slightly — сәл.', 'Слова для роста: rise, increase, grow. С глаголом используем наречие: sharply — резко, steadily — равномерно, slightly — немного.'),
+      draw: p => chartScene(1) + fadeIn(p, .1, .3, chip(410, 72, 140, 'rose sharply', 'var(--primary-tint)', 'var(--primary)')) + fadeIn(p, .35, .55, chip(200, 140, 150, 'grew steadily', 'var(--primary-tint)', 'var(--primary)')) },
+    { d: 10, text: L2('Кему мен тұрақтылық: fall, decline, decrease; remain stable — өзгермеді; reach a peak — ең жоғары нүктеге жетті.', 'Падение и стабильность: fall, decline, decrease; remain stable — не изменилось; reach a peak — достигло пика.'),
+      draw: p => [['↗', 'rise / increase / grow', 'var(--primary)'], ['↘', 'fall / decline / decrease', 'var(--gap)'], ['→', 'remain stable', 'var(--muted)'], ['▲', 'reach a peak of 800', 'var(--gold-ink)']]
+        .map(([a, w, c], i) => fadeIn(p, .05 + i * .2, .25 + i * .2, card(110, 26 + i * 54, 420, 46, 'var(--surface)') + en(160, 57 + i * 54, a, 24, c, 'font-weight="800"') + en(350, 56 + i * 54, w, 19, c, 'font-weight="700"'))).join('') },
+    { d: 12, text: L2('Толық сөйлем құрастырайық: Sales of e-books rose sharply from 200 to 800 thousand between 2015 and 2020. Сан, уақыт және тренд бір сөйлемде.', 'Соберём полное предложение: Sales of e-books rose sharply from 200 to 800 thousand between 2015 and 2020. Число, время и тренд в одном предложении.'),
+      draw: p => [['Sales of e-books', 'var(--ink)'], ['rose sharply', 'var(--primary)'], ['from 200 to 800 thousand', 'var(--gap)'], ['between 2015 and 2020.', 'var(--gold-ink)']]
+        .map(([w, c], i) => fadeIn(p, .05 + i * .18, .25 + i * .18, card(110, 22 + i * 54, 420, 44, 'var(--surface)', c) + en(320, 51 + i * 54, w, 20, c, 'font-weight="700"'))).join('') },
+  ] },
+];
+LESSONS_ENG.forEach(l => { l.dur = l.scenes.reduce((s, c) => s + c.d, 0); });
+const COURSES = {
+  math: { key: 'math', lessons: LESSONS, name: L2('Рационал сандар', 'Рациональные числа'), sub: L2('«Сандар, дәреже және түбір» курсының демо-сабақтары', 'Демо-уроки курса «Числа, степени и корни»'), label: L2('Математика', 'Математика') },
+  eng: { key: 'eng', lessons: LESSONS_ENG, name: L2('IELTS: дайындық негіздері', 'IELTS: основы подготовки'), sub: L2('Grammar, Reading және Writing бойынша демо-сабақтар', 'Демо-уроки по Grammar, Reading и Writing'), label: L2('IELTS', 'IELTS') },
+};
+const LS = () => COURSES[CS.course].lessons;
 const mmss = t => `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
 const ROBOT = `<svg class="robot" viewBox="0 0 80 84" aria-hidden="true"><line x1="40" y1="6" x2="40" y2="16" style="stroke:var(--line-strong)" stroke-width="3"/><circle class="rb-ant" cx="40" cy="6" r="5"/><rect x="4" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="69" y="30" width="7" height="16" rx="3.5" style="fill:var(--primary-2)"/><rect x="10" y="16" width="60" height="46" rx="18" style="fill:var(--primary)"/><rect x="17" y="23" width="46" height="31" rx="11" style="fill:#0F2029"/><rect class="rb-eye" x="27" y="31" width="8" height="10" rx="4"/><rect class="rb-eye" x="45" y="31" width="8" height="10" rx="4"/><g class="rb-mouth"><rect x="32" y="46" width="4" height="3" rx="1.5"/><rect x="38" y="46" width="4" height="3" rx="1.5"/><rect x="44" y="46" width="4" height="3" rx="1.5"/></g><rect x="22" y="64" width="36" height="16" rx="8" style="fill:var(--primary-2)"/><circle cx="40" cy="72" r="3.5" style="fill:var(--gold)"/></svg>`;
 
-const CS = { lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], sug: [], botMode: 'chat', busy: false, ctl: null, lastScene: -1 };
+const CS = { course: S.subj === 'eng' ? 'eng' : 'math', lesson: 0, t: 0, playing: false, speed: 1, raf: 0, last: 0, cc: true, voice: false, aloud: false, mode: 'anim', video: null, vtt: [], chat: [], sug: [], botMode: 'chat', busy: false, ctl: null, lastScene: -1 };
 let ttsP = null; const ttsGet = () => ttsP || (ttsP = (window.claude && window.claude.use) ? window.claude.use('tts').catch(() => null) : Promise.resolve(null));
 function curInfo() {
   if (CS.mode === 'video') {
@@ -2255,7 +2347,7 @@ function curInfo() {
     const near = CS.vtt.filter(c => c.end >= t - 25 && c.start <= t + 10).map(c => c.text).join(' ');
     return { t, title: tr(CK[lang].own), text: i >= 0 ? CS.vtt[i].text : '', prev: near, next: '', dur: v ? v.duration || 0 : 0 };
   }
-  const L = LESSONS[CS.lesson]; let acc = 0, i = 0;
+  const L = LS()[CS.lesson]; let acc = 0, i = 0;
   for (; i < L.scenes.length - 1 && CS.t >= acc + L.scenes[i].d; i++) acc += L.scenes[i].d;
   return { t: CS.t, i, p: clamp((CS.t - acc) / L.scenes[i].d), title: tr(L.title), text: tr(L.scenes[i].text), prev: i ? tr(L.scenes[i - 1].text) : '', next: L.scenes[i + 1] ? tr(L.scenes[i + 1].text) : '', dur: L.dur };
 }
@@ -2263,7 +2355,7 @@ function drawFrame() {
   if (S.view !== 'course') return;
   const info = curInfo(), stage = $('#stage');
   if (CS.mode === 'anim' && stage) {
-    const sc = LESSONS[CS.lesson].scenes[info.i];
+    const sc = LS()[CS.lesson].scenes[info.i];
     stage.innerHTML = `<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--primary)"/></marker></defs><rect width="640" height="360" style="fill:var(--surface)"/>` + sc.draw(info.p);
     if (info.i !== CS.lastScene) { CS.lastScene = info.i; if (CS.playing && CS.voice) ttsGet().then(t => t && t.speak(info.text).catch(() => {})); }
   }
@@ -2276,20 +2368,20 @@ function drawFrame() {
 function tick(now) {
   if (!CS.playing) return;
   const dt = (now - CS.last) / 1000; CS.last = now;
-  CS.t = Math.min(LESSONS[CS.lesson].dur, CS.t + dt * CS.speed);
-  if (CS.t >= LESSONS[CS.lesson].dur) setPlaying(false);
+  CS.t = Math.min(LS()[CS.lesson].dur, CS.t + dt * CS.speed);
+  if (CS.t >= LS()[CS.lesson].dur) setPlaying(false);
   drawFrame();
   if (CS.playing) CS.raf = requestAnimationFrame(tick);
 }
 function setPlaying(on) {
   if (CS.mode === 'video') { if (CS.video) { on ? CS.video.play().catch(() => {}) : CS.video.pause(); } CS.playing = on; updatePlayBtn(); return; }
-  if (on && CS.t >= LESSONS[CS.lesson].dur) CS.t = 0;
+  if (on && CS.t >= LS()[CS.lesson].dur) CS.t = 0;
   CS.playing = on; cancelAnimationFrame(CS.raf);
   if (on) { CS.last = performance.now(); CS.lastScene = -1; CS.raf = requestAnimationFrame(tick); } else ttsGet().then(t => t && t.stop && t.stop());
   updatePlayBtn(); drawFrame();
 }
 function updatePlayBtn() { const b = $('#playBtn'); if (b) { b.innerHTML = CS.playing ? ico('pause') : ico('play'); b.setAttribute('aria-label', CS.playing ? CT().pause : CT().play); } const st = $('.player'); if (st) st.classList.toggle('playing', CS.playing); }
-function seekTo(t) { if (CS.mode === 'video' && CS.video) CS.video.currentTime = t; else CS.t = clamp(t, 0, LESSONS[CS.lesson].dur); CS.lastScene = -1; drawFrame(); }
+function seekTo(t) { if (CS.mode === 'video' && CS.video) CS.video.currentTime = t; else CS.t = clamp(t, 0, LS()[CS.lesson].dur); CS.lastScene = -1; drawFrame(); }
 function parseVtt(s) {
   const out = [], ts = x => { const m = x.trim().match(/(?:(\d+):)?(\d+):(\d+)[.,](\d+)/); return m ? (+(m[1] || 0)) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4]) / 1000 : 0; };
   s.replace(/\r/g, '').split(/\n\n+/).forEach(b => { const l = b.split('\n'), k = l.findIndex(x => x.includes('-->')); if (k < 0) return; const [a, z] = l[k].split('-->'); out.push({ start: ts(a), end: ts(z.split(' ')[1] ? z.trim().split(' ')[0] : z), text: l.slice(k + 1).join(' ').replace(/<[^>]+>/g, '').trim() }); });
@@ -2308,10 +2400,9 @@ async function frameBlob() {
   c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
   return new Promise(res => c.toBlob(b => res(b), 'image/jpeg', .85));
 }
-const COURSE_SUBJ = 'math'; // the video lessons belong to this subject; the tutor only uses a diagnosis of the same subject
 function botStudent() { // the diagnosed student the tutor is working with (null before a diagnosis of the lesson's subject)
   const r = S.result; if (!r || !r.engine) return null;
-  const G = r.engine.G; if (G.key !== COURSE_SUBJ) return null;
+  const G = r.engine.G; if (G.key !== CS.course) return null;
   const res = r.engine.result();
   return { G, res, grade: r.engine.grade, roots: res.roots.slice(0, 3), demo: !!r.demo };
 }
@@ -2326,7 +2417,7 @@ function splitSug(t) { // reply tail: ">>> a | b | c" = follow-up suggestions, "
 const MEM_KEY = 'olqylyq.bot.mem';
 function memLoad() { try { const m = JSON.parse(localStorage.getItem(MEM_KEY) || 'null'); if (m && Array.isArray(m.notes)) return m; } catch (e) {} return { notes: [], diag: '' }; }
 function memSave(m) { try { localStorage.setItem(MEM_KEY, JSON.stringify(m)); } catch (e) {} }
-function memAdd(note) { if (!note) return; const m = memLoad(); if (m.notes.some(n => n.s === note)) return; m.notes.push({ d: new Date().toISOString().slice(0, 10), s: note, k: COURSE_SUBJ }); m.notes = m.notes.slice(-12); memSave(m); botMemUI(); }
+function memAdd(note) { if (!note) return; const m = memLoad(); if (m.notes.some(n => n.s === note)) return; m.notes.push({ d: new Date().toISOString().slice(0, 10), s: note, k: CS.course }); m.notes = m.notes.slice(-12); memSave(m); botMemUI(); }
 function memDiag(st) { // remember the last diagnosis so the tutor still knows it after a reload
   if (!st || st.demo || !st.roots.length) return; const m = memLoad(); // virtual demo students are not remembered
   const d = `${sname(st.G)}: ${st.roots.map(id => `${nm(st.G, id)} (${st.G.BY[id].grade})`).join('; ')}`;
@@ -2344,6 +2435,7 @@ function botChips() {
 function botHello() {
   const X = CT(), st = botStudent(), box = $('#chatLog'); if (!box) return;
   box.innerHTML = ''; bubble('bot', esc(X.hello)); memDiag(st);
+  if (st && st.G.key === 'eng') { const lv = cefr(st.G, st.res); bubble('bot', esc(X.helloLvl(lv.label, lv.band))); }
   if (st && st.roots.length) bubble('bot', esc(X.helloGap(nm(st.G, st.roots[0]), gl(st.G.BY[st.roots[0]].grade, st.G))));
 }
 async function askBot(q) {
@@ -2355,18 +2447,20 @@ async function askBot(q) {
   bubble('me', esc(q), info.t);
   const out = bubble('bot', `<span class="typing"><i></i><i></i><i></i></span>`);
   const lk = lang === 'kk', st = botStudent();
-  const diag = st && st.roots.length ? `Диагностика этого ученика (${st.G.key === 'eng' ? 'английский' : (st.grade > 9 ? '10–11' : st.grade) + ' класс'}) по предмету «${sname(st.G)}»: всего тем с пробелами: ${st.res.gaps.length}. Корневые пробелы: ${st.roots.map(id => `«${nm(st.G, id)}» (${st.G.key === 'eng' ? CEFR_L[st.G.BY[id].grade] : st.G.BY[id].grade + ' класс'})`).join('; ')}. Цепочки последствий: ${st.roots.map(id => st.res.chain(id).map(c => nm(st.G, c)).join(' → ')).join(' || ')}.
+  const diag = st && st.roots.length ? `Диагностика этого ученика (${st.G.key === 'eng' ? 'IELTS' : (st.grade > 9 ? '10–11' : st.grade) + ' класс'}) по предмету «${sname(st.G)}»: всего тем с пробелами: ${st.res.gaps.length}. Корневые пробелы: ${st.roots.map(id => `«${nm(st.G, id)}» (${st.G.key === 'eng' ? CEFR_L[st.G.BY[id].grade] : st.G.BY[id].grade + ' класс'})`).join('; ')}. Цепочки последствий: ${st.roots.map(id => st.res.chain(id).map(c => nm(st.G, c)).join(' → ')).join(' || ')}.
 Главная цель: закрыть именно эти пробелы за короткое время, не повторяя то, что ученик уже знает. Если вопрос связан с этими темами или ученик просит объяснить свой пробел, начни с самого раннего корневого пробела, объясняй с основания и покажи, как он мешает в следующих темах.` : '';
   const mem = memLoad(), focus = st && st.roots.length ? `корневой пробел «${nm(st.G, st.roots[0])}»` : `тема урока «${info.title}»`;
-  const notes = mem.notes.filter(n => n.k === COURSE_SUBJ);
-  const memTxt = (!diag && mem.diag && mem.diagKey === COURSE_SUBJ ? `Последняя диагностика ученика (из памяти), корневые пробелы: ${mem.diag}. Главная цель: закрыть именно их, не повторяя то, что ученик уже знает.\n` : '') + (notes.length ? `Твои заметки с прошлых занятий с этим учеником (учитывай их, не повторяй уже усвоенное, возвращайся к тому, что было трудно):\n${notes.map(n => `- ${n.d}: ${n.s}`).join('\n')}` : '');
+  const notes = mem.notes.filter(n => n.k === CS.course);
+  const memTxt = (!diag && mem.diag && mem.diagKey === CS.course ? `Последняя диагностика ученика (из памяти), корневые пробелы: ${mem.diag}. Главная цель: закрыть именно их, не повторяя то, что ученик уже знает.\n` : '') + (notes.length ? `Твои заметки с прошлых занятий с этим учеником (учитывай их, не повторяй уже усвоенное, возвращайся к тому, что было трудно):\n${notes.map(n => `- ${n.d}: ${n.s}`).join('\n')}` : '');
   const modeTxt = CS.botMode === 'guide' ? `РЕЖИМ «ПО ШАГАМ»: проведи ученика через ${focus} маленькими шагами. В первом сообщении дай план из 3–5 шагов одной строкой и сразу начни шаг 1. Дальше один шаг за сообщение: начни с «Шаг N из M», короткое объяснение (2–3 предложения) и один вопрос. К следующему шагу переходи только после верного ответа. После последнего шага подведи итог в 2 предложениях.`
     : CS.botMode === 'quiz' ? `РЕЖИМ «ТЕСТ»: проведи тест из 5 вопросов: ${focus}. Один вопрос за сообщение, начни с «Вопрос N из 5», четыре варианта ответа на отдельных строках: A) … B) … C) … D) …. Сложность повышай постепенно. Когда ученик ответил: одной-двумя фразами скажи, верно или нет и почему, затем сразу следующий вопрос. После 5-го вопроса подведи итог: сколько верно из 5 и что повторить. В этом режиме строка вариантов в конце всегда такая: >>> A | B | C | D (после итога — обычные три варианта).` : '';
+  const engTxt = CS.course === 'eng' ? `Это урок подготовки к IELTS: ты преподаватель английского. Объясняй на языке ответа, а примеры и упражнения давай на английском.${st ? ` Уровень ученика по диагностике: ${cefr(st.G, st.res).label} (IELTS ≈ ${cefr(st.G, st.res).band}).` : ''}` : '';
   const ctx = `Ты — «Ұстаз-бот», добрый робот-учитель, который смотрит видеоурок вместе со школьником (12–17 лет) и объясняет понятно и интересно.
-Курс: «${X.courseName}». Урок: «${info.title}». Видео сейчас на моменте ${mmss(info.t)}${info.dur ? ' из ' + mmss(info.dur) : ''}.
+Курс: «${tr(COURSES[CS.course].name)}». Урок: «${info.title}». Видео сейчас на моменте ${mmss(info.t)}${info.dur ? ' из ' + mmss(info.dur) : ''}.
 ${CS.mode === 'video' ? (info.text ? `Субтитр в этот момент: «${info.text}». Рядом звучит: «${info.prev}».` : 'Субтитров нет — смотри на кадр видео в этот момент (картинка приложена, если есть).') : `В этот момент в видео говорится: «${info.text}».${info.prev ? ` Перед этим: «${info.prev}».` : ''}${info.next ? ` Дальше будет: «${info.next}».` : ''}`}
-${CS.mode === 'anim' ? 'План урока: ' + LESSONS[CS.lesson].scenes.map((s, k) => `${mmss(LESSONS[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))} ${tr(s.text).split('.')[0]}`).join(' | ') : ''}
+${CS.mode === 'anim' ? 'План урока: ' + LS()[CS.lesson].scenes.map((s, k) => `${mmss(LS()[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))} ${tr(s.text).split('.')[0]}`).join(' | ') : ''}
 ${diag}
+${engTxt}
 ${memTxt}
 ${modeTxt}
 Правила ответа:
@@ -2398,25 +2492,25 @@ function renderCourse() {
   const X = CT(), sel = CS.mode === 'video' ? -1 : CS.lesson;
   $('#v-course').innerHTML = `
   <div class="crs-head"><div><button class="btn btn-ghost btn-sm" type="button" id="crsBack">${ico('redo')}${X.back}</button></div>
-    <div><span class="eyebrow">${X.demoLesson}</span><h1>${X.courseName}</h1><p class="muted">${X.courseSub}</p></div></div>
+    <div><span class="eyebrow">${X.demoLesson}</span><h1>${esc(tr(COURSES[CS.course].name))}</h1><p class="muted">${esc(tr(COURSES[CS.course].sub))}</p></div></div>
   <div class="crs-grid">
     <div class="crs-main">
       <div class="player card">
-        <div class="screen">${CS.mode === 'video' ? `<video id="vid" playsinline preload="metadata"></video>` : `<svg id="stage" viewBox="0 0 640 360" role="img" aria-label="${esc(tr(LESSONS[CS.lesson].title))}"></svg>`}
+        <div class="screen">${CS.mode === 'video' ? `<video id="vid" playsinline preload="metadata"></video>` : `<svg id="stage" viewBox="0 0 640 360" role="img" aria-label="${esc(tr(LS()[CS.lesson].title))}"></svg>`}
           <div class="subs" id="subs" aria-live="polite" hidden></div>
           <button class="bigplay" type="button" id="bigPlay" aria-label="${X.play}">${ico('play')}</button></div>
         <div class="ctrls">
           <button class="cbtn" type="button" id="playBtn" aria-label="${X.play}">${ico('play')}</button>
-          <input type="range" id="seek" class="seek" min="0" step="0.1" value="0" aria-label="${CS.mode === 'video' ? X.own : esc(tr(LESSONS[CS.lesson].title))}">
+          <input type="range" id="seek" class="seek" min="0" step="0.1" value="0" aria-label="${CS.mode === 'video' ? X.own : esc(tr(LS()[CS.lesson].title))}">
           <span class="tl num" id="tlabel">00:00</span>
           <button class="cbtn txtb" type="button" id="spdBtn" aria-label="${X.speed}">${CS.speed}×</button>
           <button class="cbtn txtb" type="button" id="ccBtn" aria-pressed="${CS.cc}">CC</button>
           <button class="cbtn txtb" type="button" id="vcBtn" aria-pressed="${CS.voice}" hidden>${X.voice}</button>
         </div>
-        ${CS.mode === 'anim' ? `<div class="chaps">${LESSONS[CS.lesson].scenes.map((s, k) => `<button type="button" class="chap" data-k="${k}"><span class="num">${mmss(LESSONS[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))}</span>${esc(tr(s.text).split(/[.:!?]/)[0])}</button>`).join('')}</div>` : ''}
+        ${CS.mode === 'anim' ? `<div class="chaps">${LS()[CS.lesson].scenes.map((s, k) => `<button type="button" class="chap" data-k="${k}"><span class="num">${mmss(LS()[CS.lesson].scenes.slice(0, k).reduce((a, c) => a + c.d, 0))}</span>${esc(tr(s.text).split(/[.:!?]/)[0])}</button>`).join('')}</div>` : ''}
       </div>
-      <section class="card lessons"><h2 class="h3">${X.lessons}</h2>
-        <ol class="lsn">${LESSONS.map((l, k) => `<li><button type="button" class="lsn-b${k === sel ? ' on' : ''}" data-k="${k}"><span class="lsn-n">${k + 1}</span><span>${esc(tr(l.title))}</span><span class="muted num">${mmss(l.dur)}</span></button></li>`).join('')}
+      <section class="card lessons"><div class="crs-pick" role="group" aria-label="${X.lessons}">${Object.values(COURSES).map(c => `<button type="button" data-c="${c.key}" aria-pressed="${CS.course === c.key}">${esc(tr(c.label))}</button>`).join('')}</div><h2 class="h3">${X.lessons}</h2>
+        <ol class="lsn">${LS().map((l, k) => `<li><button type="button" class="lsn-b${k === sel ? ' on' : ''}" data-k="${k}"><span class="lsn-n">${k + 1}</span><span>${esc(tr(l.title))}</span><span class="muted num">${mmss(l.dur)}</span></button></li>`).join('')}
           <li><button type="button" class="lsn-b${sel === -1 ? ' on' : ''}" data-k="own"><span class="lsn-n">${ico('arrow')}</span><span>${X.own}</span><span></span></button></li></ol>
         ${CS.mode === 'video' ? `<div class="own"><p class="small">${X.ownHint}</p><div class="row"><label class="btn btn-ghost btn-sm">${X.pickVideo}<input type="file" id="vidIn" accept="video/*" hidden></label><label class="btn btn-ghost btn-sm">${X.pickVtt}<input type="file" id="vttIn" accept=".vtt,text/vtt" hidden></label></div></div>` : ''}
         <p class="small" style="margin-top:var(--s-3)">${X.note}</p>
@@ -2437,12 +2531,13 @@ function renderCourse() {
   botHello(); botChips(); botMemUI();
   CS.chat.forEach(m => { const el = bubble(m.role === 'user' ? 'me' : 'bot', m.role === 'user' ? esc(m.content.replace(/^\[\d\d:\d\d\] /, '')) : mdHTML(m.content), m.role === 'user' ? (() => { const mm = m.content.match(/^\[(\d\d):(\d\d)\]/); return mm ? +mm[1] * 60 + +mm[2] : undefined; })() : undefined); });
   $('#crsBack').addEventListener('click', () => { setPlaying(false); go('result'); });
+  document.querySelectorAll('.crs-pick button').forEach(b => b.addEventListener('click', () => setCourse(b.dataset.c)));
   $('#playBtn').addEventListener('click', () => setPlaying(!CS.playing));
   $('#bigPlay').addEventListener('click', () => setPlaying(!CS.playing));
   $('#seek').addEventListener('input', e => seekTo(+e.target.value));
   $('#spdBtn').addEventListener('click', e => { CS.speed = CS.speed === 1 ? 1.5 : CS.speed === 1.5 ? 0.75 : 1; e.currentTarget.textContent = CS.speed + '×'; if (CS.video) CS.video.playbackRate = CS.speed; });
   $('#ccBtn').addEventListener('click', e => { CS.cc = !CS.cc; e.currentTarget.setAttribute('aria-pressed', CS.cc); drawFrame(); });
-  document.querySelectorAll('.chap').forEach(b => b.addEventListener('click', () => seekTo(LESSONS[CS.lesson].scenes.slice(0, +b.dataset.k).reduce((a, c) => a + c.d, 0) + 0.05)));
+  document.querySelectorAll('.chap').forEach(b => b.addEventListener('click', () => seekTo(LS()[CS.lesson].scenes.slice(0, +b.dataset.k).reduce((a, c) => a + c.d, 0) + 0.05)));
   document.querySelectorAll('.lsn-b').forEach(b => b.addEventListener('click', () => { setPlaying(false); if (b.dataset.k === 'own') { CS.mode = 'video'; } else { CS.mode = 'anim'; CS.lesson = +b.dataset.k; CS.t = 0; } CS.lastScene = -1; renderCourse(); const pl = document.querySelector('.player'); if (pl) pl.scrollIntoView({ block: 'start', behavior: MOTION ? 'smooth' : 'auto' }); }));
   $('#chatLog').addEventListener('click', e => { const b = e.target.closest('.tstamp'); if (b) seekTo(+b.dataset.t); });
   document.querySelector('.chips-q').addEventListener('click', e => { const b = e.target.closest('.qchip'); if (b && !b.disabled) askBot(b.textContent); });
@@ -2468,7 +2563,13 @@ function renderCourse() {
   ttsGet().then(t => { if (t) { $('#vcBtn').hidden = false; $('#aloudRow').hidden = false; $('#vcBtn').addEventListener('click', e => { CS.voice = !CS.voice; e.currentTarget.setAttribute('aria-pressed', CS.voice); if (!CS.voice) t.stop && t.stop(); }); } });
   updatePlayBtn(); drawFrame();
 }
-function openCourse() { CS.mode = 'anim'; S.view = 'course'; try { history.replaceState(null, '', '#course'); } catch (e) {} render(); window.scrollTo({ top: 0 }); }
+function setCourse(c) { // switch between the math and IELTS demo lessons; the chat starts over for the new subject
+  if (!COURSES[c] || c === CS.course) { if (S.view === 'course') renderCourse(); return; }
+  setPlaying(false); if (CS.ctl) CS.ctl.abort();
+  CS.course = c; CS.lesson = 0; CS.t = 0; CS.mode = 'anim'; CS.lastScene = -1; CS.chat = []; CS.sug = [];
+  if (S.view === 'course') renderCourse();
+}
+function openCourse(c) { if (typeof c === 'string' && COURSES[c] && c !== CS.course) { CS.course = c; CS.lesson = 0; CS.t = 0; CS.chat = []; CS.sug = []; } CS.mode = 'anim'; S.view = 'course'; try { history.replaceState(null, '', '#course'); } catch (e) {} render(); window.scrollTo({ top: 0 }); }
 
 // ---------- Python course content (kk/ru). Task kinds: 'out' = compare printed output for given stdin; 'fn' = call function, compare repr ----------
 const PY_UNITS = [
@@ -2653,13 +2754,13 @@ const PK = {
     output: 'Нәтиже', noOutput: '(ештеңе шықпады)', loading: 'Python жүктелуде…', loadFail: 'Python жүктелмеді. Интернетті тексеріп, бетті қайта ашыңыз.', input: 'Енгізу',
     pass: 'Барлық тест өтті! +10 ұпай', partial: (a, b) => `${a}/${b} тест өтті`, test: 'Тест', expected: 'күтілді', got: 'шықты', task: 'Тапсырма', next: 'Келесі сабақ', prev: 'Алдыңғы', done: 'Орындалды',
     botThinking: 'Ұстаз-бот кодыңды қарап жатыр…', botOff: 'Ұстаз-бот claude.ai ішінде ашылғанда жұмыс істейді.', home: 'Басты бетке', courseCard: 'Информатика: Python', courseCardSub: 'Код жазып, бірден тексеріңіз',
-    mathCard: 'Рационал сандар', mathCardSub: 'Бейнесабақ + Ұстаз-бот', coursesTitle: 'Курстар', timeout: 'Бағдарлама тым ұзақ орындалды. Шексіз цикл жоқ па?' },
+    mathCard: 'Рационал сандар', engCard: 'IELTS: Grammar, Reading, Writing', mathCardSub: 'Бейнесабақ + Ұстаз-бот', coursesTitle: 'Курстар', timeout: 'Бағдарлама тым ұзақ орындалды. Шексіз цикл жоқ па?' },
   ru: { eyebrow: 'Курс', title: 'Информатика: Python', sub: 'С нуля до алгоритмов: 8 разделов, 27 заданий. Код выполняется прямо в браузере, на этой странице.',
     points: 'очк.', solved: (a, b) => `Выполнено заданий: ${a}/${b}`, units: 'Разделы', example: 'Пример', run: 'Запустить', check: 'Проверить', hint: 'Подсказка', help: 'Помощь Ұстаз-бота', showSol: 'Показать решение', reset: 'Сначала',
     output: 'Вывод', noOutput: '(ничего не выведено)', loading: 'Загружается Python…', loadFail: 'Python не загрузился. Проверьте интернет и откройте страницу заново.', input: 'Ввод',
     pass: 'Все тесты пройдены! +10 очков', partial: (a, b) => `Пройдено тестов: ${a}/${b}`, test: 'Тест', expected: 'ожидалось', got: 'получено', task: 'Задание', next: 'Следующий урок', prev: 'Предыдущий', done: 'Выполнено',
     botThinking: 'Ұстаз-бот смотрит твой код…', botOff: 'Ұстаз-бот работает, когда страница открыта в claude.ai.', home: 'На главную', courseCard: 'Информатика: Python', courseCardSub: 'Пиши код и сразу проверяй',
-    mathCard: 'Рациональные числа', mathCardSub: 'Видеоурок + Ұстаз-бот', coursesTitle: 'Курсы', timeout: 'Программа выполнялась слишком долго. Нет ли бесконечного цикла?' },
+    mathCard: 'Рациональные числа', engCard: 'IELTS: Grammar, Reading, Writing', mathCardSub: 'Видеоурок + Ұстаз-бот', coursesTitle: 'Курсы', timeout: 'Программа выполнялась слишком долго. Нет ли бесконечного цикла?' },
 };
 const PYT = () => PK[lang];
 const PY_ALL = PY_UNITS.flatMap(u => u.lessons.map(l => ({ u, l })));

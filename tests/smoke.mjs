@@ -22,7 +22,20 @@ check(await page.$eval('.subj[aria-pressed="true"]', b => b.dataset.s) === 'math
 await page.locator('.ss[data-s="eng"]:visible, .subj[data-s="eng"]:visible').first().click(); await wait(300);
 check(!(await page.isVisible('.gradeseg')), 'grade picker is visible for IELTS');
 check(await page.isVisible('#courseBtn'), 'IELTS home has no demo video-lesson button');
-check(/математика|математик/i.test(await page.textContent('#courseBtn').catch(() => '')), 'IELTS demo-lesson button does not say it is a math lesson');
+check(/IELTS/.test(await page.textContent('#courseBtn').catch(() => '')), 'IELTS home demo-lesson button does not point to IELTS lessons');
+{ // IELTS demo lessons: open, list, play, switch to math and back
+  await page.click('#courseBtn'); await wait(600);
+  const head = await page.innerText('.crs-head'); check(/IELTS/.test(head), 'IELTS demo button did not open IELTS lessons: ' + head.slice(0, 80));
+  check((await page.$$('.lsn-b[data-k]:not([data-k="own"])')).length >= 3, 'IELTS course has fewer than 3 lessons');
+  const t0 = await page.textContent('#tlabel'); await page.click('#bigPlay'); await wait(1800); await page.click('#playBtn'); const t1 = await page.textContent('#tlabel');
+  check(t0 !== t1, 'IELTS lesson does not play');
+  for (const k of ['1', '2']) { await page.click(`.lsn-b[data-k="${k}"]`); await wait(300); await page.click('#bigPlay'); await wait(1200); await page.click('#playBtn'); }
+  await page.click('.crs-pick [data-c="math"]'); await wait(400);
+  check(/Рационал|Рациональн/.test(await page.innerText('.crs-head')), 'course switch to math failed');
+  await page.click('.crs-pick [data-c="eng"]'); await wait(400);
+  check(/IELTS/.test(await page.innerText('.crs-head')), 'course switch back to IELTS failed');
+  await page.goto(URL0); await wait(400); await page.locator('.ss[data-s="eng"]:visible, .subj[data-s="eng"]:visible').first().click(); await wait(300);
+}
 { const home = await page.innerText('#v-home'); check(!/\d+[- ]?(сынып|класс)/.test(home), 'IELTS home mentions a school grade: ' + (home.match(/.{0,30}\d+[- ]?(сынып|класс).{0,10}/) || [''])[0]); }
 await page.click('#startForm button[type="submit"]');
 for (let i = 0; i < 60; i++) {
@@ -42,7 +55,7 @@ for (const lang of ['kk', 'ru']) {
   check(!/сынып|класс/.test(txt), `[${lang}] result mentions a school grade: ${(txt.match(/.{0,30}(сынып|класс).{0,10}/) || [''])[0]}`);
   check(!/undefined/.test(txt), `[${lang}] result contains "undefined"`);
   check(!/ҰБТ|ЕНТ/.test(txt), `[${lang}] IELTS result mentions ҰБТ/ЕНТ: ${(txt.match(/.{0,30}(ҰБТ|ЕНТ).{0,20}/) || [''])[0]}`);
-  check(!(await page.$$eval('[data-open-course]', xs => xs.filter(x => x.offsetParent).length)), `[${lang}] IELTS result shows demo video-course buttons`);
+  check((await page.$$eval('[data-open-course]', xs => xs.filter(x => x.offsetParent).length)) > 0, `[${lang}] IELTS result has no demo-lesson buttons`);
 }
 
 // 4. Class view: level groups (IELTS, then math), kk and ru
@@ -80,6 +93,7 @@ for (const lang of ['ru', 'kk']) {
   check(/IELTS/.test(ai) && !/\d\s*(класс|сынып)/.test(ai), 'AI analysis prompt for IELTS uses school grades or lacks IELTS: ' + (ai.match(/.{0,30}\d\s*(класс|сынып).{0,10}/) || [''])[0]);
   // the video lesson is a MATH lesson: after an IELTS diagnosis the bot must stay a math teacher
   await p2.evaluate(() => { location.hash = '#course'; }); await p2.waitForTimeout(600);
+  await p2.click('.crs-pick [data-c="math"]'); await p2.waitForTimeout(400);
   const hello = await p2.innerText('#chatLog');
   check(!/IELTS/.test(hello) && !LEVEL.test(hello), 'math lesson bot greets with the IELTS level: ' + hello.slice(0, 120));
   await p2.click('.qchip'); await p2.waitForTimeout(600);
@@ -90,10 +104,22 @@ for (const lang of ['ru', 'kk']) {
   await p2.click('.subjseg button[data-s="math"]'); await p2.waitForSelector('tr.click', { timeout: 30000 });
   await p2.click('tr.click'); await p2.waitForTimeout(400);
   await p2.evaluate(() => { window.__prompts = []; location.hash = '#course'; }); await p2.waitForTimeout(600);
+  await p2.click('.crs-pick [data-c="math"]'); await p2.waitForTimeout(400);
   await p2.click('#botNew'); await p2.waitForTimeout(200);
   await p2.click('.qchip'); await p2.waitForTimeout(600);
   const sys2 = await p2.evaluate(() => (window.__prompts[0] || [{}])[0].content || '');
   check(/Диагностика этого ученика/.test(sys2) && !/IELTS|английск/i.test(sys2), 'math lesson bot ignores the math diagnosis or mentions English');
+  // IELTS course after an IELTS diagnosis: the bot is an English teacher who knows the level
+  await p2.evaluate(() => { location.hash = '#class'; }); await p2.waitForTimeout(300);
+  await p2.click('.subjseg button[data-s="eng"]'); await p2.waitForSelector('tr.click', { timeout: 30000 });
+  await p2.click('tr.click'); await p2.waitForTimeout(400);
+  await p2.evaluate(() => { window.__prompts = []; location.hash = '#course'; }); await p2.waitForTimeout(600);
+  await p2.click('.crs-pick [data-c="eng"]'); await p2.waitForTimeout(400);
+  const hello3 = await p2.innerText('#chatLog');
+  check(LEVEL.test(hello3), 'IELTS lesson bot greeting does not name the level');
+  await p2.click('.qchip'); await p2.waitForTimeout(600);
+  const sys3 = await p2.evaluate(() => (window.__prompts[0] || [{}])[0].content || '');
+  check(/IELTS/.test(sys3) && LEVEL.test(sys3), 'IELTS lesson bot context lacks IELTS role or level');
   await c2.close();
 }
 
