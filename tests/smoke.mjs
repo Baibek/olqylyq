@@ -21,6 +21,8 @@ check(await page.$eval('.subj[aria-pressed="true"]', b => b.dataset.s) === 'math
 // 2. IELTS: no grade picker, run a diagnostic to the end
 await page.locator('.ss[data-s="eng"]:visible, .subj[data-s="eng"]:visible').first().click(); await wait(300);
 check(!(await page.isVisible('.gradeseg')), 'grade picker is visible for IELTS');
+check(await page.isVisible('#courseBtn'), 'IELTS home has no demo video-lesson button');
+check(/математика|математик/i.test(await page.textContent('#courseBtn').catch(() => '')), 'IELTS demo-lesson button does not say it is a math lesson');
 { const home = await page.innerText('#v-home'); check(!/\d+[- ]?(сынып|класс)/.test(home), 'IELTS home mentions a school grade: ' + (home.match(/.{0,30}\d+[- ]?(сынып|класс).{0,10}/) || [''])[0]); }
 await page.click('#startForm button[type="submit"]');
 for (let i = 0; i < 60; i++) {

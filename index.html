@@ -3058,7 +3058,7 @@ function renderHome() {
         <div class="gradeseg" role="group" aria-labelledby="gradeLbl">${[7, 8, 9, 11].map(g => `<button type="button" data-g="${g}" aria-pressed="${S.grade === g}">${g > 9 ? Lx.g1011 : g}</button>`).join('')}</div></div>
       <button class="btn btn-primary" type="submit">${Lx.start}${ico('arrow')}</button>
       <button class="btn btn-ghost" type="button" id="demoBtn">${ico('play')}${Lx.demo}</button>
-      <button class="btn btn-ghost" type="button" id="courseBtn"${S.subj === 'eng' ? ' hidden' : ''}>${ROBOT_MINI}${CT().demoCourse}</button>
+      <button class="btn btn-ghost" type="button" id="courseBtn">${ROBOT_MINI}${S.subj === 'math' ? CT().demoCourse : CT().demoCourseMath}</button>
       <p class="note">${esc(Lx.demoNote(nm(G, meta.demo[0]), nm(G, meta.demo[1])))}</p>
     </form>
   </div>
@@ -3561,7 +3561,7 @@ const CK = {
     memTitle: n => `Бот жады: ${n} жазба`, memHint: 'Бот өткен сабақтардан есте сақтағаны. Тек осы браузерде сақталады.', memEmpty: 'Әзірге бос.', memClear: 'Жадыны тазалау', memDiag: 'Соңғы диагностика',
     ask: 'Сұрағыңды жаз…', send: 'Жіберу', at: 'сәт', off: 'Ұстаз-бот бет claude.ai ішінде ашылғанда жұмыс істейді.',
     err: { not_granted: 'AI-ға рұқсат берілмеді.', rate_limited: 'Сұрақ көп болды, сәлден кейін қайталаңыз.', other: 'Байланыс үзілді, қайта сұрап көр.' },
-    readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
+    readAloud: 'Жауапты дауыстап оқу', demoLesson: 'Демо-сабақ', demoCourse: 'Демо-сабақ: Ұстаз-ботпен', demoCourseMath: 'Демо-бейнесабақ (математика) + Ұстаз-бот', note: 'Бейнесабақтар — анимациялы демо. Курс бағасы мен құрамы мысал ретінде берілген.',
   },
   ru: {
     back: 'Вернуться к результату', courseName: 'Рациональные числа', courseSub: 'Демо-уроки курса «Числа, степени и корни»',
@@ -3576,7 +3576,7 @@ const CK = {
     memTitle: n => `Память бота: записей ${n}`, memHint: 'Что бот запомнил с прошлых занятий. Хранится только в этом браузере.', memEmpty: 'Пока пусто.', memClear: 'Очистить память', memDiag: 'Последняя диагностика',
     ask: 'Напиши вопрос…', send: 'Отправить', at: 'момент', off: 'Ұстаз-бот работает, когда страница открыта в claude.ai.',
     err: { not_granted: 'Доступ к AI не разрешён.', rate_limited: 'Слишком много вопросов, повтори чуть позже.', other: 'Связь прервалась, спроси ещё раз.' },
-    readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
+    readAloud: 'Читать ответ вслух', demoLesson: 'Демо-урок', demoCourse: 'Демо-урок с Ұстаз-ботом', demoCourseMath: 'Демо-видеоурок (математика) + Ұстаз-бот', note: 'Видеоуроки — анимированное демо. Цена и состав курса даны для примера.',
   },
 };
 const CT = () => CK[lang];
