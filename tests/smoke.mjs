@@ -111,6 +111,15 @@ await page.click('tr.click'); await wait(500);
   await c3.close();
 }
 
+// 8. A script error is shown on screen, so a user can screenshot it
+{
+  const p4 = await browser.newPage(); await p4.goto(URL0); await p4.waitForTimeout(400);
+  await p4.evaluate(() => setTimeout(() => { throw new Error('test-boom'); }, 0)); await p4.waitForTimeout(300);
+  const t = await p4.$eval('#errBanner', el => el.hidden ? '' : el.innerText).catch(() => '');
+  check(/test-boom/.test(t), 'script errors are not shown on screen');
+  await p4.close();
+}
+
 check(!errs.length, 'page errors: ' + errs.join(' | '));
 await browser.close();
 console.log('problems:', bad.length ? bad : 'none');
